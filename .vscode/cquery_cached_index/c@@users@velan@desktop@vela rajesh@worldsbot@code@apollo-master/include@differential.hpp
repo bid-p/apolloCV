@@ -1,0 +1,9 @@
+#pragma once
+#include "okapi/api.hpp"
+
+extern okapi::Motor diffLeft;
+extern okapi::Motor diffRight;
+extern char getDiffState();
+extern void abortDiff();
+extern void updateDiff();
+extern void diffAct();
