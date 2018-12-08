@@ -62,8 +62,8 @@ void diffAct() {
     diffRight.moveVoltage(12000);
     break;
   case diffIntakeOut:
-    diffLeft.moveVoltage(9000);
-    diffRight.moveVoltage(-9000);
+    diffLeft.moveVoltage(10000);
+    diffRight.moveVoltage(-10000);
     break;
   case diffLiftHold:
     diffLeft.moveVoltage(1500);
