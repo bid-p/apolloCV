@@ -66,7 +66,7 @@ void executeProgSkills() {
   profileController.removePath("B2");
 
   profileController.generatePath(
-      {Point{0_in, 0_in, 0_deg}, Point{50_in, 0_in, 0_deg}}, "C1");
+      {Point{0_in, 0_in, 0_deg}, Point{52_in, 0_in, 0_deg}}, "C1");
 
   profileController.setTarget("C1"); // Straight into low flag
   profileController.waitUntilSettled();

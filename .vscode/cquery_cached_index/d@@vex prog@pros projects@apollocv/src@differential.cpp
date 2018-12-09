@@ -15,7 +15,6 @@ ControllerButton liftUp = controller[ControllerDigital::A];
 ControllerButton liftDown = controller[ControllerDigital::Y];
 ControllerButton intakeIn = controller[ControllerDigital::R1];
 ControllerButton intakeOut = controller[ControllerDigital::R2];
-ControllerButton diffhold = controller[ControllerDigital::X];
 Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
 Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
 
@@ -33,20 +32,23 @@ void updateDiff() {
   if (liftDown.isPressed()) {
     diffState = diffLiftDown;
   }
-  if (intakeIn.isPressed()) {
+  if (intakeIn.isPressed() && !intakeOut.isPressed()) {
     diffState = diffIntakeIn;
   }
-  if (intakeOut.isPressed()) {
+  if (intakeOut.isPressed() && !intakeIn.isPressed()) {
     diffState = diffIntakeOut;
   }
-  if (diffhold.isPressed()) {
-    diffHoldToggle = !diffHoldToggle;
+  if (intakeIn.isPressed() && intakeOut.isPressed()) {
     diffState = diffLiftHold;
   }
 }
 
 void diffAct() {
   switch (diffState) {
+  case diffNotRunning:
+    diffLeft.moveVoltage(0);
+    diffRight.moveVoltage(0);
+    break;
   case diffLiftUp:
     diffLeft.moveVoltage(12000);
     diffRight.moveVoltage(12000);
@@ -60,20 +62,12 @@ void diffAct() {
     diffRight.moveVoltage(12000);
     break;
   case diffIntakeOut:
-    diffLeft.moveVoltage(9000);
-    diffRight.moveVoltage(-9000);
+    diffLeft.moveVoltage(10000);
+    diffRight.moveVoltage(-10000);
     break;
   case diffLiftHold:
-    if (diffHoldToggle) {
-      diffLeft.moveVoltage(1500);
-      diffRight.moveVoltage(1500);
-    } else {
-      diffState = diffNotRunning;
-    }
-    break;
-  case diffNotRunning:
-    diffLeft.moveVoltage(0);
-    diffRight.moveVoltage(0);
+    diffLeft.moveVoltage(1500);
+    diffRight.moveVoltage(1500);
     break;
   }
 }

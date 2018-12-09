@@ -12,10 +12,11 @@ using namespace okapi;
  * from where it left off.
  */
 void autonomous() {
-  // executeRedNear1(); // column  NO PARK
+  executeRedNear1(); // column  NO PARK
   // executeRedFar1(); // middle flag with two caps with park
   // executeBlueNear1(); // column  NO PARK
-  // executeBlueFar1(); // middle flag with two caps with park
+  // executeBlueFar1(); // middle flag with two caps with
+  // park
 
-  executeProgSkills(); // column with two caps and center park
+  // executeProgSkills(); // column with two caps and center park
 }

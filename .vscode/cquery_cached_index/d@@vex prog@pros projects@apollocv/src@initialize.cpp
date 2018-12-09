@@ -8,7 +8,12 @@
  */
 void initialize() {
   pros::lcd::initialize();
-  initProgSkills();
+  initRedNear1();
+  //  initRedFar1();
+  // initBlueNear1();
+  // initBlueFar1();
+
+  // initProgSkills();
 }
 
 /**

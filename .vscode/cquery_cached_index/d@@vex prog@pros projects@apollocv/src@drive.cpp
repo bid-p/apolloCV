@@ -15,7 +15,7 @@ ChassisControllerIntegrated chassisController =
         AbstractMotor::gearset::green, {4.125_in, 12.727_in});
 
 AsyncMotionProfileController profileController =
-    AsyncControllerFactory::motionProfile(1.09, 4.0,
+    AsyncControllerFactory::motionProfile(/*1.09*/ 2.00, 5.0,
                                           10.0, // maxvel, accel, max jerk
                                           chassisController);
 
