@@ -11,3 +11,10 @@ const int DIFF_PORT_R = 14;
 const int PUNCHER_PORT = 10;
 
 const int ANGLE_CHANGER_PORT = 5;
+
+/*----------------------------------------------------------------------------------------------*/
+
+const char SPORT_INTAKE_L = 'F';
+const char SPORT_INTAKE_R = 'G';
+
+const char SPORT_PUNCHERB = 'H';

@@ -2,6 +2,18 @@
 
 using namespace okapi;
 
+ControllerButton liftUp = controller[ControllerDigital::A];
+ControllerButton liftDown = controller[ControllerDigital::Y];
+ControllerButton intakeIn = controller[ControllerDigital::R1];
+ControllerButton intakeOut = controller[ControllerDigital::R2];
+Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
+Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
+
+pros::ADILineSensor lineL(SPORT_INTAKE_L);
+pros::ADILineSensor lineR(SPORT_INTAKE_R);
+
+pros::ADILineSensor lineP(SPORT_PUNCHERB);
+
 enum {
   diffLiftUp = 'u',    // L1
   diffLiftDown = 'd',  // L2
@@ -11,24 +23,43 @@ enum {
   diffLiftHold = 'a',
 } diffState = diffNotRunning;
 
-ControllerButton liftUp = controller[ControllerDigital::A];
-ControllerButton liftDown = controller[ControllerDigital::Y];
-ControllerButton intakeIn = controller[ControllerDigital::R1];
-ControllerButton intakeOut = controller[ControllerDigital::R2];
-Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
-Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
-
 bool diffHoldToggle = true;
 
 char getDiffState() { return diffState; }
 
 void abortDiff() { diffState = diffNotRunning; }
 
+bool hasBall() {
+  if (lineL.get_value() < 2000 || lineR.get_value() < 2000) {
+    return true;
+  }
+  return false;
+}
+
+bool isLoaded() {
+  if (lineP.get_value() < 2000) {
+    return true;
+  }
+  return false;
+}
+
 void updateDiff() {
+  if (!isLoaded()) {
+    diffState = diffIntakeIn;
+  } // if isn't loaded, run intake
+  if (isLoaded() && !hasBall()) {
+    diffState = diffIntakeIn;
+  } // if is loaded but doesn't have ball ready, keep running intake
+  if (isLoaded() && hasBall()) {
+    diffState = diffNotRunning;
+  } // if has ball ready and is loaded, turn off intake
   diffState = diffNotRunning;
   if (liftUp.isPressed()) {
     diffState = diffLiftUp;
   }
+
+  // AUTOMATED SHIT GETS OVERWRITTEN BY USER?
+
   if (liftDown.isPressed()) {
     diffState = diffLiftDown;
   }
@@ -58,12 +89,12 @@ void diffAct() {
     diffRight.moveVoltage(-12000);
     break;
   case diffIntakeIn:
-    diffLeft.moveVoltage(-12000);
-    diffRight.moveVoltage(12000);
+    diffLeft.moveVelocity(-200);
+    diffRight.moveVelocity(200);
     break;
   case diffIntakeOut:
-    diffLeft.moveVoltage(10000);
-    diffRight.moveVoltage(-10000);
+    diffLeft.moveVelocity(-150);
+    diffRight.moveVelocity(150);
     break;
   case diffLiftHold:
     diffLeft.moveVoltage(1500);
