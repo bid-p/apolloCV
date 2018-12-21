@@ -44,22 +44,21 @@ bool isLoaded() {
 }
 
 void updateDiff() {
-  if (!isLoaded()) {
+  if (diffState == diffIntakeIn && !isLoaded()) {
     diffState = diffIntakeIn;
-  } // if isn't loaded, run intake
-  if (isLoaded() && !hasBall()) {
+  } // if puncher isn't loaded, run intake
+  if (diffState == diffIntakeIn && isLoaded() && !hasBall()) {
     diffState = diffIntakeIn;
   } // if is loaded but doesn't have ball ready, keep running intake
-  if (isLoaded() && hasBall()) {
+  if (diffState == diffIntakeIn && isLoaded() && hasBall()) {
     diffState = diffNotRunning;
   } // if has ball ready and is loaded, turn off intake
-  diffState = diffNotRunning;
-  if (liftUp.isPressed()) {
-    diffState = diffLiftUp;
-  }
 
   // AUTOMATED SHIT GETS OVERWRITTEN BY USER?
 
+  if (liftUp.isPressed()) {
+    diffState = diffLiftUp;
+  }
   if (liftDown.isPressed()) {
     diffState = diffLiftDown;
   }
@@ -83,22 +82,26 @@ void diffAct() {
   case diffLiftUp:
     diffLeft.moveVoltage(12000);
     diffRight.moveVoltage(12000);
+    diffState = diffNotRunning;
     break;
   case diffLiftDown:
     diffLeft.moveVoltage(-12000);
     diffRight.moveVoltage(-12000);
+    diffState = diffNotRunning;
     break;
   case diffIntakeIn:
-    diffLeft.moveVelocity(-200);
-    diffRight.moveVelocity(200);
+    diffLeft.moveVoltage(-12000);
+    diffRight.moveVoltage(12000);
     break;
   case diffIntakeOut:
-    diffLeft.moveVelocity(-150);
-    diffRight.moveVelocity(150);
+    diffLeft.moveVoltage(10000);
+    diffRight.moveVoltage(-10000);
+    diffState = diffNotRunning;
     break;
   case diffLiftHold:
     diffLeft.moveVoltage(1500);
     diffRight.moveVoltage(1500);
+    diffState = diffNotRunning;
     break;
   }
 }
