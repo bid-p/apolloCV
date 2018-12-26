@@ -43,6 +43,15 @@ bool isLoaded() {
   return false;
 }
 
+// for the macro
+void loadBall() {
+  if(isLoaded()) {
+    diffState = diffNotRunning;
+  } else {
+    diffState = diffIntakeIn;
+  }
+}
+
 void updateDiff() {
   if (diffState == diffIntakeIn && !isLoaded()) {
     diffState = diffIntakeIn;

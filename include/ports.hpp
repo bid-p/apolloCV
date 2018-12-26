@@ -14,7 +14,7 @@ const int ANGLE_CHANGER_PORT = 5;
 
 /*----------------------------------------------------------------------------------------------*/
 
-const char SPORT_INTAKE_L = 'F';
+const char SPORT_INTAKE_L = 'H';
 const char SPORT_INTAKE_R = 'G';
 
-const char SPORT_PUNCHERB = 'H';
+const char SPORT_PUNCHERB = 'F';
