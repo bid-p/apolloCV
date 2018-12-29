@@ -94,13 +94,13 @@ void diffAct() {
     diffRight.moveVoltage(0);
     break;
   case diffLiftUp:
-    diffLeft.moveVoltage(12000);
-    diffRight.moveVoltage(12000);
+    diffLeft.moveVelocity(150);
+    diffRight.moveVelocity(150);
     diffState = diffNotRunning;
     break;
   case diffLiftDown:
-    diffLeft.moveVoltage(-12000);
-    diffRight.moveVoltage(-12000);
+    diffLeft.moveVelocity(-150);
+    diffRight.moveVelocity(-150);
     diffState = diffNotRunning;
     break;
   case diffIntakeIn:

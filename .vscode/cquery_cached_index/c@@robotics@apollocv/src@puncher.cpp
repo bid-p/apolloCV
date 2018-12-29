@@ -131,10 +131,12 @@ void updatePuncher() {
   if (angleCloseHighBtn.changedToPressed()) {
     angleTarget = 25;
     angleState = angleHold;
+    //angleState = angleDown;
   }
   if(angleMidHighBtn.changedToPressed()) {
     angleTarget = 0;
     angleState = angleHold;
+    //angleState = angleUp;
   }
   if (angleFarHighBtn.changedToPressed()) {
     angleTarget = 87;
@@ -159,13 +161,13 @@ void updatePuncher() {
   // start macro
   if(puncherCockingBtn.isPressed() && puncherOnBtn.isPressed()) {
     macroState = macroReady;
-    macroHighTarget = 25;
-    macroMidTarget = 190;
+    macroHighTarget = 15;
+    macroMidTarget = 125;
   }
   if(macroFarBtn.isPressed()) {
     macroState = macroReady;
     macroHighTarget = 80;
-    macroMidTarget = 150;
+    macroMidTarget = 180;
   }
 }
 
@@ -175,14 +177,14 @@ void puncherAct() {
   switch (angleState) {
   // no more manual angle changing
   /*case angleUp:
-  angleChanger.moveVoltage(12000);
+  angleChanger.moveVoltage(5000);
   angleTarget = angleChanger.getPosition();
   break;
   case angleDown:
-  angleChanger.moveVoltage(-12000);
+  angleChanger.moveVoltage(-5000);
   angleTarget = angleChanger.getPosition();
-  break;*/
-
+  break;
+*/
   case angleHold: // hold only every other time when close, otherwise it stalls
     if (abs(angleChanger.getPosition() - angleTarget) < 5) {
       if (hold) {
@@ -217,10 +219,24 @@ void puncherAct() {
   }
 }
 
-void runMacro() {
+// for auton
+void runNearMacro() {
   macroState = macroReady;
-  macroHighTarget = 25;
-  macroMidTarget = 190;
+  macroHighTarget = 15; // 25
+  macroMidTarget = 125; // 190
+  while(macroState != macroNotRunning) {
+    updateMacro();
+
+    puncherAct();
+    diffAct();
+  }
+}
+
+// for auton
+void runFarMacro() {
+  macroState = macroReady;
+  macroHighTarget = 65;
+  macroMidTarget = 180;
   while(macroState != macroNotRunning) {
     updateMacro();
 
