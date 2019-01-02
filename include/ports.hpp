@@ -5,7 +5,7 @@ const int DRIVE_PORT_L2 = 11;
 const int DRIVE_PORT_R1 = 20;
 const int DRIVE_PORT_R2 = 19;
 
-const int DIFF_PORT_L = 18;
+const int DIFF_PORT_L = 13;
 const int DIFF_PORT_R = 14;
 
 const int PUNCHER_PORT = 10;
