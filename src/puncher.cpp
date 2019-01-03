@@ -139,7 +139,7 @@ void updatePuncher() {
     //angleState = angleUp;
   }
   if (angleFarHighBtn.changedToPressed()) {
-    angleTarget = 87;
+    angleTarget = 95;
     angleState = angleHold;
   }
   if(angleFarMidBtn.changedToPressed()) {
