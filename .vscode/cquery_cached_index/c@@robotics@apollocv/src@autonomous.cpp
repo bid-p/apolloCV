@@ -13,8 +13,8 @@ using namespace okapi;
  */
 void autonomous() {
  //executeRedNear1(); // column , 1 middle flag, 2 caps
- //executeRedNear2();// column, park, 1 cap
-   executeRedFar1(); // two flags, two caps, park
+ executeRedNear2();// column, park, 1 cap
+   //executeRedFar1(); // two flags, two caps, park
   // executeBlueNear1(); // column, 1 middle flag, 2 caps
   //executeBlueNear2(); //column, park, 1 cap
   // executeBlueFar1(); // two flags, two caps, park

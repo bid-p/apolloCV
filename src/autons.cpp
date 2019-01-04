@@ -216,7 +216,7 @@ void initRedFar1() {
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{10_in, 0_in, 0_deg}}, "A1");
   profileController.generatePath(
-      {Point{0_in, 0_in, 0_deg}, Point{36_in, 0_in, 0_deg}}, "B");
+      {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "B");
 
 }
 
@@ -232,7 +232,7 @@ void executeRedFar1() {
   profileController.waitUntilSettled();
   runIntake(0);
 
-    turnAngleVel(-78_deg, 150);
+    turnAngleVel(-75_deg, 150);
 
     runFarMacro();
 
@@ -257,7 +257,7 @@ void executeRedFar1() {
 
     turnAngleVel(90_deg, 100); // face parking platform
 
-    chassisController.moveDistance(33_in); // climb platform
+    chassisController.moveDistance(30_in); // climb platform
 
     runIntake(0); // stop intake
 

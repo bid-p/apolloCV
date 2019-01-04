@@ -235,7 +235,7 @@ void runNearMacro() {
 // for auton
 void runFarMacro() {
   macroState = macroReady;
-  macroHighTarget = 65;
+  macroHighTarget = 70;
   macroMidTarget = 180;
   while(macroState != macroNotRunning) {
     updateMacro();
