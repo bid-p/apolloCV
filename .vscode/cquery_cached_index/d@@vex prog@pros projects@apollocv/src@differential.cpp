@@ -2,32 +2,20 @@
 
 using namespace okapi;
 
-ControllerButton liftUp = controller[ControllerDigital::A];
-ControllerButton liftDown = controller[ControllerDigital::Y];
-ControllerButton intakeIn = controller[ControllerDigital::R1];
-ControllerButton intakeOut = controller[ControllerDigital::R2];
+ControllerButton liftUpBtn = controller[ControllerDigital::A];
+ControllerButton liftDownBtn = controller[ControllerDigital::Y];
+ControllerButton intakeInBtn = controller[ControllerDigital::R1];
+ControllerButton intakeOutBtn = controller[ControllerDigital::R2];
+
+namespace differential {
+
+tDifferentialStates currState;
+
 Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
 Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
 
 pros::ADILineSensor lineL(SPORT_INTAKE_L);
 pros::ADILineSensor lineR(SPORT_INTAKE_R);
-
-pros::ADILineSensor lineP(SPORT_PUNCHERB);
-
-enum {
-  diffLiftUp = 'u',    // L1
-  diffLiftDown = 'd',  // L2
-  diffIntakeIn = 'i',  // R1
-  diffIntakeOut = 'o', // R2
-  diffNotRunning = 'x',
-  diffLiftHold = 'a',
-} diffState = diffNotRunning;
-
-bool diffHoldToggle = true;
-
-char getDiffState() { return diffState; }
-
-void abortDiff() { diffState = diffNotRunning; }
 
 bool hasBall() {
   if (lineL.get_value() < 2000 || lineR.get_value() < 2000) {
@@ -36,77 +24,75 @@ bool hasBall() {
   return false;
 }
 
-bool isLoaded() {
-  if (lineP.get_value() < 2000) {
-    return true;
-  }
-  return false;
-}
-
-void updateDiff() {
-  if (diffState == diffIntakeIn && !isLoaded()) {
-    diffState = diffIntakeIn;
+void update() {
+  // AUTOMATED CHECKERS
+  if (currState == intakeIn && !puncher::isLoaded()) {
+    currState = intakeIn;
   } // if puncher isn't loaded, run intake
-  if (diffState == diffIntakeIn && isLoaded() && !hasBall()) {
-    diffState = diffIntakeIn;
+  if (currState == intakeIn && puncher::isLoaded() && !hasBall()) {
+    currState = intakeIn;
   } // if is loaded but doesn't have ball ready, keep running intake
-  if (diffState == diffIntakeIn && isLoaded() && hasBall()) {
-    diffState = diffNotRunning;
+  if (currState == intakeIn && puncher::isLoaded() && hasBall()) {
+    currState = intakeIn;
   } // if has ball ready and is loaded, turn off intake
 
-  // AUTOMATED SHIT GETS OVERWRITTEN BY USER?
+  // USER INPUT
+  if (intakeInBtn.isPressed() && intakeOutBtn.isPressed()) {
+    currState = liftHold;
+  }
+  if (liftUpBtn.isPressed()) {
+    currState = liftUp;
+  }
+  if (liftDownBtn.isPressed()) {
+    currState = liftDown;
+  }
+  if (intakeInBtn.isPressed() && !intakeOutBtn.isPressed()) {
+    currState = intakeIn;
+  }
+  if (intakeOutBtn.isPressed() && !intakeInBtn.isPressed()) {
+    currState = intakeOut;
+  }
+}
 
-  if (liftUp.isPressed()) {
-    diffState = diffLiftUp;
-  }
-  if (liftDown.isPressed()) {
-    diffState = diffLiftDown;
-  }
-  if (intakeIn.isPressed() && !intakeOut.isPressed()) {
-    diffState = diffIntakeIn;
-  }
-  if (intakeOut.isPressed() && !intakeIn.isPressed()) {
-    diffState = diffIntakeOut;
-  }
-  if (intakeIn.isPressed() && intakeOut.isPressed()) {
-    diffState = diffLiftHold;
+void act(void *) {
+  while (true) {
+    switch (currState) {
+    case notRunning:
+      diffLeft.moveVoltage(0);
+      diffRight.moveVoltage(0);
+      break;
+    case liftUp:
+      diffLeft.moveVelocity(200);
+      diffRight.moveVelocity(200);
+      currState = notRunning;
+      break;
+    case liftDown:
+      diffLeft.moveVelocity(-200);
+      diffRight.moveVelocity(-200);
+      currState = notRunning;
+      break;
+    case intakeIn:
+      diffLeft.moveVelocity(-200);
+      diffRight.moveVelocity(200);
+      break;
+    case intakeOut:
+      diffLeft.moveVelocity(150);
+      diffRight.moveVelocity(-150);
+      currState = notRunning;
+      break;
+    case liftHold:
+      diffLeft.moveVoltage(1500);
+      diffRight.moveVelocity(1500);
+      currState = notRunning;
+      break;
+    }
+    pros::delay(10);
   }
 }
 
-void diffAct() {
-  switch (diffState) {
-  case diffNotRunning:
-    diffLeft.moveVoltage(0);
-    diffRight.moveVoltage(0);
-    break;
-  case diffLiftUp:
-    diffLeft.moveVoltage(12000);
-    diffRight.moveVoltage(12000);
-    diffState = diffNotRunning;
-    break;
-  case diffLiftDown:
-    diffLeft.moveVoltage(-12000);
-    diffRight.moveVoltage(-12000);
-    diffState = diffNotRunning;
-    break;
-  case diffIntakeIn:
-    diffLeft.moveVoltage(-12000);
-    diffRight.moveVoltage(12000);
-    break;
-  case diffIntakeOut:
-    diffLeft.moveVoltage(10000);
-    diffRight.moveVoltage(-10000);
-    diffState = diffNotRunning;
-    break;
-  case diffLiftHold:
-    diffLeft.moveVoltage(1500);
-    diffRight.moveVoltage(1500);
-    diffState = diffNotRunning;
-    break;
-  }
-}
+} // namespace differential
 
 void runIntake(int speed) {
-  diffLeft.moveVelocity(-1 * speed);
-  diffRight.moveVelocity(1 * speed);
+  differential::diffLeft.moveVelocity(-1 * speed);
+  differential::diffRight.moveVelocity(1 * speed);
 }

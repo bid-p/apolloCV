@@ -12,11 +12,50 @@ using namespace okapi;
  * from where it left off.
  */
 void autonomous() {
-  executeRedNear1(); // column  NO PARK
+
+  //  executeRedNear1(); // column  NO PARK
   // executeRedFar1(); // middle flag with two caps with park
   // executeBlueNear1(); // column  NO PARK
   // executeBlueFar1(); // middle flag with two caps with
   // park
 
   // executeProgSkills(); // column with two caps and center park
+
+  switch (autonRoutine) {
+  case progSkills:
+    executeProgSkills();
+    break;
+
+  case redNear1:
+    executeRedNear1();
+    break;
+
+  case redNear2:
+    executeRedNear2();
+    break;
+
+  case redFar1:
+    executeRedFar1();
+    break;
+
+  case redFar2:
+    executeRedFar2();
+    break;
+
+  case blueNear1:
+    executeBlueNear1();
+    break;
+
+  case blueNear2:
+    executeBlueNear2();
+    break;
+
+  case blueFar1:
+    executeBlueFar1();
+    break;
+
+  case blueFar2:
+    executeBlueFar2();
+    break;
+  }
 }

@@ -2,123 +2,57 @@
 
 using namespace okapi;
 
-enum {
-  puncherNotRunning = 'x',
-  puncherShooting = 's',
-  puncherCocking = 'c',
-} puncherState = puncherNotRunning;
-enum {
-  // angleUp = 'u',
-  // angleDown = 'd',
-  angleHold = 'h',
-  angleNotRunning = 'x',
-} angleState = angleNotRunning;
+ControllerButton puncherShootBtn = controller[ControllerDigital::L1];
+ControllerButton puncherCockingBtn = controller[ControllerDigital::L2];
 
-double angleTarget;
+namespace puncher {
 
-Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::red);
-Motor angleChanger(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::green);
-AsyncPosIntegratedController angleController =
-    AsyncControllerFactory::posIntegrated(angleChanger);
+tPuncherStates currState;
+
+Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::green);
+
 AsyncPosIntegratedController puncherController =
     AsyncControllerFactory::posIntegrated(puncher);
 
-ControllerButton angleFar1MidBtn = controller[ControllerDigital::left];
-ControllerButton angleFar1HighBtn = controller[ControllerDigital::right];
-ControllerButton angleCloseMidBtn = controller[ControllerDigital::down];
-ControllerButton angleCloseHighBtn = controller[ControllerDigital::up];
+pros::ADILineSensor lineP(SPORT_PUNCHERB);
 
-ControllerButton angleFar2MidBtn = controller[ControllerDigital::B];
-
-ControllerButton puncherOnBtn = controller[ControllerDigital::L1];
-ControllerButton puncherCockingBtn = controller[ControllerDigital::L2];
-
-char getPuncherState() { return puncherState; }
-
-char getAngleState() { return angleState; }
-
-void abortPuncher() {
-  angleState = angleNotRunning;
-  puncherState = puncherNotRunning;
+bool isLoaded() {
+  if (lineP.get_value() < 2000) {
+    return true;
+  }
+  return false;
 }
 
-void updatePuncher() {
-  if (angleState != angleNotRunning) {
-    angleState = angleHold;
-  }
-  if (puncherState != puncherCocking) {
-    puncherState = puncherNotRunning;
-  }
-  if (angleFar2MidBtn.changedToPressed()) {
-    angleTarget = 245;
-    angleState = angleHold;
-  }
-  if (angleCloseMidBtn.changedToPressed()) {
-    angleTarget = 350;
-    angleState = angleHold;
-  }
-  if (angleCloseHighBtn.changedToPressed()) {
-    angleTarget = 0;
-    angleState = angleHold;
-  }
-  if (angleFar1MidBtn.changedToPressed()) {
-    angleTarget = 305;
-    angleState = angleHold;
-  }
-  if (angleFar1HighBtn.changedToPressed()) {
-    angleTarget = 120;
-    angleState = angleHold;
-  }
-  if (puncherOnBtn.isPressed()) {
-    puncherState = puncherShooting;
+void update() {
+  if (puncherShootBtn.isPressed()) {
+    currState = shooting;
   }
   if (puncherCockingBtn.changedToPressed()) {
-    puncher.tarePosition(); // the puncher motor has to be reset before it is
-                            // set to the cocked position
-    puncherState = puncherCocking;
+    puncher.tarePosition(); // puncher has to be reset before cocked
+    currState = cocking;
   }
 }
 
-bool hold = false;
-
-void puncherAct() {
-  switch (angleState) {
-  // no more manual angle changing
-  /*case angleUp:
-  angleChanger.moveVoltage(12000);
-  angleTarget = angleChanger.getPosition();
-  break;
-  case angleDown:
-  angleChanger.moveVoltage(-12000);
-  angleTarget = angleChanger.getPosition();
-  break;
-  */
-  case angleHold: // hold only every other time when close, otherwise it stalls
-    if (abs(angleChanger.getPosition() - angleTarget) < 10) {
-      if (hold) {
-        angleController.setTarget(angleTarget);
-      } else {
-        angleChanger.moveVoltage(0);
-      }
-    } else {
-      angleController.setTarget(angleTarget); // when far just do pid everytime
-                                              // (or else it doesn't go up)
+void act(void *) {
+  while (true) {
+    switch (currState) {
+    case notRunning:
+      puncherController.flipDisable(true);
+      puncher.setBrakeMode(AbstractMotor::brakeMode::coast);
+      puncher.moveVoltage(0);
+      break;
+    case shooting:
+      puncherController.flipDisable(true);
+      puncher.moveVoltage(12000);
+      currState = notRunning;
+      break;
+    case cocking:
+      puncherController.setTarget(250);
+      puncherController.flipDisable(false);
+      break;
     }
-    hold = !hold;
-    break;
-  case angleNotRunning:
-    angleChanger.moveVoltage(0);
-    break;
-  }
-  switch (puncherState) {
-  case puncherNotRunning:
-    puncher.moveVoltage(0);
-    break;
-  case puncherShooting:
-    puncher.moveVoltage(12000);
-    break;
-  case puncherCocking:
-    puncherController.setTarget(250);
-    break;
+    pros::delay(10);
   }
 }
+
+} // namespace puncher

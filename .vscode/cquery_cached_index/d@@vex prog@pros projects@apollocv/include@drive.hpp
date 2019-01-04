@@ -1,13 +1,29 @@
-#pragma once
+#ifndef DRIVE_GUARD
+#define DRIVE_GUARD
+
 #include "okapi/api.hpp"
 using namespace okapi;
-extern okapi::Controller controller;
-extern okapi::Motor driveR1, driveR2, driveL1, driveL2;
+
+namespace drive {
+
+typedef enum states {
+  notRunning,
+  running,
+} tDriveStates;
+
+extern tDriveStates currState;
+
+extern char stateIndicator;
+
+extern Motor driveR1, driveR2, driveL1, driveL2;
 extern ChassisControllerIntegrated chassisController;
 extern AsyncMotionProfileController profileController;
 
-extern char getDriveState();
-extern void abortDrive();
-extern void updateDrive();
-extern void driveAct();
+extern void update();
+extern void act(void *);
+
+} // namespace drive
+
 extern void turnAngleVel(QAngle angle, double maxVel);
+
+#endif

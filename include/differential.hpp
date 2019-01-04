@@ -1,20 +1,38 @@
-#pragma once
+#ifndef DIFFERENTIAL_GUARD
+#define DIFFERENTIAL_GUARD
+
 #include "okapi/api.hpp"
 
-extern okapi::Motor diffLeft;
-extern okapi::Motor diffRight;
+using namespace okapi;
 
-extern char getDiffState();
-extern void abortDiff();
-extern void updateDiff();
-extern void diffAct();
+namespace differential {
 
-extern void runIntake(int speed);
+typedef enum states {
+  notRunning,
+  liftHold,
+  liftUp,
+  liftDown,
+  intakeIn,
+  intakeOut,
+} tDifferentialStates;
+
+extern tDifferentialStates currState;
+
+extern okapi::Motor diffLeft, diffRight;
 
 extern pros::ADILineSensor lineL;
 extern pros::ADILineSensor lineR;
 
-extern pros::ADILineSensor lineP;
+extern char stateIndicator;
+
+extern void update();
+
+extern void act(void *);
 
 extern bool hasBall();
-extern bool isLoaded();
+
+} // namespace differential
+
+extern void runIntake(int speed);
+
+#endif

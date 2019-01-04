@@ -6,14 +6,7 @@
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-  pros::lcd::initialize();
-  initRedNear1();
-  //  initRedFar1();
-  // initBlueNear1();
-  // initBlueFar1();
-
-  // initProgSkills();
+void initialize() { /*autonSelector();*/
 }
 
 /**

@@ -42,9 +42,12 @@
 #include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
 
+#include "angler.hpp"
 #include "autons.hpp"
 #include "differential.hpp"
+#include "display.hpp"
 #include "drive.hpp"
+#include "init.hpp"
 #include "okapi/api.hpp"
 #include "ports.hpp"
 #include "puncher.hpp"

@@ -2,7 +2,11 @@
 
 using namespace okapi;
 
-bool running = false;
+namespace drive {
+
+tDriveStates currState;
+
+char stateIndicator;
 
 Motor driveL1(DRIVE_PORT_L1, false, AbstractMotor::gearset::green);
 Motor driveL2(DRIVE_PORT_L2, false, AbstractMotor::gearset::green);
@@ -19,33 +23,41 @@ AsyncMotionProfileController profileController =
                                           10.0, // maxvel, accel, max jerk
                                           chassisController);
 
-Controller controller;
-
-char getDriveState() { return running ? 'r' : 'x'; }
-
-void abortDrive() { running = false; }
-
-void updateDrive() {
-  if (controller.getAnalog(ControllerAnalog::leftY) != 0 ||
-      controller.getAnalog(ControllerAnalog::rightY) != 0) {
-    running = true;
+void update() {
+  if (abs(controller.getAnalog(ControllerAnalog::leftY)) > joyDeadband ||
+      abs(controller.getAnalog(ControllerAnalog::rightY)) > joyDeadband) {
+    currState = running;
+    stateIndicator = 'r';
   } else {
-    running = false;
+    currState = notRunning;
+    stateIndicator = 'x';
   }
 }
 
-void driveAct() {
-  chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
-  if (running) {
-    chassisController.tank(controller.getAnalog(ControllerAnalog::leftY),
-                           controller.getAnalog(ControllerAnalog::rightY));
-  } else {
-    chassisController.tank(0, 0);
+void act(void *) {
+  while (true) {
+    switch (currState) {
+    case notRunning:
+      chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+      chassisController.tank(0, 0, 0);
+      break;
+
+    case running:
+      chassisController.tank(
+          controller.getAnalog(ControllerAnalog::leftY) * 1.0,
+          controller.getAnalog(ControllerAnalog::rightY) * 1.0,
+          joyDeadband * 1.0);
+      currState = notRunning;
+      break;
+    }
+    pros::delay(10);
   }
 }
+
+} // namespace drive
 
 void turnAngleVel(QAngle angle, double maxVel) {
-  chassisController.setMaxVelocity(maxVel);
-  chassisController.turnAngle(angle);
-  chassisController.setMaxVelocity(200);
+  drive::chassisController.setMaxVelocity(maxVel);
+  drive::chassisController.turnAngle(angle);
+  drive::chassisController.setMaxVelocity(200);
 }

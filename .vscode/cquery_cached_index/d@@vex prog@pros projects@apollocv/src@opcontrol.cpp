@@ -1,7 +1,5 @@
 #include "main.h"
 
-using namespace okapi;
-
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -16,40 +14,25 @@ using namespace okapi;
  * task, not resume it from where it left off.
  */
 
-//ControllerButton abortBtn = controller[ControllerDigital::Y];
-
-void stop() { // there is no longer an abort button
-	abortPuncher();
-	abortDiff();
-	abortDrive();
-}
-
-void states() {
-	pros::lcd::print(1, "Drive state: %c | Drive temp: %i", getDriveState(), (int) driveR1.getTemperature());
-	pros::lcd::print(2, "Puncher state: %c | Puncher temp: %i", getPuncherState(), (int) puncher.getTemperature());
-	pros::lcd::print(3, "Puncher encoder: %i", (int) puncher.getPosition()); //pros::lcd::print(3, "Angle target: %i",(int) angleTarget);
-	pros::lcd::print(4, "Angle state: %c | Angle temp: %i", getAngleState(), (int) angleChanger.getTemperature());
-	pros::lcd::print(5, "Angle encoder: %i", (int) angleChanger.getPosition());
-	pros::lcd::print(6, "Diff state: %c | Diff Left temp: %i", getDiffState(), (int) diffLeft.getTemperature());
-	pros::lcd::print(7, "Diff right temp: %i", (int) diffRight.getTemperature());
-}
+// ControllerButton abortBtn = controller[ControllerDigital::Y];
 
 void opcontrol() {
-	pros::lcd::print(0, "Opcontrol");
-	while (true) {
-		states();
 
-		updateDrive();
-		updateDiff();
-		updatePuncher();
+  autonSelector();
 
-		/*if(abortBtn.changedToPressed()) {
-			stop();
-		}*/
+  drive::currState = drive::notRunning;
+  angler::currState = angler::notRunning;
+  puncher::currState = puncher::notRunning;
+  differential::currState = differential::notRunning;
 
-		driveAct();
-		diffAct();
-		puncherAct();
-		pros::delay(10);
-	}
+  initActTasks();
+
+  while (true) {
+    drive::update();
+    angler::update();
+    puncher::update();
+    differential::update();
+
+    pros::delay(10);
+  }
 }
