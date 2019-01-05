@@ -65,7 +65,7 @@ void updateDiff() {
     diffState = diffStopBall;
     stopBallTimer.getDt();
   } // if has ball ready and is loaded, turn off intake
-  if(diffState == diffStopBall && stopBallTimer.readDt() >= 50_ms) {
+  if(diffState == diffStopBall && stopBallTimer.readDt() >= 20_ms) {
     diffState = diffNotRunning;
   }
   // AUTOMATED SHIT GETS OVERWRITTEN BY USER?

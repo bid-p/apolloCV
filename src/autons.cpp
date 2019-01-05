@@ -8,7 +8,7 @@ void initProgSkills() {
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{22_in, 0_in, 0_deg}}, "B");
   profileController.generatePath(
-          {Point{0_in, 0_in, 0_deg}, Point{30_in, 0_in, 0_deg}}, "B2");
+          {Point{0_in, 0_in, 0_deg}, Point{33_in, 0_in, 0_deg}}, "B2");
 }
 
 Timer outtakeTimer;
@@ -18,9 +18,9 @@ void executeProgSkills() {
   profileController.setTarget("A", false);
   while(!hasBall());
   outtakeTimer.getDt();
-  while(outtakeTimer.readDt() <= 20_ms) {
-      diffLeft.moveVoltage(12000);
-      diffRight.moveVoltage(-12000);
+  while(outtakeTimer.readDt() <= 5_ms) {
+      diffLeft.moveVoltage(10000);
+      diffRight.moveVoltage(-10000);
   }
   profileController.waitUntilSettled();
   runIntake(0);
@@ -62,7 +62,7 @@ void executeProgSkills() {
     profileController.removePath("B");
     profileController.removePath("A1");
     profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{20_in, 0_in, 0_deg}}, "C");
+        {Point{0_in, 0_in, 0_deg}, Point{21_in, 0_in, 0_deg}}, "C");
     profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{60_in, 0_in, 0_deg}}, "D");
 
@@ -86,7 +86,7 @@ void executeProgSkills() {
 
       runIntake(200); // start intake to aid in climbing
 
-      chassisController.moveDistance(70_in); // climb platform
+      chassisController.moveDistance(73_in); // climb platform
 
       runIntake(0); // stop intake
 
@@ -232,7 +232,7 @@ void executeRedFar1() {
   profileController.waitUntilSettled();
   runIntake(0);
 
-    turnAngleVel(-75_deg, 150);
+    turnAngleVel(-78_deg, 150);
 
     runFarMacro();
 
