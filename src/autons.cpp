@@ -52,7 +52,7 @@ void executeProgSkills() {
 
 
 
-    turnAngleVel(-33_deg, 100);
+    turnAngleVel(-35_deg, 100);
 
     puncher.moveVoltage(12000);
     pros::delay(800);
@@ -68,7 +68,7 @@ void executeProgSkills() {
 
         pros::delay(1000);
 
-      turnAngleVel(33_deg, 100);
+      turnAngleVel(35_deg, 100);
 
       profileController.setTarget("C", true); // Reverse from cap 2
       profileController.waitUntilSettled();
@@ -147,7 +147,7 @@ void executeRedNear1() {
     chassisController.setMaxVelocity(200); // return drive to full speed
 
 chassisController.setMaxVelocity(200);
-    turnAngleVel(-33_deg, 100);
+    turnAngleVel(-35_deg, 100);
 
     puncher.moveVoltage(12000);
     pros::delay(800);
@@ -232,7 +232,7 @@ void executeRedFar1() {
   profileController.waitUntilSettled();
   runIntake(0);
 
-    turnAngleVel(-78_deg, 150);
+    turnAngleVel(-80_deg, 150);
 
     runFarMacro();
 
@@ -271,7 +271,7 @@ void initBlueNear1() {
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{60_in, 0_in, 0_deg}}, "A1");
   profileController.generatePath(
-      {Point{0_in, 0_in, 0_deg}, Point{25_in, 0_in, 0_deg}}, "B");
+      {Point{0_in, 0_in, 0_deg}, Point{27_in, 0_in, 0_deg}}, "B");
   profileController.generatePath(
           {Point{0_in, 0_in, 0_deg}, Point{30_in, 0_in, 0_deg}}, "B2");
 
@@ -292,13 +292,13 @@ void executeBlueNear1() {
   profileController.setTarget("A", true);
   profileController.waitUntilSettled();
 
-  turnAngleVel(92_deg, 100);
+  turnAngleVel(90_deg, 100);
 
   runNearMacro();
 
   pros::delay(500);
 
- turnAngleVel(7_deg, 150);// turn to face low flag
+ turnAngleVel(9_deg, 150);// turn to face low flag
  runIntake(200);
 
   profileController.setTarget("A1", false);
@@ -317,7 +317,7 @@ void executeBlueNear1() {
     chassisController.setMaxVelocity(200); // return drive to full speed
 
 chassisController.setMaxVelocity(200);
-    turnAngleVel(33_deg, 100);
+    turnAngleVel(44_deg, 100);
 
     puncher.moveVoltage(12000);
     pros::delay(800);
@@ -381,10 +381,52 @@ profileController.removePath("A1");
 }
 
 void initBlueFar1() {
-
+  profileController.generatePath(
+      {Point{0_in, 0_in, 0_deg}, Point{45_in, 0_in, 0_deg}}, "A");
+  profileController.generatePath(
+      {Point{0_in, 0_in, 0_deg}, Point{10_in, 0_in, 0_deg}}, "A1");
+  profileController.generatePath(
+      {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "B");
 }
 
 void executeBlueFar1() {
+  runIntake(200);
+  profileController.setTarget("A", false);
+  while(!hasBall());
+  outtakeTimer.getDt();
+  while(outtakeTimer.readDt() <= 20_ms) {
+      diffLeft.moveVoltage(12000);
+      diffRight.moveVoltage(-12000);
+  }
+  profileController.waitUntilSettled();
+  runIntake(0);
 
+    turnAngleVel(78_deg, 150);
 
+    runFarMacro();
+
+    turnAngleVel(180_deg, 150);
+    chassisController.setMaxVelocity(100); // slow drive
+    runIntake(-150);
+
+    profileController.setTarget("B", false); // Run into cap 2 and flip
+    profileController.waitUntilSettled();
+
+    profileController.setTarget("B", true); // Reverse from cap 2
+    profileController.waitUntilSettled();
+
+    chassisController.setMaxVelocity(200); // return drive to full speed
+
+    runIntake(0); // stop intake
+
+    turnAngleVel(-90_deg, 100); // turn to be parallel with field perimeter
+    runIntake(200);
+    profileController.setTarget("A1", false); // Reverse to align with platforms
+    profileController.waitUntilSettled();
+
+    turnAngleVel(-90_deg, 100); // face parking platform
+
+    chassisController.moveDistance(30_in); // climb platform
+
+    runIntake(0); // stop intake
 }

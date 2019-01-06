@@ -139,7 +139,7 @@ void updatePuncher() {
     //angleState = angleUp;
   }
   if (angleFarHighBtn.changedToPressed()) {
-    angleTarget = 95;
+    angleTarget = 60;
     angleState = angleHold;
   }
   if(angleFarMidBtn.changedToPressed()) {
@@ -166,8 +166,8 @@ void updatePuncher() {
   }
   if(macroFarBtn.isPressed()) {
     macroState = macroReady;
-    macroHighTarget = 80;
-    macroMidTarget = 180;
+    macroHighTarget = 70;
+    macroMidTarget = 165;
   }
 }
 
