@@ -167,7 +167,7 @@ void updatePuncher() {
   if(macroFarBtn.isPressed()) {
     macroState = macroReady;
     macroHighTarget = 70;
-    macroMidTarget = 165;
+    macroMidTarget = 145;
   }
 }
 

@@ -15,9 +15,9 @@ void autonomous() {
  //executeRedNear1(); // column , 1 middle flag, 2 caps
  //executeRedNear2();// column, park, 1 cap
    //executeRedFar1(); // two flags, two caps, park
-  executeBlueNear1(); // column, 1 middle flag, 2 caps
+  //executeBlueNear1(); // column, 1 middle flag, 2 caps
   //executeBlueNear2(); //column, park, 1 cap
   // executeBlueFar1(); // two flags, two caps, park
-   //executeProgSkills(); // column with two caps and center park (possible middle flag)
+   executeProgSkills(); // column with two caps and center park (possible middle flag)
 }
  

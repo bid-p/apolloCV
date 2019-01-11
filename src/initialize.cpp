@@ -11,11 +11,11 @@ void initialize() {
   //initRedNear1();
   //initRedNear2();
   // initRedFar1();
-   initBlueNear1();
+   //initBlueNear1();
    //initBlueNear2();
   // initBlueFar1();
 
-    //initProgSkills();
+    initProgSkills();
 }
 
 /**

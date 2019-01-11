@@ -4,12 +4,12 @@ void initProgSkills() {
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{45_in, 0_in, 0_deg}}, "A");
   profileController.generatePath(
-      {Point{0_in, 0_in, 0_deg}, Point{55_in, 0_in, 0_deg}}, "A1");
+      {Point{0_in, 0_in, 0_deg}, Point{30_in, -10_in, 0_deg}}, "A1");
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{22_in, 0_in, 0_deg}}, "B");
   profileController.generatePath(
           {Point{0_in, 0_in, 0_deg}, Point{33_in, 0_in, 0_deg}}, "B2");
-}
+
 
 Timer outtakeTimer;
 
@@ -32,10 +32,15 @@ void executeProgSkills() {
 
   runNearMacro();
 
-  pros::delay(700);
+    puncher.moveVoltage(12000);
+    pros::delay(500);
+    puncher.moveVoltage(0);
+  pros::delay(200);
 
- turnAngleVel(-9_deg, 150);// turn to face low flag
+ // turnAngleVel(-9_deg, 150);// turn to face low flag
  runIntake(200);
+
+  profileController.removePath("A");
 
   profileController.setTarget("A1", false);
   profileController.waitUntilSettled();
@@ -58,16 +63,21 @@ void executeProgSkills() {
     pros::delay(800);
     puncher.moveVoltage(0);
 
-    profileController.removePath("A");
     profileController.removePath("B");
     profileController.removePath("A1");
+    profileController.removePath("B2");
     profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{21_in, 0_in, 0_deg}}, "C");
+    profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{42_in, 15_in, 0_deg}}, "D1");
     profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{60_in, 0_in, 0_deg}}, "D");
 
         pros::delay(1000);
-
+  profileController.setTarget("D1", false);
+  profileController.waitUntilSettled();
+  profileController.setTarget("D1", true);
+  profileController.waitUntilSettled();
       turnAngleVel(35_deg, 100);
 
       profileController.setTarget("C", true); // Reverse from cap 2
