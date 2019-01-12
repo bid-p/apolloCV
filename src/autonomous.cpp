@@ -60,4 +60,6 @@ void autonomous() {
     executeBlueFar2();
     break;
   }
+
+  executeProgSkills();
 }

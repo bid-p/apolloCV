@@ -39,12 +39,12 @@ void tempcheck(){
 	if (angleChanger.getTemperature() >= 50){
 		controller.rumble(".. .. ..");
 	}
-	if (driveR1.getTemperature() >= 50){
-		controller.rumble(".. .. ..");
-	}
-	if (puncher.getTemperature() >= 50){
-		controller.rumble(".. .. ..");
-	}
+	// if (driveR1.getTemperature() >= 50){
+	// 	controller.rumble(".. .. ..");
+	// }
+	// if (puncher.getTemperature() >= 50){
+	// 	controller.rumble(".. .. ..");
+	// }
 	if (diffLeft.getTemperature() >= 50){
 		controller.rumble(".. .. ..");
 	}
@@ -59,11 +59,12 @@ void opcontrol() {
 		updateDiff();
 		updatePuncher();
 
-		tempcheck();
+		//tempcheck();
 
 		driveAct();
 		diffAct();
 		puncherAct();
+		
 		pros::delay(10);
 	}
 }
