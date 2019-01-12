@@ -1,7 +1,7 @@
 #include "main.h"
 
 LV_IMG_DECLARE(fieldResizedIMG);
-// LV_IMG_DECLARE(redNear1);
+LV_IMG_DECLARE(redNearIMG);
 
 bool readyBtnExists = false;
 
@@ -196,6 +196,8 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     autonRoutine = blueFar2;
   }
+
+  lv_img_set_src(fieldPic, &redNearIMG);
 
   lv_btn_set_state(btn, LV_BTN_STATE_TGL_REL); /*Set toggled state*/
 

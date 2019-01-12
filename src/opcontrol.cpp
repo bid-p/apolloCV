@@ -18,12 +18,13 @@
 
 void opcontrol() {
 
-  autonSelector();
+  // autonSelector();
 
   drive::currState = drive::notRunning;
   angler::currState = angler::notRunning;
   puncher::currState = puncher::notRunning;
   differential::currState = differential::notRunning;
+  macro::currMacroState = macro::none;
 
   initActTasks();
 
@@ -32,6 +33,7 @@ void opcontrol() {
     angler::update();
     puncher::update();
     differential::update();
+    macro::update();
 
     pros::delay(10);
   }

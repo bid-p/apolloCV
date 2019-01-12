@@ -22,6 +22,8 @@ void autonomous() {
   // executeProgSkills(); // column with two caps and center park
 
   switch (autonRoutine) {
+  case notSelected:
+    break;
   case progSkills:
     executeProgSkills();
     break;

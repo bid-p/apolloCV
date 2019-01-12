@@ -2,36 +2,35 @@
 
 using namespace okapi;
 
-ControllerButton angleFar1MidBtn = controller[ControllerDigital::left];
-ControllerButton angleFar1HighBtn = controller[ControllerDigital::right];
-ControllerButton angleCloseMidBtn = controller[ControllerDigital::down];
-ControllerButton angleCloseHighBtn = controller[ControllerDigital::up];
-ControllerButton angleFar2MidBtn = controller[ControllerDigital::B];
+ControllerButton angleCloseHigh = controller[ControllerDigital::down];
+ControllerButton angleMidHighBtn = controller[ControllerDigital::up];
+ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
+ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 
 namespace angler {
 
-tAnglerStates currState;
+int nearTarget;
+int farTarget;
 
-Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::green);
+anglerStates currState;
+
+Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::blue);
 
 AsyncPosIntegratedController angleController =
     AsyncControllerFactory::posIntegrated(angler);
 
 void update() {
-  if (angleCloseMidBtn.changedToPressed()) {
-    currState = closeMid; // 350
+  if (angleCloseHigh.changedToPressed()) {
+    currState = closeHigh; // 350
   }
-  if (angleCloseHighBtn.changedToPressed()) {
-    currState = closeHigh; // 0
+  if (angleMidHighBtn.changedToPressed()) {
+    currState = midHigh; // 0
   }
-  if (angleFar1MidBtn.changedToPressed()) {
-    currState = far1Mid; // 305
+  if (angleFarMidBtn.changedToPressed()) {
+    currState = farMid; // 305
   }
-  if (angleFar1HighBtn.changedToPressed()) {
-    currState = far1High; // 120
-  }
-  if (angleFar2MidBtn.changedToPressed()) {
-    currState = far2Mid; // 245
+  if (angleFarHighBtn.changedToPressed()) {
+    currState = farHigh; // 120
   }
 }
 
@@ -43,25 +42,24 @@ void act(void *) {
       angler.setBrakeMode(AbstractMotor::brakeMode::coast);
       angler.moveVoltage(0);
       break;
-    case closeMid:
-      angleController.setTarget(350);
+    case closeHigh:
+      angleController.setTarget(25);
       angleController.flipDisable(false);
       break;
-    case closeHigh:
+    case midHigh:
       angleController.setTarget(0);
       angleController.flipDisable(false);
       break;
-    case far1Mid:
-      angleController.setTarget(305);
+    case farMid:
+      angleController.setTarget(200);
       angleController.flipDisable(false);
       break;
-    case far1High:
-      angleController.setTarget(120);
+    case farHigh:
+      angleController.setTarget(95);
       angleController.flipDisable(false);
       break;
-    case far2Mid:
-      angleController.setTarget(245);
-      angleController.flipDisable(false);
+    case autoAim:
+      // nothing cuz theres no vision code yet lul
       break;
     }
     pros::delay(10);

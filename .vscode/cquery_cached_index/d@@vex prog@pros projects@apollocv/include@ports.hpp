@@ -18,3 +18,11 @@ const char SPORT_INTAKE_L = 'F';
 const char SPORT_INTAKE_R = 'G';
 
 const char SPORT_PUNCHERB = 'H';
+
+/*----------------------------------------------------------------------------------------------*/
+
+const int SPORT_VISION = 1;
+
+/*----------------------------------------------------------------------------------------------*/
+
+const int SPORT_LINECOCK = 'A';

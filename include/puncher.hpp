@@ -6,13 +6,13 @@ using namespace okapi;
 
 namespace puncher {
 
-typedef enum states {
+enum puncherStates {
   notRunning,
   shooting,
   cocking,
-} tPuncherStates;
+};
 
-extern tPuncherStates currState;
+extern puncherStates currState;
 
 extern char stateIndicator;
 
@@ -22,10 +22,14 @@ extern AsyncPosIntegratedController puncherController;
 
 extern pros::ADILineSensor lineP;
 
+extern pros::ADILineSensor lineCock;
+
 extern bool isLoaded();
 
 extern void update();
 extern void act(void *);
+
+extern void puncherMacro();
 
 } // namespace puncher
 

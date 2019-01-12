@@ -7,16 +7,16 @@ using namespace okapi;
 
 namespace differential {
 
-typedef enum states {
+enum differentialStates {
   notRunning,
   liftHold,
   liftUp,
   liftDown,
   intakeIn,
-  intakeOut,
-} tDifferentialStates;
+  intakeOut
+};
 
-extern tDifferentialStates currState;
+extern differentialStates currState;
 
 extern okapi::Motor diffLeft, diffRight;
 

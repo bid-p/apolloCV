@@ -48,6 +48,7 @@
 #include "display.hpp"
 #include "drive.hpp"
 #include "init.hpp"
+#include "macros.hpp"
 #include "okapi/api.hpp"
 #include "ports.hpp"
 #include "puncher.hpp"

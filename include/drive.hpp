@@ -6,12 +6,12 @@ using namespace okapi;
 
 namespace drive {
 
-typedef enum states {
+enum driveStates {
   notRunning,
   running,
-} tDriveStates;
+};
 
-extern tDriveStates currState;
+extern driveStates currState;
 
 extern char stateIndicator;
 

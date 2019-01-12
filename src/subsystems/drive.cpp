@@ -4,7 +4,7 @@ using namespace okapi;
 
 namespace drive {
 
-tDriveStates currState;
+driveStates currState;
 
 char stateIndicator;
 

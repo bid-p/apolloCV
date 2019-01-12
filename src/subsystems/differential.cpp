@@ -9,7 +9,7 @@ ControllerButton intakeOutBtn = controller[ControllerDigital::R2];
 
 namespace differential {
 
-tDifferentialStates currState;
+differentialStates currState;
 
 Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
 Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
@@ -86,6 +86,7 @@ void act(void *) {
       currState = notRunning;
       break;
     }
+
     pros::delay(10);
   }
 }

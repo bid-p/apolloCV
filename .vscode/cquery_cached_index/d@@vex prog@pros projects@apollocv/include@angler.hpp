@@ -6,16 +6,15 @@ using namespace okapi;
 
 namespace angler {
 
-typedef enum states {
+enum anglerStates {
   notRunning,
-  closeMid,
-  closeHigh,
-  far1Mid,
-  far1High,
-  far2Mid,
-} tAnglerStates;
+  toTarget,
+  brake,
+};
 
-extern tAnglerStates currState;
+extern anglerStates currState;
+
+extern int target;
 
 extern Motor angler;
 
