@@ -162,11 +162,11 @@ void updatePuncher() {
   if(puncherCockingBtn.isPressed() && puncherOnBtn.isPressed()) {
     macroState = macroReady;
     macroHighTarget = 0;
-    macroMidTarget = 125;
+    macroMidTarget = 120;
   }
   if(macroFarBtn.isPressed()) {
     macroState = macroReady;
-    macroHighTarget = 70;
+    macroHighTarget = 50;
     macroMidTarget = 145;
   }
 }
@@ -225,7 +225,7 @@ Timer timeOutMacro;
 void runNearMacro() {
   macroState = macroReady;
   timeOutMacro.getDt();
-  macroHighTarget = 30;
+  macroHighTarget = 0;
   macroMidTarget = 125;
   while(macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
     updateMacro();
@@ -239,8 +239,8 @@ void runNearMacro() {
 void runFarMacro() {
   macroState = macroReady;
   timeOutMacro.getDt();
-  macroHighTarget = 70;
-  macroMidTarget = 180;
+  macroHighTarget = 55;//70
+  macroMidTarget = 160;//180
   while(macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
     updateMacro();
 
