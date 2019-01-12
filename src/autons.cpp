@@ -1,5 +1,7 @@
 #include "main.h"
 
+autonRoutines autonRoutine = notSelected;
+
 void initProgSkills() {
   profileController.generatePath(
       {Point{0_in, 0_in, 0_deg}, Point{45_in, 0_in, 0_deg}}, "A");
@@ -273,6 +275,9 @@ void executeRedFar1() {
 
 }
 
+ void initRedFar2(){};
+ void executeRedFar2(){};
+
 
 
 void initBlueNear1() {
@@ -440,3 +445,6 @@ void executeBlueFar1() {
 
     runIntake(0); // stop intake
 }
+
+ void initBlueFar2(){};
+ void executeBlueFar2(){};

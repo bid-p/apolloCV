@@ -35,18 +35,31 @@ void states() {
 	pros::lcd::print(7, "Macro state: %c", getMacroState());
 }
 
+void tempcheck(){
+	if (angleChanger.getTemperature() >= 50){
+		controller.rumble(".. .. ..");
+	}
+	if (driveR1.getTemperature() >= 50){
+		controller.rumble(".. .. ..");
+	}
+	if (puncher.getTemperature() >= 50){
+		controller.rumble(".. .. ..");
+	}
+	if (diffLeft.getTemperature() >= 50){
+		controller.rumble(".. .. ..");
+	}
+}
+
 void opcontrol() {
-	pros::lcd::print(0, "Opcontrol");
+	// pros::lcd::print(0, "Opcontrol");
 	while (true) {
-		states();
+		// states();
 
 		updateDrive();
 		updateDiff();
 		updatePuncher();
 
-		/*if(abortBtn.changedToPressed()) {
-			stop();
-		}*/
+		tempcheck();
 
 		driveAct();
 		diffAct();
