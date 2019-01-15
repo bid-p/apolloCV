@@ -7,9 +7,9 @@ using namespace okapi;
 namespace angler {
 
 enum anglerStates {
-  notRunning,
-  toTarget,
-  brake,
+  notRunning = 'x',
+  toTarget = 't',
+  brake = 'b'
 };
 
 extern anglerStates currState;

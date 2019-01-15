@@ -7,13 +7,13 @@ using namespace okapi;
 namespace macro {
 
 enum macroStates {
-  none,
-  singleShot,
-  doubleShot,
-  anglerCH,
-  anglerMH,
-  anglerFM,
-  anglerFH
+  none = 'x',
+  singleShot = 's',
+  doubleShot = 'd',
+  anglerCH = '1',
+  anglerMH = '2',
+  anglerFM = '3',
+  anglerFH = '4'
 };
 
 extern macroStates currMacroState;

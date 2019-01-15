@@ -8,12 +8,13 @@ using namespace okapi;
 namespace differential {
 
 enum differentialStates {
-  notRunning,
-  liftHold,
-  liftUp,
-  liftDown,
-  intakeIn,
-  intakeOut
+  notRunning = 'x',
+  liftHold = 'h',
+  liftUp = '1',
+  liftDown = '2',
+  intakeIn = 'i',
+  intakeOut = 'o',
+  tempNigga = 't',
 };
 
 extern differentialStates currState;

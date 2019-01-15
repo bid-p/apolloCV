@@ -7,9 +7,9 @@ using namespace okapi;
 namespace puncher {
 
 enum puncherStates {
-  notRunning,
-  shooting,
-  cocking,
+  notRunning = 'x',
+  shooting = 's',
+  cocking = 'c'
 };
 
 extern puncherStates currState;

@@ -9,8 +9,8 @@ namespace drive
 
 enum driveStates
 {
-  notRunning,
-  running,
+  notRunning = 'x',
+  running = 'r',
 };
 
 extern driveStates currState;

@@ -16,8 +16,21 @@
 
 // ControllerButton abortBtn = controller[ControllerDigital::Y];
 
+void states() {
+	pros::lcd::print(1, "Drive state: %c | Drive temp: %i", drive::currState, (int) drive::driveR1.getTemperature());
+	pros::lcd::print(2, "Puncher state: %c | Puncher temp: %i", puncher::currState, (int) puncher::puncher.getTemperature());
+	pros::lcd::print(3, "Puncher encoder: %i", (int) puncher::puncher.getPosition()); 
+  pros::lcd::print(3, "Angle target: %i",(int) angler::target);
+	pros::lcd::print(4, "Angle state: %c | Angle temp: %i", angler::currState, (int) angler::angler.getTemperature());
+	pros::lcd::print(5, "Angle encoder: %i", (int) angler::angler.getPosition());
+	pros::lcd::print(6, "Diff state: %c | Diff Left temp: %i", differential::currState, (int) differential::diffLeft.getTemperature());
+	pros::lcd::print(7, "Macro state: %c", macro::currMacroState);
+}
+
 void opcontrol()
 {
+
+  pros::lcd::initialize();
 
   // autonSelector();
 
@@ -29,6 +42,8 @@ void opcontrol()
     differential::update();
     macro::update();
 
-    pros::delay(10);
+    states();
+
+    pros::delay(5);
   }
 }
