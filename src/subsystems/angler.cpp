@@ -7,7 +7,8 @@ using namespace okapi;
 // ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
 // ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 
-namespace angler {
+namespace angler
+{
 
 anglerStates currState;
 
@@ -18,7 +19,8 @@ Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::blue);
 // AsyncPosIntegratedController angleController =
 //     AsyncControllerFactory::posIntegrated(angler);
 
-void update() {
+void update()
+{
   // if (angleCloseHigh.changedToPressed()) {
   //   currState = closeHigh; // 350
   // }
@@ -33,9 +35,12 @@ void update() {
   // }
 }
 
-void act(void *) {
-  while (true) {
-    switch (currState) {
+void act(void *)
+{
+  while (true)
+  {
+    switch (currState)
+    {
     case notRunning:
       angler.setBrakeMode(AbstractMotor::brakeMode::coast);
       angler.moveVoltage(0);
@@ -46,7 +51,7 @@ void act(void *) {
       currState = brake;
       break;
     case brake:
-      angler.setBrakeMode(AbstractMotor::brakeMode::coast);
+      angler.setBrakeMode(AbstractMotor::brakeMode::brake);
       angler.moveVoltage(0);
       break;
     }

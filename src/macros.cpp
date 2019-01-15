@@ -7,28 +7,37 @@ ControllerButton angleMidHighBtn = controller[ControllerDigital::up];
 ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
 ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 
-namespace macro {
+namespace macro
+{
 
 macroStates currMacroState;
 
-void update() {
-  if (angleCloseHigh.changedToPressed()) {
+void update()
+{
+  if (angleCloseHigh.changedToPressed())
+  {
     currMacroState = anglerCH; // 350
   }
-  if (angleMidHighBtn.changedToPressed()) {
+  if (angleMidHighBtn.changedToPressed())
+  {
     currMacroState = anglerMH; // 0
   }
-  if (angleFarMidBtn.changedToPressed()) {
+  if (angleFarMidBtn.changedToPressed())
+  {
     currMacroState = anglerFM; // 305
   }
-  if (angleFarHighBtn.changedToPressed()) {
+  if (angleFarHighBtn.changedToPressed())
+  {
     currMacroState = anglerFH; // 120
   }
 }
 
-void act(void *) {
-  while (true) {
-    switch (currMacroState) {
+void act(void *)
+{
+  while (true)
+  {
+    switch (currMacroState)
+    {
     case none:
       break;
     case singleShot:
@@ -40,7 +49,8 @@ void act(void *) {
 
       puncher::currState = puncher::cocking;
 
-      while (!puncher::isLoaded()) {
+      while (!puncher::isLoaded())
+      {
         pros::delay(10);
       }
 
@@ -57,9 +67,10 @@ void act(void *) {
       // switches out of cocking when sensor value achieved
 
       differential::currState = differential::intakeIn;
-      // should automatically stop when ball loads into puncherMacro
+      // should automatically stop when ball loads into puncher
 
-      while (!puncher::isLoaded()) {
+      while (!puncher::isLoaded())
+      {
         pros::delay(10);
       } // waits for puncher to load
 
@@ -76,7 +87,8 @@ void act(void *) {
 
       puncher::currState = puncher::cocking;
 
-      while (!puncher::isLoaded()) {
+      while (!puncher::isLoaded())
+      {
         pros::delay(10);
       }
 

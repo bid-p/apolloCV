@@ -6,7 +6,18 @@
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() { autonSelector(); }
+void initialize()
+{
+    autonSelector();
+
+    drive::currState = drive::notRunning;
+    angler::currState = angler::notRunning;
+    puncher::currState = puncher::notRunning;
+    differential::currState = differential::notRunning;
+    macro::currMacroState = macro::none;
+
+    initActTasks();
+}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or

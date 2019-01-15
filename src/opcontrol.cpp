@@ -16,19 +16,13 @@
 
 // ControllerButton abortBtn = controller[ControllerDigital::Y];
 
-void opcontrol() {
+void opcontrol()
+{
 
   // autonSelector();
 
-  drive::currState = drive::notRunning;
-  angler::currState = angler::notRunning;
-  puncher::currState = puncher::notRunning;
-  differential::currState = differential::notRunning;
-  macro::currMacroState = macro::none;
-
-  initActTasks();
-
-  while (true) {
+  while (true)
+  {
     drive::update();
     angler::update();
     puncher::update();
