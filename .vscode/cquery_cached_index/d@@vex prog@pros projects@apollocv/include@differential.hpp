@@ -8,7 +8,6 @@ extern char getDiffState();
 extern void abortDiff();
 extern void updateDiff();
 extern void diffAct();
-extern void loadBall();
 
 extern void runIntake(int speed);
 

@@ -31,40 +31,25 @@ void states() {
 	pros::lcd::print(4, "Angle state: %c | Angle temp: %i", getAngleState(), (int) angleChanger.getTemperature());
 	pros::lcd::print(5, "Angle encoder: %i", (int) angleChanger.getPosition());
 	pros::lcd::print(6, "Diff state: %c | Diff Left temp: %i", getDiffState(), (int) diffLeft.getTemperature());
-	//pros::lcd::print(7, "Diff right temp: %i", (int) diffRight.getTemperature()); // this is redundant i think
-	pros::lcd::print(7, "Macro state: %c", getMacroState());
-}
-
-void tempcheck(){
-	if (angleChanger.getTemperature() >= 50){
-		controller.rumble(".. .. ..");
-	}
-	// if (driveR1.getTemperature() >= 50){
-	// 	controller.rumble(".. .. ..");
-	// }
-	// if (puncher.getTemperature() >= 50){
-	// 	controller.rumble(".. .. ..");
-	// }
-	if (diffLeft.getTemperature() >= 50){
-		controller.rumble(".. .. ..");
-	}
+	pros::lcd::print(7, "Diff right temp: %i", (int) diffRight.getTemperature());
 }
 
 void opcontrol() {
-	// pros::lcd::print(0, "Opcontrol");
+	pros::lcd::print(0, "Opcontrol");
 	while (true) {
-		// states();
+		states();
 
 		updateDrive();
 		updateDiff();
 		updatePuncher();
 
-		//tempcheck();
+		/*if(abortBtn.changedToPressed()) {
+			stop();
+		}*/
 
 		driveAct();
 		diffAct();
 		puncherAct();
-		
 		pros::delay(10);
 	}
 }

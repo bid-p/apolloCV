@@ -4,6 +4,9 @@
 extern okapi::Motor puncher;
 extern okapi::Motor angleChanger;
 extern okapi::AsyncPosIntegratedController angleController;
+
+extern pros::ADILineSensor lineCock;
+
 extern double angleTarget;
 extern char getPuncherState();
 extern char getAngleState();
