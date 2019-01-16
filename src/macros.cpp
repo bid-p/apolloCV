@@ -7,28 +7,41 @@ ControllerButton angleMidHighBtn = controller[ControllerDigital::up];
 ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
 ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 
+ControllerButton doubleShotNearBtn1 = controller[ControllerDigital::L1];
+ControllerButton doubleShotNearBtn2 = controller[ControllerDigital::L2];
+
+ControllerButton doubleShotFarBtn = controller[ControllerDigital::L2];
+
 namespace macro
 {
 
-macroStates currMacroState;
+macroStates currState;
 
 void update()
 {
   if (angleCloseHigh.changedToPressed())
   {
-    currMacroState = anglerCH; // 350
+    currState = anglerCH; // 350
   }
   if (angleMidHighBtn.changedToPressed())
   {
-    currMacroState = anglerMH; // 0
+    currState = anglerMH; // 0
   }
   if (angleFarMidBtn.changedToPressed())
   {
-    currMacroState = anglerFM; // 305
+    currState = anglerFM; // 305
   }
   if (angleFarHighBtn.changedToPressed())
   {
-    currMacroState = anglerFH; // 120
+    currState = anglerFH; // 120
+  }
+  if (doubleShotNearBtn1.isPressed() && doubleShotNearBtn2.isPressed())
+  {
+    currState = doubleShotNear;
+  }
+  if (doubleShotFarBtn.isPressed())
+  {
+    currState = doubleShotFar;
   }
 }
 
@@ -36,7 +49,7 @@ void act(void *)
 {
   while (true)
   {
-    switch (currMacroState)
+    switch (currState)
     {
     case none:
       break;
@@ -58,13 +71,14 @@ void act(void *)
 
       puncher::currState = puncher::shooting;
       break;
-    case doubleShot:
-      angler::target = 15;
-      angler::currState = angler::toTarget;
-      // will switch out of toTarget automatically when target reached
+    case doubleShotNear:
 
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
+
+      angler::target = 0;
+      angler::currState = angler::toTarget;
+      // will switch out of toTarget automatically when target reached
 
       differential::currState = differential::intakeIn;
       // should automatically stop when ball loads into puncher
@@ -79,15 +93,16 @@ void act(void *)
       puncher::currState = puncher::shooting;
       waitUntilSettled(puncher::puncher);
 
-      angler::target = 125;
+      puncher::currState = puncher::cocking;
+
+      angler::target = 120;
       angler::currState = angler::toTarget;
 
       differential::currState = differential::intakeIn;
       // should automatically stop when ball loads into puncherMacro
 
-      puncher::currState = puncher::cocking;
-
       while (!puncher::isLoaded())
+
       {
         pros::delay(10);
       }
@@ -95,6 +110,50 @@ void act(void *)
       waitUntilSettled(angler::angler);
 
       puncher::currState = puncher::shooting;
+
+      macro::currState = none;
+      break;
+    case doubleShotFar:
+
+      puncher::currState = puncher::cocking;
+      // switches out of cocking when sensor value achieved
+
+      angler::target = 0;
+      angler::currState = angler::toTarget;
+      // will switch out of toTarget automatically when target reached
+
+      differential::currState = differential::intakeIn;
+      // should automatically stop when ball loads into puncher
+
+      while (!puncher::isLoaded())
+      {
+        pros::delay(10);
+      } // waits for puncher to load
+
+      waitUntilSettled(angler::angler); // waits until angler to stop
+
+      puncher::currState = puncher::shooting;
+      waitUntilSettled(puncher::puncher);
+
+      puncher::currState = puncher::cocking;
+
+      angler::target = 120;
+      angler::currState = angler::toTarget;
+
+      differential::currState = differential::intakeIn;
+      // should automatically stop when ball loads into puncherMacro
+
+      while (!puncher::isLoaded())
+
+      {
+        pros::delay(10);
+      }
+
+      waitUntilSettled(angler::angler);
+
+      puncher::currState = puncher::shooting;
+
+      macro::currState = none;
       break;
     case anglerCH:
       angler::target = 25;
@@ -113,8 +172,7 @@ void act(void *)
       angler::currState = angler::toTarget;
       break;
     }
-    pros::delay(10);
-    currMacroState = none;
+    pros::delay(5);
   }
 }
 

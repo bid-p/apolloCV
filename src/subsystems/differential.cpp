@@ -30,15 +30,15 @@ bool hasBall()
 
 void update()
 {
-  if (puncher::isLoaded())
-  {
-    printf("loaded\n");
-  }
+  // if (puncher::isLoaded())
+  // {
+  //   printf("loaded\n");
+  // }
 
-  if (differential::hasBall())
-  {
-    printf("has ball\n");
-  }
+  // if (differential::hasBall())
+  // {
+  //   printf("has ball\n");
+  // }
 
   // AUTOMATED CHECKERS
   if (currState == intakeIn && !puncher::isLoaded())
@@ -54,7 +54,8 @@ void update()
     currState = tempNigga;
     timerTempNigga.getDt();
   } // if has ball ready and is loaded, turn off intake
-  if(currState == tempNigga && timerTempNigga.getDt() <= 30_ms) {
+  if (currState == tempNigga && timerTempNigga.getDt() <= 45_ms)
+  {
     currState = notRunning;
   }
 
@@ -88,6 +89,8 @@ void act(void *)
     switch (currState)
     {
     case notRunning:
+      diffLeft.setBrakeMode(AbstractMotor::brakeMode::coast);
+      diffRight.setBrakeMode(AbstractMotor::brakeMode::coast);
       diffLeft.moveVoltage(0);
       diffRight.moveVoltage(0);
       break;
@@ -102,8 +105,8 @@ void act(void *)
       currState = notRunning;
       break;
     case intakeIn:
-      diffLeft.moveVelocity(-175);
-      diffRight.moveVelocity(175);
+      diffLeft.moveVelocity(-200);
+      diffRight.moveVelocity(200);
       break;
     case intakeOut:
       diffLeft.moveVelocity(150);
@@ -111,9 +114,10 @@ void act(void *)
       currState = notRunning;
       break;
     case liftHold:
-      diffLeft.moveVoltage(1500);
-      diffRight.moveVelocity(1500);
-      currState = notRunning;
+      // diffLeft.setBrakeMode(AbstractMotor::brakeMode::hold);
+      // diffRight.setBrakeMode(AbstractMotor::brakeMode::hold);
+      diffLeft.moveVoltage(0);
+      diffRight.moveVoltage(0);
       break;
     case tempNigga:
       diffLeft.moveVelocity(200);

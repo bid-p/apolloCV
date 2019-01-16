@@ -10,7 +10,7 @@ namespace puncher
 
 puncherStates currState;
 
-Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::green);
+Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::red);
 
 // AsyncPosIntegratedController puncherController =
 //     AsyncControllerFactory::posIntegrated(puncher);
@@ -39,15 +39,15 @@ bool isLoaded()
 
 void update()
 {
-  if (puncherShootBtn.isPressed())
+  if (puncherShootBtn.isPressed() && !puncherCockingBtn.isPressed())
   {
     currState = shooting;
   }
-  if (puncherCockingBtn.changedToPressed())
-  {
-    puncher.tarePosition(); // puncher has to be reset before cocked
-    currState = cocking;
-  }
+  // if (puncherCockingBtn.changedToPressed())
+  // {
+  //   puncher.tarePosition(); // puncher has to be reset before cocked
+  //   currState = cocking;
+  // }
 }
 
 void act(void *)
@@ -61,10 +61,9 @@ void act(void *)
       puncher.moveVoltage(0);
       break;
     case shooting:
-      // puncher.moveVoltage(12000);
-      puncher.moveRelative(360, 200);
+      puncher.moveRelative(360, 100);
       waitUntilSettled(puncher);
-      currState = notRunning;
+      currState = cocking;
       break;
     case cocking:
       if (!isCocked())
@@ -74,6 +73,7 @@ void act(void *)
       else
       {
         puncher.moveVoltage(0);
+        currState = notRunning;
       }
       break;
     }

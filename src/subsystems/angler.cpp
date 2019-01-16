@@ -55,7 +55,7 @@ void act(void *)
       angler.moveVoltage(0);
       break;
     }
-    pros::delay(10);
+    pros::delay(5);
   }
 }
 

@@ -14,7 +14,7 @@ void initialize()
     angler::currState = angler::notRunning;
     puncher::currState = puncher::notRunning;
     differential::currState = differential::notRunning;
-    macro::currMacroState = macro::none;
+    macro::currState = macro::none;
 
     initActTasks();
 }

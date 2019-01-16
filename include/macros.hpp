@@ -4,19 +4,22 @@
 
 using namespace okapi;
 
-namespace macro {
+namespace macro
+{
 
-enum macroStates {
+enum macroStates
+{
   none = 'x',
   singleShot = 's',
-  doubleShot = 'd',
+  doubleShotNear = 'n',
+  doubleShotFar = 'f',
   anglerCH = '1',
   anglerMH = '2',
   anglerFM = '3',
   anglerFH = '4'
 };
 
-extern macroStates currMacroState;
+extern macroStates currState;
 
 extern void update();
 
