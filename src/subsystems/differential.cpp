@@ -54,7 +54,7 @@ void update()
     currState = tempNigga;
     timerTempNigga.getDt();
   } // if has ball ready and is loaded, turn off intake
-  if (currState == tempNigga && timerTempNigga.getDt() <= 45_ms)
+  if (currState == tempNigga && timerTempNigga.getDt() <= 20_ms)
   {
     currState = notRunning;
   }
@@ -105,12 +105,12 @@ void act(void *)
       currState = notRunning;
       break;
     case intakeIn:
-      diffLeft.moveVelocity(-200);
-      diffRight.moveVelocity(200);
+      diffLeft.moveVoltage(-12000);
+      diffRight.moveVelocity(12000);
       break;
     case intakeOut:
-      diffLeft.moveVelocity(150);
-      diffRight.moveVelocity(-150);
+      diffLeft.moveVoltage(10000);
+      diffRight.moveVelocity(-10000);
       currState = notRunning;
       break;
     case liftHold:
@@ -120,8 +120,8 @@ void act(void *)
       diffRight.moveVoltage(0);
       break;
     case tempNigga:
-      diffLeft.moveVelocity(200);
-      diffRight.moveVelocity(-200);
+      diffLeft.moveVoltage(10000);
+      diffRight.moveVelocity(-10000);
       //temp nigga outtakes without yielding control back to notRunning
       break;
     }
