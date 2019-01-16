@@ -19,4 +19,6 @@ extern pros::Task differentialActTask;
 
 extern void initActTasks();
 
+extern void updateFunc(void *);
+
 #endif

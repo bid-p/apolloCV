@@ -13,6 +13,7 @@ enum macroStates
   singleShot = 's',
   doubleShotNear = 'n',
   doubleShotFar = 'f',
+  customShot = 'c',
   anglerCH = '1',
   anglerMH = '2',
   anglerFM = '3',
@@ -26,5 +27,7 @@ extern void update();
 extern void act(void *);
 
 } // namespace macro
+
+void customShotCall(int target1, int target2);
 
 #endif

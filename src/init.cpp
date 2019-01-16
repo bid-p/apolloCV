@@ -15,6 +15,19 @@ void waitUntilSettled(okapi::AbstractMotor &motor)
   }
 }
 
+void updateFunc(void *)
+{
+  while (true)
+  {
+    drive::update();
+    differential::update();
+    puncher::update();
+    angler::update();
+
+    pros::delay(10);
+  }
+}
+
 void initActTasks()
 {
 
@@ -32,4 +45,7 @@ void initActTasks()
 
   pros::Task macroActTask(macro::act, NULL, TASK_PRIORITY_DEFAULT,
                           TASK_STACK_DEPTH_DEFAULT, "Act Macro");
+
+  pros::Task updateTask(updateFunc, NULL, TASK_PRIORITY_DEFAULT,
+                        TASK_STACK_DEPTH_DEFAULT, "Update");
 }

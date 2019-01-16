@@ -12,6 +12,9 @@ ControllerButton doubleShotNearBtn2 = controller[ControllerDigital::L2];
 
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::L2];
 
+int macroTarget1;
+int macroTarget2;
+
 namespace macro
 {
 
@@ -53,26 +56,7 @@ void act(void *)
     {
     case none:
       break;
-    case singleShot:
-      angler::target = 15;
-      angler::currState = angler::toTarget;
-
-      differential::currState = differential::intakeIn;
-      // should automatically stop when ball loads into puncherMacro
-
-      puncher::currState = puncher::cocking;
-
-      while (!puncher::isLoaded())
-      {
-        pros::delay(10);
-      }
-
-      waitUntilSettled(angler::angler);
-
-      puncher::currState = puncher::shooting;
-      break;
     case doubleShotNear:
-
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -155,6 +139,46 @@ void act(void *)
 
       macro::currState = none;
       break;
+    case customShot:
+      puncher::currState = puncher::cocking;
+      // switches out of cocking when sensor value achieved
+
+      angler::target = macroTarget1;
+      angler::currState = angler::toTarget;
+      // will switch out of toTarget automatically when target reached
+
+      differential::currState = differential::intakeIn;
+      // should automatically stop when ball loads into puncher
+
+      while (!puncher::isLoaded())
+      {
+        pros::delay(10);
+      } // waits for puncher to load
+
+      waitUntilSettled(angler::angler); // waits until angler to stop
+
+      puncher::currState = puncher::shooting;
+      waitUntilSettled(puncher::puncher);
+
+      puncher::currState = puncher::cocking;
+
+      angler::target = macroTarget2;
+      angler::currState = angler::toTarget;
+
+      differential::currState = differential::intakeIn;
+      // should automatically stop when ball loads into puncherMacro
+
+      while (!puncher::isLoaded())
+
+      {
+        pros::delay(10);
+      }
+
+      waitUntilSettled(angler::angler);
+
+      puncher::currState = puncher::shooting;
+
+      macro::currState = none;
     case anglerCH:
       angler::target = 25;
       angler::currState = angler::toTarget;
@@ -177,3 +201,11 @@ void act(void *)
 }
 
 } // namespace macro
+
+void customShotCall(int target1, int target2)
+{
+  macroTarget1 = target1;
+  macroTarget2 = target2;
+
+  macro::currState = macro::macroStates::customShot;
+}

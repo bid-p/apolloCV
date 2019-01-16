@@ -4,11 +4,13 @@
 #include "okapi/api.hpp"
 using namespace okapi;
 
-namespace drive {
+namespace drive
+{
 
-enum driveStates {
-  notRunning,
-  running,
+enum driveStates
+{
+  notRunning = 'x',
+  running = 'r',
 };
 
 extern driveStates currState;
@@ -25,5 +27,7 @@ extern void act(void *);
 } // namespace drive
 
 extern void turnAngleVel(QAngle angle, double maxVel);
+
+extern void removePaths(std::string path1, std::string path2);
 
 #endif

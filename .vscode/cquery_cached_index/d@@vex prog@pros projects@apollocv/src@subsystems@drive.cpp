@@ -2,7 +2,8 @@
 
 using namespace okapi;
 
-namespace drive {
+namespace drive
+{
 
 driveStates currState;
 
@@ -23,20 +24,27 @@ AsyncMotionProfileController profileController =
                                           10.0, // maxvel, accel, max jerk
                                           chassisController);
 
-void update() {
+void update()
+{
   if (abs(controller.getAnalog(ControllerAnalog::leftY)) > joyDeadband ||
-      abs(controller.getAnalog(ControllerAnalog::rightY)) > joyDeadband) {
+      abs(controller.getAnalog(ControllerAnalog::rightY)) > joyDeadband)
+  {
     currState = running;
     stateIndicator = 'r';
-  } else {
+  }
+  else
+  {
     currState = notRunning;
     stateIndicator = 'x';
   }
 }
 
-void act(void *) {
-  while (true) {
-    switch (currState) {
+void act(void *)
+{
+  while (true)
+  {
+    switch (currState)
+    {
     case notRunning:
       chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
       chassisController.tank(0, 0, 0);
@@ -56,8 +64,15 @@ void act(void *) {
 
 } // namespace drive
 
-void turnAngleVel(QAngle angle, double maxVel) {
+void turnAngleVel(QAngle angle, double maxVel)
+{
   drive::chassisController.setMaxVelocity(maxVel);
   drive::chassisController.turnAngle(angle);
   drive::chassisController.setMaxVelocity(200);
+}
+
+void removePaths(std::string path1, std::string path2)
+{
+  drive::profileController.removePath(path1);
+  drive::profileController.removePath(path2);
 }
