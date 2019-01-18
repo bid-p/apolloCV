@@ -56,7 +56,7 @@ void update()
     currState = tempNigga;
     timerTempNigga.getDt();
   } // if has ball ready and is loaded, turn off intake
-  if (currState == tempNigga && timerTempNigga.readDt() <= 20_ms)
+  if (currState == tempNigga && timerTempNigga.getDt() <= 20_ms)
   {
     currState = notRunning;
   }

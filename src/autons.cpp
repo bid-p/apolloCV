@@ -79,9 +79,9 @@ void executeProgSkills()
     turnAngleVel(90_deg, 100);
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{38_in, 0_in, 0_deg}}, "C1");
+        {Point{0_in, 0_in, 0_deg}, Point{36_in, 0_in, 0_deg}}, "C1");
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{15_in, 0_in, 0_deg}}, "C2");
+        {Point{0_in, 0_in, 0_deg}, Point{13_in, 0_in, 0_deg}}, "C2");
 
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
@@ -159,12 +159,33 @@ void executeProgSkills()
     removePaths("F", "G");
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{48_in, 0_in, 0_deg}}, "H");
+        {Point{0_in, 0_in, 0_deg}, Point{49_in, 0_in, 0_deg}}, "H");
 
     drive::profileController.setTarget("H", true);
     drive::profileController.waitUntilSettled();
 
     turnAngleVel(-90_deg, 100);
+
+    differential::currState = differential::intakeIn;
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{18_in, 0_in, 0_deg}}, "I");
+
+    drive::profileController.setTarget("I");
+    drive::profileController.waitUntilSettled();
+
+    removePaths("H", "I");
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{41_in, 0_in, 0_deg}}, "J");
+
+    drive::profileController.setTarget("J", true);
+    drive::profileController.waitUntilSettled();
+
+    differential::currState = differential::notRunning;
+
+    turnAngleVel(90_deg, 100);
+    
 }
 
 /*-------------------------------------------------------------------*/
