@@ -76,6 +76,8 @@ void act(void *)
         currState = notRunning;
       }
       break;
+    case yield:
+      break;
     }
     pros::delay(10);
   }

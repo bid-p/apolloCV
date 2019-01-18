@@ -4,12 +4,15 @@
 
 using namespace okapi;
 
-namespace angler {
+namespace angler
+{
 
-enum anglerStates {
+enum anglerStates
+{
   notRunning = 'x',
   toTarget = 't',
-  brake = 'b'
+  brake = 'b',
+  yield = 'y',
 };
 
 extern anglerStates currState;

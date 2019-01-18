@@ -24,7 +24,7 @@ void updateFunc(void *)
     puncher::update();
     angler::update();
 
-    pros::delay(10);
+    pros::delay(5);
   }
 }
 
@@ -49,3 +49,7 @@ void initActTasks()
   pros::Task updateTask(updateFunc, NULL, TASK_PRIORITY_DEFAULT,
                         TASK_STACK_DEPTH_DEFAULT, "Update");
 }
+
+extern void states();
+
+extern void autonStates();

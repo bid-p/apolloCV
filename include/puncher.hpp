@@ -4,12 +4,15 @@
 
 using namespace okapi;
 
-namespace puncher {
+namespace puncher
+{
 
-enum puncherStates {
+enum puncherStates
+{
   notRunning = 'x',
   shooting = 's',
-  cocking = 'c'
+  cocking = 'c',
+  yield = 'y'
 };
 
 extern puncherStates currState;

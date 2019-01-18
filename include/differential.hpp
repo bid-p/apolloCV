@@ -5,9 +5,11 @@
 
 using namespace okapi;
 
-namespace differential {
+namespace differential
+{
 
-enum differentialStates {
+enum differentialStates
+{
   notRunning = 'x',
   liftHold = 'h',
   liftUp = '1',
@@ -15,6 +17,7 @@ enum differentialStates {
   intakeIn = 'i',
   intakeOut = 'o',
   tempNigga = 't',
+  yield = 'y',
 };
 
 extern differentialStates currState;

@@ -40,6 +40,8 @@ void update()
   //   printf("has ball\n");
   // }
 
+  // printf("greetings\n");
+
   // AUTOMATED CHECKERS
   if (currState == intakeIn && !puncher::isLoaded())
   {
@@ -106,11 +108,11 @@ void act(void *)
       break;
     case intakeIn:
       diffLeft.moveVoltage(-12000);
-      diffRight.moveVelocity(12000);
+      diffRight.moveVoltage(12000);
       break;
     case intakeOut:
       diffLeft.moveVoltage(10000);
-      diffRight.moveVelocity(-10000);
+      diffRight.moveVoltage(-10000);
       currState = notRunning;
       break;
     case liftHold:
@@ -121,8 +123,10 @@ void act(void *)
       break;
     case tempNigga:
       diffLeft.moveVoltage(10000);
-      diffRight.moveVelocity(-10000);
+      diffRight.moveVoltage(-10000);
       //temp nigga outtakes without yielding control back to notRunning
+      break;
+    case yield:
       break;
     }
 

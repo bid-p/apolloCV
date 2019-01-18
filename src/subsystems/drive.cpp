@@ -20,7 +20,7 @@ ChassisControllerIntegrated chassisController =
         AbstractMotor::gearset::green, {4.125_in, 12.727_in});
 
 AsyncMotionProfileController profileController =
-    AsyncControllerFactory::motionProfile(/*1.09*/ 2.00, 5.0,
+    AsyncControllerFactory::motionProfile(1.00, 2.0,
                                           10.0, // maxvel, accel, max jerk
                                           chassisController);
 
@@ -30,12 +30,6 @@ void update()
       abs(controller.getAnalog(ControllerAnalog::rightY)) > joyDeadband)
   {
     currState = running;
-    stateIndicator = 'r';
-  }
-  else
-  {
-    currState = notRunning;
-    stateIndicator = 'x';
   }
 }
 
@@ -43,10 +37,14 @@ void act(void *)
 {
   while (true)
   {
+
+    pros::lcd::print(0, "%f", drive::driveL1.getPosition());
+    pros::lcd::print(1, "%c", drive::currState);
+
     switch (currState)
     {
     case notRunning:
-      chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+      chassisController.setBrakeMode(AbstractMotor::brakeMode::hold);
       chassisController.tank(0, 0, 0);
       break;
 
@@ -57,7 +55,11 @@ void act(void *)
           joyDeadband * 1.0);
       currState = notRunning;
       break;
+
+    case yield:
+      break;
     }
+
     pros::delay(10);
   }
 }

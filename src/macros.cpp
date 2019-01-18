@@ -18,7 +18,7 @@ int macroTarget2;
 namespace macro
 {
 
-macroStates currState;
+macroStates currState = none;
 
 void update()
 {
@@ -196,7 +196,7 @@ void act(void *)
       angler::currState = angler::toTarget;
       break;
     }
-    pros::delay(5);
+    pros::delay(10);
   }
 }
 

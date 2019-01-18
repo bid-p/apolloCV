@@ -8,7 +8,9 @@
  */
 void initialize()
 {
-    autonSelector();
+    // autonSelector();
+
+    pros::lcd::initialize();
 
     drive::currState = drive::notRunning;
     angler::currState = angler::notRunning;
@@ -17,6 +19,8 @@ void initialize()
     macro::currState = macro::none;
 
     initActTasks();
+
+    initProgSkills();
 }
 
 /**

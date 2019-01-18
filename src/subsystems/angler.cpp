@@ -54,6 +54,8 @@ void act(void *)
       angler.setBrakeMode(AbstractMotor::brakeMode::brake);
       angler.moveVoltage(0);
       break;
+    case yield:
+      break;
     }
     pros::delay(5);
   }

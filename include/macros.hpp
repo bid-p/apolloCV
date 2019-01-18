@@ -10,14 +10,14 @@ namespace macro
 enum macroStates
 {
   none = 'x',
-  singleShot = 's',
+  singleShot = '0',
   doubleShotNear = 'n',
   doubleShotFar = 'f',
   customShot = 'c',
   anglerCH = '1',
   anglerMH = '2',
   anglerFM = '3',
-  anglerFH = '4'
+  anglerFH = '4',
 };
 
 extern macroStates currState;

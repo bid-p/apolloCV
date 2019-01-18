@@ -11,6 +11,7 @@ enum driveStates
 {
   notRunning = 'x',
   running = 'r',
+  yield = 'y',
 };
 
 extern driveStates currState;

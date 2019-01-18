@@ -11,8 +11,27 @@ using namespace okapi;
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+void autonStates()
+{
+  pros::lcd::print(0, "%f", drive::driveL1.getPosition());
+  pros::lcd::print(1, "%c", drive::currState);
+  pros::lcd::print(2, "%c", differential::currState);
+}
+
+void demoProgram()
+{
+  turnAngleVel(90_deg, 100);
+}
+
 void autonomous()
 {
+  drive::currState = drive::driveStates::yield;
+  differential::currState = differential::differentialStates::yield;
+  puncher::currState = puncher::puncherStates::yield;
+  angler::currState = angler::anglerStates::yield;
+
+autonStates();
 
   switch (autonRoutine)
   {
@@ -54,4 +73,8 @@ void autonomous()
     executeBlueFar2();
     break;
   }
+
+  executeProgSkills();
+
+  //demoProgram();
 }
