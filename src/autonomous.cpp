@@ -21,7 +21,7 @@ void autonStates()
 
 void demoProgram()
 {
-  turnAngleVel(90_deg, 100);
+  customShotCall(20, 120);
 }
 
 void autonomous()

@@ -43,20 +43,20 @@ void update()
   // printf("greetings\n");
 
   // AUTOMATED CHECKERS
-  if (currState == intakeIn && !puncher::isLoaded())
+  /*if (currState == intakeIn && !puncher::isLoaded())
   {
     currState = intakeIn;
   } // if puncher isn't loaded, run intake
   if (currState == intakeIn && puncher::isLoaded() && !hasBall())
   {
     currState = intakeIn;
-  } // if is loaded but doesn't have ball ready, keep running intake
+  } // if is loaded but doesn't have ball ready, keep running intake*/
   if (currState == intakeIn && puncher::isLoaded() && hasBall())
   {
     currState = tempNigga;
     timerTempNigga.getDt();
   } // if has ball ready and is loaded, turn off intake
-  if (currState == tempNigga && timerTempNigga.getDt() <= 20_ms)
+  if (currState == tempNigga && timerTempNigga.readDt() <= 20_ms)
   {
     currState = notRunning;
   }
@@ -125,6 +125,11 @@ void act(void *)
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
       //temp nigga outtakes without yielding control back to notRunning
+      break;
+    case intakeOutNY:
+      diffLeft.moveVoltage(10000);
+      diffRight.moveVoltage(-10000);
+      //for auton use
       break;
     case yield:
       break;

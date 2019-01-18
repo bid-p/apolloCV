@@ -10,10 +10,10 @@ namespace macro
 enum macroStates
 {
   none = 'x',
-  singleShot = '0',
   doubleShotNear = 'n',
   doubleShotFar = 'f',
-  customShot = 'c',
+  customShotDouble = 'd',
+  customShotSingle = 's',
   anglerCH = '1',
   anglerMH = '2',
   anglerFM = '3',
@@ -28,6 +28,8 @@ extern void act(void *);
 
 } // namespace macro
 
-void customShotCall(int target1, int target2);
+extern void customShotCall(int target1, int target2);
+
+extern void customShotCall(int target1);
 
 #endif

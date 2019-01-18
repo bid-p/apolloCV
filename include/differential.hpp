@@ -17,6 +17,7 @@ enum differentialStates
   intakeIn = 'i',
   intakeOut = 'o',
   tempNigga = 't',
+  intakeOutNY = 'n',
   yield = 'y',
 };
 

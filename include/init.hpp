@@ -16,6 +16,8 @@ extern pros::Task driveActTask;
 extern pros::Task puncherActTask;
 extern pros::Task anglerActTask;
 extern pros::Task differentialActTask;
+extern pros::Task macroActTask;
+extern pros::Task updateTask;
 
 extern void initActTasks();
 
