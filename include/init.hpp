@@ -19,8 +19,6 @@ extern pros::Task differentialActTask;
 extern pros::Task macroActTask;
 extern pros::Task updateTask;
 
-extern void initActTasks();
-
 extern void updateFunc(void *);
 
 #endif

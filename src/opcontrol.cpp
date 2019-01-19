@@ -31,20 +31,22 @@ void states()
 void opcontrol()
 {
 
+  lv_obj_clean(lv_scr_act());
+
   pros::lcd::initialize();
+
+  states();
 
   // autonSelector();
 
   while (true)
   {
-    drive::update();
-    angler::update();
-    puncher::update();
-    differential::update();
-    macro::update();
 
-    states();
+  // i'm alive!
 
-    pros::delay(5);
+  // All of our work has been offloaded to external tasks, so the main
+  // while loop is empty.
+
+    pros::delay(10);
   }
 }

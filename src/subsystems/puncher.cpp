@@ -19,6 +19,7 @@ pros::ADILineSensor lineP(SPORT_PUNCHERB);
 
 pros::ADILineSensor lineCock(SPORT_LINECOCK);
 
+// uses line sensors to detect whether the puncher is pulled back for ball intake
 bool isCocked()
 {
   if (lineCock.get_value() > 2200)
@@ -28,6 +29,7 @@ bool isCocked()
   return false;
 }
 
+// uses line sensors to detect whether a ball is on the puncher
 bool isLoaded()
 {
   if (lineP.get_value() < 2000)
@@ -41,13 +43,8 @@ void update()
 {
   if (puncherShootBtn.isPressed() && !puncherCockingBtn.isPressed())
   {
-    currState = shooting;
+    currState = shooting; // begin shooting on button press; will cock automatically after shooting
   }
-  // if (puncherCockingBtn.changedToPressed())
-  // {
-  //   puncher.tarePosition(); // puncher has to be reset before cocked
-  //   currState = cocking;
-  // }
 }
 
 void act(void *)
@@ -56,16 +53,16 @@ void act(void *)
   {
     switch (currState)
     {
-    case notRunning:
+    case notRunning: // stop the puncher from moving
       puncher.setBrakeMode(AbstractMotor::brakeMode::coast);
       puncher.moveVoltage(0);
       break;
-    case shooting:
+    case shooting: // turn the puncher gear exactly one revolution to shoot the ball
       puncher.moveRelative(360, 100);
       waitUntilSettled(puncher);
       currState = cocking;
       break;
-    case cocking:
+    case cocking: // pulls back the puncher until line sensors detect the puncher
       if (!isCocked())
       {
         puncher.moveVoltage(12000);
@@ -76,7 +73,7 @@ void act(void *)
         currState = notRunning;
       }
       break;
-    case yield:
+    case yield: // for macro in order to take direct control of puncher
       break;
     }
     pros::delay(10);

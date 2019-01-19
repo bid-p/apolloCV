@@ -15,7 +15,7 @@ differentialStates currState;
 Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
 Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
 
-Timer timerTempNigga;
+Timer timerBallBrake;
 pros::ADILineSensor lineL(SPORT_INTAKE_L);
 pros::ADILineSensor lineR(SPORT_INTAKE_R);
 
@@ -26,7 +26,7 @@ bool hasBall()
     return true;
   }
   return false;
-}
+} // Function that returns whether a ball has been detected in the intake
 
 void update()
 {
@@ -51,21 +51,23 @@ void update()
   {
     currState = intakeIn;
   } // if is loaded but doesn't have ball ready, keep running intake*/
+
   if (currState == intakeIn && puncher::isLoaded() && hasBall())
   {
-    currState = tempNigga;
-    timerTempNigga.getDt();
-  } // if has ball ready and is loaded, turn off intake
-  if (currState == tempNigga && timerTempNigga.getDt() <= 20_ms)
+    currState = ballBrake;
+    timerBallBrake.getDt();
+  } // Once balls have been detected in puncher & intake, run ball brake
+  if (currState == ballBrake && timerBallBrake.getDt() <= 20_ms)
   {
     currState = notRunning;
-  }
+  } // Reverses intake at 83.3% speed for 20ms so that ball doesn't
+    // overshoot due to speed of the intake
 
   // USER INPUT
   if (intakeInBtn.isPressed() && intakeOutBtn.isPressed())
   {
     currState = liftHold;
-  }
+  } // if both buttons are pressed, run lift PID
   if (liftUpBtn.isPressed())
   {
     currState = liftUp;
@@ -96,12 +98,12 @@ void act(void *)
       diffLeft.moveVoltage(0);
       diffRight.moveVoltage(0);
       break;
-    case liftUp:
+    case liftUp: // Both differential motors same direction
       diffLeft.moveVelocity(200);
       diffRight.moveVelocity(200);
       currState = notRunning;
       break;
-    case liftDown:
+    case liftDown: // Both differential motors same direction
       diffLeft.moveVelocity(-200);
       diffRight.moveVelocity(-200);
       currState = notRunning;
@@ -110,26 +112,27 @@ void act(void *)
       diffLeft.moveVoltage(-12000);
       diffRight.moveVoltage(12000);
       break;
-    case intakeOut:
+    case intakeOut: // Reverses intake at 83.3% power
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
       currState = notRunning;
       break;
-    case liftHold:
-      // diffLeft.setBrakeMode(AbstractMotor::brakeMode::hold);
-      // diffRight.setBrakeMode(AbstractMotor::brakeMode::hold);
+    case liftHold: // lift hold PID
+      diffLeft.setBrakeMode(AbstractMotor::brakeMode::hold);
+      diffRight.setBrakeMode(AbstractMotor::brakeMode::hold);
       diffLeft.moveVoltage(0);
       diffRight.moveVoltage(0);
       break;
-    case tempNigga:
+    case ballBrake:
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
-      //temp nigga outtakes without yielding control back to notRunning
+      // Robot outtakes without yielding control back to notRunning state
       break;
     case intakeOutNY:
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
-      //for auton use
+      // For use in auton, keeps intake running in the reverse
+      // diretion to flip caps
       break;
     case yield:
       break;

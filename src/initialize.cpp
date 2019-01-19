@@ -8,19 +8,18 @@
  */
 void initialize()
 {
-    // autonSelector();
+    autonSelector();
 
-    pros::lcd::initialize();
+    // pros::lcd::initialize();
 
+    // set all the states to not running by default
     drive::currState = drive::notRunning;
     angler::currState = angler::notRunning;
     puncher::currState = puncher::notRunning;
     differential::currState = differential::notRunning;
     macro::currState = macro::none;
 
-    initActTasks();
-
-    initProgSkills();
+    // initProgSkills();
 }
 
 /**

@@ -12,16 +12,11 @@ using namespace okapi;
  * from where it left off.
  */
 
-void autonStates()
+void autonStates() // Prints helpful robot stats during auton period
 {
   pros::lcd::print(0, "%f", drive::driveL1.getPosition());
   pros::lcd::print(1, "%c", drive::currState);
   pros::lcd::print(2, "%c", differential::currState);
-}
-
-void demoProgram()
-{
-  customShotCall(20, 120);
 }
 
 void autonomous()
@@ -30,10 +25,11 @@ void autonomous()
   differential::currState = differential::differentialStates::yield;
   puncher::currState = puncher::puncherStates::yield;
   angler::currState = angler::anglerStates::yield;
+  // Overrides states to yield during autonomous period
 
 autonStates();
 
-  switch (autonRoutine)
+  switch (autonRoutine) // Executes auton routine based on auton selector
   {
   case notSelected:
     break;
@@ -73,8 +69,4 @@ autonStates();
     executeBlueFar2();
     break;
   }
-
-  executeProgSkills();
-
-  //demoProgram();
 }

@@ -2,11 +2,6 @@
 
 using namespace okapi;
 
-// ControllerButton angleCloseHigh = controller[ControllerDigital::down];
-// ControllerButton angleMidHighBtn = controller[ControllerDigital::up];
-// ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
-// ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
-
 namespace angler
 {
 
@@ -16,23 +11,9 @@ int target;
 
 Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::blue);
 
-// AsyncPosIntegratedController angleController =
-//     AsyncControllerFactory::posIntegrated(angler);
-
 void update()
 {
-  // if (angleCloseHigh.changedToPressed()) {
-  //   currState = closeHigh; // 350
-  // }
-  // if (angleMidHighBtn.changedToPressed()) {
-  //   currState = midHigh; // 0
-  // }
-  // if (angleFarMidBtn.changedToPressed()) {
-  //   currState = farMid; // 305
-  // }
-  // if (angleFarHighBtn.changedToPressed()) {
-  //   currState = farHigh; // 120
-  // }
+  // work offloaded to Macro state machine
 }
 
 void act(void *)
@@ -41,20 +22,22 @@ void act(void *)
   {
     switch (currState)
     {
-    case notRunning:
+    case notRunning: // Turns off angler
       angler.setBrakeMode(AbstractMotor::brakeMode::coast);
       angler.moveVoltage(0);
       break;
-    case toTarget:
+    case toTarget: // Sets angler position to given target
       angler.moveAbsolute(target, 600);
       waitUntilSettled(angler);
       currState = brake;
       break;
-    case brake:
+    case brake: // Shorts the motor terminals to replicate
+                //PID hold without current use
       angler.setBrakeMode(AbstractMotor::brakeMode::brake);
       angler.moveVoltage(0);
       break;
-    case yield:
+    case yield: // yields to give the Macro state machine 
+                // access to the angler
       break;
     }
     pros::delay(5);

@@ -12,8 +12,8 @@ ControllerButton doubleShotNearBtn2 = controller[ControllerDigital::L2];
 
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::L2];
 
-int macroTarget1;
-int macroTarget2;
+int macroTarget1; // target encoder values for angler to shoot first flag in macro
+int macroTarget2; // target encoder value for angler to shoot second flag in macro
 
 namespace macro
 {
@@ -54,9 +54,9 @@ void act(void *)
   {
     switch (currState)
     {
-    case none:
+    case none: // macro is not activated
       break;
-    case doubleShotNear:
+    case doubleShotNear: // shoots two flags from the near tile; for driver control
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -133,7 +133,7 @@ void act(void *)
 
       macro::currState = none;
       break;
-    case customShotDouble:
+    case customShotDouble: // shoots two flags with the specified target encoder values for those flags; for autonomous
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -171,7 +171,7 @@ void act(void *)
 
       macro::currState = none;
       break;
-    case customShotSingle:
+    case customShotSingle: // shoots a single flag with a single given target encoder value for that flag; for autonomous
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -194,19 +194,19 @@ void act(void *)
       macro::currState = none;
 
       break;
-    case anglerCH:
+    case anglerCH: // changes the angler to target the high flag from the close tile
       angler::target = 25;
       angler::currState = angler::toTarget;
       break;
-    case anglerMH:
+    case anglerMH: // changes the angler to target the high flag from the middle tile
       angler::target = 0;
       angler::currState = angler::toTarget;
       break;
-    case anglerFM:
+    case anglerFM: // changes the angler to target the middle flag from the far tile
       angler::target = 200;
       angler::currState = angler::toTarget;
       break;
-    case anglerFH:
+    case anglerFH: // changes the angler to target the high flag from the far title
       angler::target = 95;
       angler::currState = angler::toTarget;
       break;
@@ -217,6 +217,7 @@ void act(void *)
 
 } // namespace macro
 
+// overloaded function: two arguments means two shots
 void customShotCall(int target1, int target2)
 {
   macroTarget1 = target1;
@@ -225,6 +226,7 @@ void customShotCall(int target1, int target2)
   macro::currState = macro::macroStates::customShotDouble;
 }
 
+// overloaded function: one argument means single shot
 void customShotCall(int target1) {
   macroTarget1 = target1;
   

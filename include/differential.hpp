@@ -16,7 +16,7 @@ enum differentialStates
   liftDown = '2',
   intakeIn = 'i',
   intakeOut = 'o',
-  tempNigga = 't',
+  ballBrake = 't',
   intakeOutNY = 'n',
   yield = 'y',
 };
