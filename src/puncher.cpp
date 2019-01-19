@@ -6,6 +6,7 @@ enum {
   puncherNotRunning = 'x',
   puncherShooting = 's',
   puncherCocking = 'c',
+  puncherLineCocking = 'l',
 } puncherState = puncherNotRunning;
 enum {
   /*angleUp = 'u',
@@ -55,15 +56,6 @@ char getAngleState() { return angleState; }
 
 char getMacroState() { return macroState; }
 
-pros::ADILineSensor lineCock(SPORT_LINECOCK);
-
-bool isCocked() {
-  if (lineCock.get_value() > 2200) {
-    return true;
-  }
-  return false;
-}
-
 void abortPuncher() {
   angleState = angleNotRunning;
   puncherState = puncherNotRunning;
@@ -71,66 +63,61 @@ void abortPuncher() {
 
 void updateMacro() {
   // abort
-  if (macroAbort1Btn.isPressed() && macroAbort2Btn.isPressed()) {
+  if(macroAbort1Btn.isPressed() && macroAbort2Btn.isPressed()) {
     macroState = macroNotRunning;
     return;
   }
 
   // actions
-  switch (macroState) {
-  case macroReady:
+  switch(macroState) {
+    case macroReady:
     angleTarget = macroHighTarget;
     angleState = angleHold;
     break;
-  case macroFirstShot:
+    case macroFirstShot:
     puncherState = puncherShooting;
     break;
-  case macroLoad:
+    case macroLoad:
     loadBall();
     puncherState = puncherCocking;
     angleState = angleHold;
     angleTarget = macroMidTarget; // mid flag
     break;
-  case macroBeginShot:
+    case macroBeginShot:
     puncherState = puncherShooting;
     break;
-  case macroSecondShot:
+    case macroSecondShot:
     puncherState = puncherShooting;
     break;
-  case macroNotRunning:
+    case macroNotRunning:
     break;
   }
 
   // state transitions
-  if (macroState == macroSecondShot && !isLoaded()) {
+  if(macroState == macroSecondShot && !isLoaded()) {
     macroState = macroNotRunning;
     puncherState = puncherNotRunning;
   }
-  if (macroState == macroBeginShot &&
-      macroTimer.readDt() >=
-          300_ms) { // the ball bounces around a little before isLoaded is true,
-                    // so start the shot regardless of whether it is loaded
+  if(macroState == macroBeginShot && macroTimer.readDt() >= 300_ms) { // the ball bounces around a little before isLoaded is true, so start the shot regardless of whether it is loaded
     macroState = macroSecondShot;
   }
-  if (macroState == macroLoad && isLoaded() &&
-      abs(angleChanger.getPosition() - angleTarget) < 5) {
+  if(macroState == macroLoad && isLoaded() && abs(angleChanger.getPosition() - angleTarget) < 5) {
     macroState = macroBeginShot;
     macroTimer.getDt();
   }
-  if (macroState == macroFirstShot && !isLoaded()) {
+  if(macroState == macroFirstShot && !isLoaded()) {
     macroState = macroLoad;
     puncher.tarePosition();
     cockingTimer.getDt();
   }
-  if (macroState == macroReady &&
-      abs(angleChanger.getPosition() - angleTarget) < 5) {
+  if(macroState == macroReady && abs(angleChanger.getPosition() - angleTarget) < 5) {
     macroState = macroFirstShot;
   }
 }
 
 void updatePuncher() {
   // default states
-  if (macroState != macroNotRunning) {
+  if(macroState != macroNotRunning) {
     updateMacro();
     return; // macro overrides normal updates
   }
@@ -141,22 +128,22 @@ void updatePuncher() {
     puncherState = puncherNotRunning;
   }
 
-  // angler state transition
+  //angler state transition
   if (angleCloseHighBtn.changedToPressed()) {
     angleTarget = 25;
     angleState = angleHold;
-    // angleState = angleDown;
+    //angleState = angleDown;
   }
-  if (angleMidHighBtn.changedToPressed()) {
+  if(angleMidHighBtn.changedToPressed()) {
     angleTarget = 0;
     angleState = angleHold;
-    // angleState = angleUp;
+    //angleState = angleUp;
   }
   if (angleFarHighBtn.changedToPressed()) {
     angleTarget = 60;
     angleState = angleHold;
   }
-  if (angleFarMidBtn.changedToPressed()) {
+  if(angleFarMidBtn.changedToPressed()) {
     angleTarget = 200;
     angleState = angleHold;
   }
@@ -173,15 +160,15 @@ void updatePuncher() {
   }
 
   // start macro
-  if (puncherCockingBtn.isPressed() && puncherOnBtn.isPressed()) {
+  if(puncherCockingBtn.isPressed() && puncherOnBtn.isPressed()) {
     macroState = macroReady;
     macroHighTarget = 0;
     macroMidTarget = 120;
   }
-  if (macroFarBtn.isPressed()) {
+  if(macroFarBtn.isPressed()) {
     macroState = macroReady;
-    macroHighTarget = 15;
-    macroMidTarget = 130;
+    macroHighTarget = 63;
+    macroMidTarget = 140;
   }
 }
 
@@ -224,12 +211,13 @@ void puncherAct() {
     puncher.moveVoltage(12000);
     break;
   case puncherCocking:
-    if (!isCocked()) {
+    if(cockingTimer.readDt() <= 500_ms) { // time based cocking
       puncher.moveVoltage(12000);
     } else {
       puncher.moveVoltage(0);
-      puncherState = puncherNotRunning;
     }
+    break;
+  case puncherLineCocking:
     break;
   }
 }
@@ -240,9 +228,9 @@ Timer timeOutMacro;
 void runNearMacro() {
   macroState = macroReady;
   timeOutMacro.getDt();
-  macroHighTarget = 0;
+  macroHighTarget = 20;
   macroMidTarget = 125;
-  while (macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
+  while(macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
     updateMacro();
 
     puncherAct();
@@ -254,9 +242,9 @@ void runNearMacro() {
 void runFarMacro() {
   macroState = macroReady;
   timeOutMacro.getDt();
-  macroHighTarget = 55; // 70
-  macroMidTarget = 160; // 180
-  while (macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
+  macroHighTarget = 70;//70
+  macroMidTarget = 160;//180
+  while(macroState != macroNotRunning && timeOutMacro.readDt() < 2500_ms) {
     updateMacro();
 
     puncherAct();
