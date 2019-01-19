@@ -1,4 +1,4 @@
-#include "main.h"
+   #include "main.h"
 
 autonRoutines autonRoutine = notSelected;
 
@@ -64,14 +64,14 @@ void executeProgSkills()
     removePaths("A1", "A2");
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{46_in, 8_in, 0_deg}}, "B");
+        {Point{0_in, 0_in, 0_deg}, Point{46_in, 6_in, 0_deg}}, "B");
 
     drive::profileController.setTarget("B");
     drive::profileController.waitUntilSettled();
     // Perform s-curve to toggle the bottom flag
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{47_in, -8_in, 0_deg}}, "B1");
+        {Point{0_in, 0_in, 0_deg}, Point{48.5_in, -6_in, 0_deg}}, "B1");
 
     drive::profileController.setTarget("B1", true);
     drive::profileController.waitUntilSettled();
@@ -133,14 +133,14 @@ void executeProgSkills()
     // Pause to return control to differential
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{28_in, 6_in, 0_deg}}, "E");
+        {Point{0_in, 0_in, 0_deg}, Point{27_in, 6_in, 0_deg}}, "E");
 
     drive::profileController.setTarget("E");
     drive::profileController.waitUntilSettled();
     // Perform another s-curve to toggle bottom flag
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{25_in, -6_in, 0_deg}}, "E1");
+        {Point{0_in, 0_in, 0_deg}, Point{26_in, -6_in, 0_deg}}, "E1");
 
     drive::profileController.setTarget("E1", true);
     drive::profileController.waitUntilSettled();
@@ -155,7 +155,7 @@ void executeProgSkills()
     // Reverse intake
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{40_in, 0_in, 0_deg}}, "F");
+        {Point{0_in, 0_in, 0_deg}, Point{41_in, 0_in, 0_deg}}, "F");
 
     drive::profileController.setTarget("F");
     drive::profileController.waitUntilSettled();
@@ -176,7 +176,7 @@ void executeProgSkills()
     removePaths("F", "G");
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{49_in, 0_in, 0_deg}}, "H");
+        {Point{0_in, 0_in, 0_deg}, Point{48_in, 0_in, 0_deg}}, "H");
 
     drive::profileController.setTarget("H", true);
     drive::profileController.waitUntilSettled();
@@ -187,7 +187,7 @@ void executeProgSkills()
     differential::currState = differential::intakeIn; // Run intake
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{18_in, 0_in, 0_deg}}, "I");
+        {Point{0_in, 0_in, 0_deg}, Point{19_in, 0_in, 0_deg}}, "I");
 
     drive::profileController.setTarget("I");
     drive::profileController.waitUntilSettled();
@@ -215,7 +215,7 @@ void executeProgSkills()
     removePaths("J", "K");
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{45_in, 0_in, 0_deg}}, "L");
+        {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "L");
 
     drive::profileController.setTarget("L", true);
     drive::profileController.waitUntilSettled();
@@ -233,23 +233,23 @@ void executeProgSkills()
     drive::profileController.waitUntilSettled();
     // Move forward to align with cap #5
 
-    removePaths("L", "M");
-
     turnAngleVel(90_deg, 100);
     // Turn to face cap #5
+
+    removePaths("L", "M");
 
     differential::currState = differential::intakeIn;
     // Run intake
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{46_in, 0_in, 0_deg}}, "N");
+        {Point{0_in, 0_in, 0_deg}, Point{44_in, 0_in, 0_deg}}, "N");
 
     drive::profileController.setTarget("N");
     drive::profileController.waitUntilSettled();
     // Run into/flip cap
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{28_in, 0_in, 0_deg}}, "O");
+        {Point{0_in, 0_in, 0_deg}, Point{39_in, 22_in, 0_deg}}, "O");
 
     drive::profileController.setTarget("O", true);
     drive::profileController.waitUntilSettled();
@@ -263,11 +263,21 @@ void executeProgSkills()
     turnAngleVel(90_deg, 100);
     // Turn to face flags
 
-    customShotCall(20, 120);
+    macroActTask.resume();
+
+    customShotCall(60, 120);
     // Shoot right column from far
 
+    while (macro::currState != macro::none)
+    {
+        pros::delay(10);
+    }
+    // Wait for the shot to be complete
+
+    macroActTask.suspend();
+
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{24_in, -10_in, 0_deg}}, "P");
+        {Point{0_in, 0_in, 0_deg}, Point{44_in, -10_in, 0_deg}}, "P");
 
     drive::profileController.setTarget("P");
     drive::profileController.waitUntilSettled();
@@ -276,8 +286,12 @@ void executeProgSkills()
     turnAngleVel(-90_deg, 100);
     // Turn to face platforms
 
+    differential::currState = differential::intakeIn;
+
     drive::chassisController.moveDistance(65_in);
     // Park.
+
+    differential::currState = differential::notRunning;
 }
 
 /*-------------------------------------------------------------------*/
