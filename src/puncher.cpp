@@ -23,7 +23,18 @@ enum {
   macroNotRunning = 'x',
 } macroState = macroNotRunning;
 
+pros::ADILineSensor lineCock(SPORT_LINECOCK);
+
 double angleTarget;
+
+bool isCocked()
+{
+  if (lineCock.get_value() > 2200)
+  {
+    return true;
+  }
+  return false;
+}
 
 Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::red);
 Motor angleChanger(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::green);
@@ -124,9 +135,9 @@ void updatePuncher() {
   if (angleState != angleNotRunning) {
     angleState = angleHold;
   }
-  if (puncherState != puncherCocking) {
-    puncherState = puncherNotRunning;
-  }
+  // if (puncherState != puncherCocking || puncherState != puncherLineCocking) {
+  //   puncherState = puncherNotRunning;
+  // }
 
   //angler state transition
   if (angleCloseHighBtn.changedToPressed()) {
@@ -153,10 +164,12 @@ void updatePuncher() {
     puncherState = puncherShooting;
   }
   if (puncherCockingBtn.changedToPressed()) {
-    puncher.tarePosition(); // the puncher motor has to be reset before it is
-                            // set to the cocked position
-    puncherState = puncherCocking;
-    cockingTimer.getDt();
+    // puncher.tarePosition(); // the puncher motor has to be reset before it is
+    //                         // set to the cocked position
+    // puncherState = puncherCocking;
+    // cockingTimer.getDt();
+
+    puncherState = puncherLineCocking;
   }
 
   // start macro
@@ -209,6 +222,7 @@ void puncherAct() {
     break;
   case puncherShooting:
     puncher.moveVoltage(12000);
+    puncherState = puncherNotRunning;
     break;
   case puncherCocking:
     if(cockingTimer.readDt() <= 500_ms) { // time based cocking
@@ -218,6 +232,12 @@ void puncherAct() {
     }
     break;
   case puncherLineCocking:
+      puncher.moveVoltage(12000);
+      if (isCocked())
+      {
+        puncher.moveVoltage(0);
+        puncherState = puncherNotRunning;
+      }
     break;
   }
 }

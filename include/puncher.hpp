@@ -13,3 +13,6 @@ extern void runFarMacro();
 extern void updatePuncher();
 extern void puncherAct();
 extern void abortPuncher();
+
+extern pros::ADILineSensor lineCock;
+

@@ -51,6 +51,7 @@ void opcontrol() {
 		driveAct();
 		diffAct();
 		puncherAct();
+		
 		pros::delay(10);
 	}
 }

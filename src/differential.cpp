@@ -39,7 +39,7 @@ bool hasBall() {
 }
 
 bool isLoaded() {
-  if (lineP.get_value() < 2000) {
+  if (lineP.get_value() < 2300) {
     return true;
   }
   return false;
