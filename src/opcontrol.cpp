@@ -31,12 +31,17 @@ void states() {
 	pros::lcd::print(4, "Angle state: %c | Angle temp: %i", getAngleState(), (int) angleChanger.getTemperature());
 	pros::lcd::print(5, "Angle encoder: %i", (int) angleChanger.getPosition());
 	pros::lcd::print(6, "Diff state: %c | Diff Left temp: %i", getDiffState(), (int) diffLeft.getTemperature());
-	//pros::lcd::print(7, "Diff right temp: %i", (int) diffRight.getTemperature()); // this is redundant i think
 	pros::lcd::print(7, "Macro state: %c", getMacroState());
 }
 
 void opcontrol() {
-	pros::lcd::print(0, "Opcontrol");
+
+  lv_obj_clean(lv_scr_act());
+
+  pros::lcd::initialize();
+
+  states();
+
 	while (true) {
 		states();
 

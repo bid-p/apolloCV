@@ -7,15 +7,9 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  pros::lcd::initialize();
-// initRedNear1();
-// initRedNear2();
-initRedFar1();
-//initBlueNear1();
-//initBlueNear2();
-//  initBlueFar1();
 
-// initProgSkills();
+        autonSelector();
+  
 }
 
 /**

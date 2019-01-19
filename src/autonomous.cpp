@@ -11,12 +11,48 @@ using namespace okapi;
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
-  //executeRedNear1(); // column , 1 middle flag, 2 caps
- //executeRedNear2();// column, park, 1 cap
- executeRedFar1(); // two flags, two caps, park
-//executeBlueNear1(); // column, 1 middle flag, 2 caps
-//  executeBlueNear2(); //column, park, 1 cap
-  //executeBlueFar1(); // two flags, two caps, park
-//   executeProgSkills(); // column with two caps and center park (possible middle flag)
+
+void autonomous()
+{
+
+  switch (autonRoutine) // Executes auton routine based on auton selector
+  {
+  case notSelected:
+    break;
+  case progSkills:
+    executeProgSkills();
+    break;
+
+  case redNear1:
+    executeRedNear1();
+    break;
+
+  case redNear2:
+    executeRedNear2();
+    break;
+
+  case redFar1:
+    executeRedFar1();
+    break;
+
+  case redFar2:
+    executeRedFar2();
+    break;
+
+  case blueNear1:
+    executeBlueNear1();
+    break;
+
+  case blueNear2:
+    executeBlueNear2();
+    break;
+
+  case blueFar1:
+    executeBlueFar1();
+    break;
+
+  case blueFar2:
+    executeBlueFar2();
+    break;
+  }
 }
