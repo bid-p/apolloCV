@@ -35,12 +35,12 @@ void opcontrol()
 
   pros::lcd::initialize();
 
-  states();
-
   // autonSelector();
 
   while (true)
   {
+
+      states();
 
   // i'm alive!
 

@@ -255,7 +255,7 @@ void executeProgSkills()
     drive::profileController.waitUntilSettled();
     // Reverse back to reality, oh there goes gravity
 
-    removePaths("J", "K");
+    removePaths("N", "O");
 
     differential::currState = differential::notRunning;
     // Intake off
@@ -290,6 +290,8 @@ void executeProgSkills()
 
     drive::chassisController.moveDistance(65_in);
     // Park.
+
+    drive::profileController.removePath("P");
 
     differential::currState = differential::notRunning;
 }
