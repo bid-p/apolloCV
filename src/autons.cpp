@@ -1,4 +1,4 @@
-   #include "main.h"
+#include "main.h"
 
 autonRoutines autonRoutine = notSelected;
 
@@ -242,14 +242,14 @@ void executeProgSkills()
     // Run intake
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{44_in, 0_in, 0_deg}}, "N");
+        {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "N");
 
     drive::profileController.setTarget("N");
     drive::profileController.waitUntilSettled();
     // Run into/flip cap
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{39_in, 22_in, 0_deg}}, "O");
+        {Point{0_in, 0_in, 0_deg}, Point{35.5_in, 22_in, 0_deg}}, "O");
 
     drive::profileController.setTarget("O", true);
     drive::profileController.waitUntilSettled();
@@ -260,7 +260,7 @@ void executeProgSkills()
     differential::currState = differential::notRunning;
     // Intake off
 
-    turnAngleVel(90_deg, 100);
+    turnAngleVel(92_deg, 100);
     // Turn to face flags
 
     macroActTask.resume();
@@ -283,6 +283,8 @@ void executeProgSkills()
     drive::profileController.waitUntilSettled();
     // S-Curve to align with platforms
 
+    drive::profileController.removePath("P");
+
     turnAngleVel(-90_deg, 100);
     // Turn to face platforms
 
@@ -290,8 +292,6 @@ void executeProgSkills()
 
     drive::chassisController.moveDistance(65_in);
     // Park.
-
-    drive::profileController.removePath("P");
 
     differential::currState = differential::notRunning;
 }
