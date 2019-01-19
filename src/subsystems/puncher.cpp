@@ -32,7 +32,7 @@ bool isCocked()
 // uses line sensors to detect whether a ball is on the puncher
 bool isLoaded()
 {
-  if (lineP.get_value() < 2000)
+  if (lineP.get_value() < 2300)
   {
     return true;
   }

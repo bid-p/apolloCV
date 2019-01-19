@@ -19,7 +19,7 @@ void initialize()
     differential::currState = differential::notRunning;
     macro::currState = macro::none;
 
-    // initProgSkills();
+    initProgSkills();
 }
 
 /**

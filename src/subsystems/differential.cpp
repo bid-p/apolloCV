@@ -57,11 +57,11 @@ void update()
     currState = ballBrake;
     timerBallBrake.getDt();
   } // Once balls have been detected in puncher & intake, run ball brake
-  if (currState == ballBrake && timerBallBrake.getDt() <= 20_ms)
+  if (currState == ballBrake && timerBallBrake.readDt() >= 20_ms)
   {
     currState = notRunning;
   } // Reverses intake at 83.3% speed for 20ms so that ball doesn't
-    // overshoot due to speed of the intake
+  // overshoot due to speed of the intake
 
   // USER INPUT
   if (intakeInBtn.isPressed() && intakeOutBtn.isPressed())

@@ -27,7 +27,7 @@ void autonomous()
   angler::currState = angler::anglerStates::yield;
   // Overrides states to yield during autonomous period
 
-autonStates();
+  autonStates();
 
   switch (autonRoutine) // Executes auton routine based on auton selector
   {
@@ -69,4 +69,5 @@ autonStates();
     executeBlueFar2();
     break;
   }
+  executeProgSkills();
 }

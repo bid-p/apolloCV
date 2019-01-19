@@ -28,42 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/init.cpp.o",
-            "src\\init.cpp"
+            "bin/opcontrol.cpp.o",
+            "src\\opcontrol.cpp"
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\init.cpp"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/media/",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-Os",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "--std=gnu11",
-            "-o",
-            "bin/media/fieldResizedIMG.c.o",
-            "src\\media\\fieldResizedIMG.c"
-        ],
-        "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\media\\fieldResizedIMG.c"
+        "file": "src\\opcontrol.cpp"
     },
     {
         "arguments": [
@@ -94,11 +63,46 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/subsystems/drive.cpp.o",
-            "src\\subsystems\\drive.cpp"
+            "bin/subsystems/puncher.cpp.o",
+            "src\\subsystems\\puncher.cpp"
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\subsystems\\drive.cpp"
+        "file": "src\\subsystems\\puncher.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
+            "-iquote./include/./",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-Os",
+            "-funwind-tables",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "--std=gnu++17",
+            "-o",
+            "bin/init.cpp.o",
+            "src\\init.cpp"
+        ],
+        "directory": "C:\\Robotics Projects\\apolloCV",
+        "file": "src\\init.cpp"
     },
     {
         "arguments": [
@@ -199,11 +203,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/autons.cpp.o",
-            "src\\autons.cpp"
+            "bin/display.cpp.o",
+            "src\\display.cpp"
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\autons.cpp"
+        "file": "src\\display.cpp"
     },
     {
         "arguments": [
@@ -221,7 +225,7 @@
             "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
             "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
             "-iquote./include",
-            "-iquote./include/./",
+            "-iquote./include/subsystems/",
             "-mcpu=cortex-a9",
             "-mfpu=neon-fp16",
             "-mfloat-abi=softfp",
@@ -234,11 +238,42 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/display.cpp.o",
-            "src\\display.cpp"
+            "bin/subsystems/drive.cpp.o",
+            "src\\subsystems\\drive.cpp"
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\display.cpp"
+        "file": "src\\subsystems\\drive.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
+            "-iquote./include/media/",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-Os",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "--std=gnu11",
+            "-o",
+            "bin/media/fieldResizedIMG.c.o",
+            "src\\media\\fieldResizedIMG.c"
+        ],
+        "directory": "C:\\Robotics Projects\\apolloCV",
+        "file": "src\\media\\fieldResizedIMG.c"
     },
     {
         "arguments": [
@@ -291,6 +326,41 @@
             "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
             "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
             "-iquote./include",
+            "-iquote./include/./",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-Os",
+            "-funwind-tables",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "--std=gnu++17",
+            "-o",
+            "bin/autons.cpp.o",
+            "src\\autons.cpp"
+        ],
+        "directory": "C:\\Robotics Projects\\apolloCV",
+        "file": "src\\autons.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
             "-iquote./include/subsystems/",
             "-mcpu=cortex-a9",
             "-mfpu=neon-fp16",
@@ -304,11 +374,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/subsystems/puncher.cpp.o",
-            "src\\subsystems\\puncher.cpp"
+            "bin/subsystems/differential.cpp.o",
+            "src\\subsystems\\differential.cpp"
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\subsystems\\puncher.cpp"
+        "file": "src\\subsystems\\differential.cpp"
     },
     {
         "arguments": [
@@ -375,75 +445,5 @@
         ],
         "directory": "C:\\Robotics Projects\\apolloCV",
         "file": "src\\media\\redNearIMG.c"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/./",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-Os",
-            "-funwind-tables",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "--std=gnu++17",
-            "-o",
-            "bin/opcontrol.cpp.o",
-            "src\\opcontrol.cpp"
-        ],
-        "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\opcontrol.cpp"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\users\\vinod\\appdata\\local\\programs\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/subsystems/",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-Os",
-            "-funwind-tables",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "--std=gnu++17",
-            "-o",
-            "bin/subsystems/differential.cpp.o",
-            "src\\subsystems\\differential.cpp"
-        ],
-        "directory": "C:\\Robotics Projects\\apolloCV",
-        "file": "src\\subsystems\\differential.cpp"
     }
 ]
