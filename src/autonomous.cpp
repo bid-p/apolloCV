@@ -55,4 +55,6 @@ void autonomous()
     executeBlueFar2();
     break;
   }
+
+  lv_obj_clean(lv_scr_act());
 }

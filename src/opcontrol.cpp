@@ -36,15 +36,12 @@ void states() {
 
 void opcontrol() {
 
-  lv_obj_clean(lv_scr_act());
-
   pros::lcd::initialize();
 
   states();
 
 	while (true) {
-		states();
-
+		// states();
 		updateDrive();
 		updateDiff();
 		updatePuncher();
