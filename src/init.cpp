@@ -4,25 +4,26 @@ Controller controller;
 
 const double joyDeadband = .08;
 
+alliances alliance;
+
 // Constructs and starts acting tasks for subsystems
-  pros::Task driveActTask(drive::act, NULL, TASK_PRIORITY_DEFAULT,
-                          TASK_STACK_DEPTH_DEFAULT, "Act Drive");
+pros::Task driveActTask(drive::act, NULL, TASK_PRIORITY_DEFAULT,
+                        TASK_STACK_DEPTH_DEFAULT, "Act Drive");
 
-  pros::Task puncherActTask(puncher::act, NULL, TASK_PRIORITY_DEFAULT,
-                            TASK_STACK_DEPTH_DEFAULT, "Act Puncher");
+pros::Task puncherActTask(puncher::act, NULL, TASK_PRIORITY_DEFAULT,
+                          TASK_STACK_DEPTH_DEFAULT, "Act Puncher");
 
-  pros::Task anglerActTask(angler::act, NULL, TASK_PRIORITY_DEFAULT,
-                           TASK_STACK_DEPTH_DEFAULT, "Act Angler");
+pros::Task anglerActTask(angler::act, NULL, TASK_PRIORITY_DEFAULT,
+                         TASK_STACK_DEPTH_DEFAULT, "Act Angler");
 
-  pros::Task differentialActTask(differential::act, NULL, TASK_PRIORITY_DEFAULT,
-                                 TASK_STACK_DEPTH_DEFAULT, "Act Diff");
+pros::Task differentialActTask(differential::act, NULL, TASK_PRIORITY_DEFAULT,
+                               TASK_STACK_DEPTH_DEFAULT, "Act Diff");
 
-  pros::Task macroActTask(macro::act, NULL, TASK_PRIORITY_DEFAULT,
-                          TASK_STACK_DEPTH_DEFAULT, "Act Macro");
+pros::Task macroActTask(macro::act, NULL, TASK_PRIORITY_DEFAULT,
+                        TASK_STACK_DEPTH_DEFAULT, "Act Macro");
 
-  pros::Task updateTask(updateFunc, NULL, TASK_PRIORITY_DEFAULT,
-                        TASK_STACK_DEPTH_DEFAULT, "Update");
-
+pros::Task updateTask(updateFunc, NULL, TASK_PRIORITY_DEFAULT,
+                      TASK_STACK_DEPTH_DEFAULT, "Update");
 
 void waitUntilSettled(okapi::AbstractMotor &motor)
 {
@@ -33,8 +34,8 @@ void waitUntilSettled(okapi::AbstractMotor &motor)
   {
     pros::delay(10);
   }
-} // Custom waiting util that checks for when an integrated PID 
-  // controller has settled
+} // Custom waiting util that checks for when an integrated PID
+// controller has settled
 
 void updateFunc(void *)
 {
@@ -52,5 +53,4 @@ void updateFunc(void *)
 
 extern void states();
 
-  
 extern void autonStates();

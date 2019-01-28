@@ -12,9 +12,6 @@ puncherStates currState;
 
 Motor puncher(PUNCHER_PORT, true, AbstractMotor::gearset::red);
 
-// AsyncPosIntegratedController puncherController =
-//     AsyncControllerFactory::posIntegrated(puncher);
-
 pros::ADILineSensor lineP(SPORT_PUNCHERB);
 
 pros::ADILineSensor lineCock(SPORT_LINECOCK);
@@ -58,7 +55,7 @@ void act(void *)
       puncher.moveVoltage(0);
       break;
     case shooting: // turn the puncher gear exactly one revolution to shoot the ball
-      puncher.moveRelative(360, 100);
+      puncher.moveRelative(270, 100);
       waitUntilSettled(puncher);
       currState = cocking;
       break;

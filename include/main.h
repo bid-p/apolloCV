@@ -42,16 +42,18 @@
 #include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
 
-#include "angler.hpp"
+#include "ports.hpp"
+#include "motion/odometry.hpp"
+#include "subsystems/angler.hpp"
 #include "autons.hpp"
-#include "differential.hpp"
+#include "subsystems/differential.hpp"
 #include "display.hpp"
-#include "drive.hpp"
+#include "subsystems/drive.hpp"
 #include "init.hpp"
 #include "macros.hpp"
 #include "okapi/api.hpp"
-#include "ports.hpp"
-#include "puncher.hpp"
+#include "subsystems/puncher.hpp"
+
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.

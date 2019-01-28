@@ -17,11 +17,11 @@ Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
 
 Timer timerBallBrake;
 pros::ADILineSensor lineL(SPORT_INTAKE_L);
-pros::ADILineSensor lineR(SPORT_INTAKE_R);
+// pros::ADILineSensor lineR(SPORT_INTAKE_R);
 
 bool hasBall()
 {
-  if (lineL.get_value() < 2000 || lineR.get_value() < 2000)
+  if (lineL.get_value() < 2300 /* || lineR.get_value() < 2000*/)
   {
     return true;
   }

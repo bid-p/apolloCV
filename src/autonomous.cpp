@@ -14,20 +14,21 @@ using namespace okapi;
 
 void autonStates() // Prints helpful robot stats during auton period
 {
-  pros::lcd::print(0, "%f", drive::driveL1.getPosition());
-  pros::lcd::print(1, "%c", drive::currState);
-  pros::lcd::print(2, "%c", differential::currState);
 }
 
 void autonomous()
 {
+  pros::Task odometryPrint(odometry::printPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Screen");
+
   drive::currState = drive::driveStates::yield;
   differential::currState = differential::differentialStates::yield;
   puncher::currState = puncher::puncherStates::yield;
   angler::currState = angler::anglerStates::yield;
   // Overrides states to yield during autonomous period
 
-  autonStates();
+  drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+
+  // autonStates();
 
   switch (autonRoutine) // Executes auton routine based on auton selector
   {
@@ -70,4 +71,11 @@ void autonomous()
     break;
   }
   executeProgSkills();
+
+  // turnAngleVel(3600_deg, 100);
+
+  // odometryPrint.suspend();
+
+  // lv_obj_clean(lv_scr_act());
+
 }

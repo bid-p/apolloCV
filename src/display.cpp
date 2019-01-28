@@ -32,10 +32,12 @@ lv_obj_t *fieldPic = lv_img_create(lv_scr_act(), NULL);
 
 lv_style_t pathStyle;
 
-lv_res_t readySelect(lv_obj_t *btn) {
+lv_res_t readySelect(lv_obj_t *btn)
+{
 
   // printf("READY\n");
-  switch (autonRoutine) {
+  switch (autonRoutine)
+  {
   case notSelected:
     printf("NS\n");
     break;
@@ -93,9 +95,11 @@ lv_res_t readySelect(lv_obj_t *btn) {
   return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
 
-lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
+lv_res_t secondaryBtnToggle(lv_obj_t *btn)
+{
 
-  if (btn == redNear1Btn) {
+  if (btn == redNear1Btn)
+  {
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
     lv_btn_set_state(redFar1Btn, LV_BTN_STATE_REL);
@@ -107,8 +111,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     autonRoutine = redNear1;
 
     displayRedNear1();
+
+    alliance = red;
   }
-  if (btn == redNear2Btn) {
+  if (btn == redNear2Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
     lv_btn_set_state(redFar1Btn, LV_BTN_STATE_REL);
@@ -118,8 +125,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = redNear2;
+
+    alliance = red;
   }
-  if (btn == progSkillsBtn) {
+  if (btn == progSkillsBtn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redFar1Btn, LV_BTN_STATE_REL);
@@ -129,8 +139,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = progSkills;
+
+    alliance = red;
   }
-  if (btn == redFar1Btn) {
+  if (btn == redFar1Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -140,8 +153,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = redFar1;
+
+    alliance = red;
   }
-  if (btn == redFar2Btn) {
+  if (btn == redFar2Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -151,8 +167,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = redFar2;
+
+    alliance = red;
   }
-  if (btn == blueNear1Btn) {
+  if (btn == blueNear1Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -162,8 +181,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = blueNear1;
+
+    alliance = blue;
   }
-  if (btn == blueNear2Btn) {
+  if (btn == blueNear2Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -173,8 +195,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = blueNear2;
+
+    alliance = blue;
   }
-  if (btn == blueFar1Btn) {
+  if (btn == blueFar1Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -184,8 +209,11 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar2Btn, LV_BTN_STATE_REL);
     autonRoutine = blueFar1;
+
+    alliance = blue;
   }
-  if (btn == blueFar2Btn) {
+  if (btn == blueFar2Btn)
+  {
     lv_btn_set_state(redNear1Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(redNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(progSkillsBtn, LV_BTN_STATE_REL);
@@ -195,6 +223,8 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
     lv_btn_set_state(blueNear2Btn, LV_BTN_STATE_REL);
     lv_btn_set_state(blueFar1Btn, LV_BTN_STATE_REL);
     autonRoutine = blueFar2;
+
+    alliance = blue;
   }
 
   lv_img_set_src(fieldPic, &redNearIMG);
@@ -218,7 +248,8 @@ lv_res_t secondaryBtnToggle(lv_obj_t *btn) {
   return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
 
-lv_res_t mainBtnToggle(lv_obj_t *btn) {
+lv_res_t mainBtnToggle(lv_obj_t *btn)
+{
 
   lv_style_copy(&pathStyle, &lv_style_plain);
   pathStyle.line.color = LV_COLOR_HEX(0x000000);
@@ -229,7 +260,8 @@ lv_res_t mainBtnToggle(lv_obj_t *btn) {
 
   lv_btn_set_state(btn, LV_BTN_STATE_TGL_REL); /*Set toggled state*/
 
-  if (btn == redNearBtn) {
+  if (btn == redNearBtn)
+  {
 
     lv_obj_set_hidden(redFar1Btn, true);
     lv_obj_set_hidden(redFar2Btn, true);
@@ -269,7 +301,8 @@ lv_res_t mainBtnToggle(lv_obj_t *btn) {
     lv_btn_set_action(progSkillsBtn, LV_BTN_ACTION_CLICK, secondaryBtnToggle);
   }
 
-  if (btn == redFarBtn) {
+  if (btn == redFarBtn)
+  {
     // lv_img_set_src(fieldPic, &redNear1);
 
     lv_obj_set_hidden(redNear1Btn, true);
@@ -304,7 +337,8 @@ lv_res_t mainBtnToggle(lv_obj_t *btn) {
     lv_btn_set_action(redFar2Btn, LV_BTN_ACTION_CLICK, secondaryBtnToggle);
   }
 
-  if (btn == blueNearBtn) {
+  if (btn == blueNearBtn)
+  {
 
     lv_obj_set_hidden(redNear1Btn, true);
     lv_obj_set_hidden(redNear2Btn, true);
@@ -337,7 +371,8 @@ lv_res_t mainBtnToggle(lv_obj_t *btn) {
     lv_btn_set_action(blueNear2Btn, LV_BTN_ACTION_CLICK, secondaryBtnToggle);
   }
 
-  if (btn == blueFarBtn) {
+  if (btn == blueFarBtn)
+  {
 
     lv_obj_set_hidden(redNear1Btn, true);
     lv_obj_set_hidden(redNear2Btn, true);
@@ -373,7 +408,8 @@ lv_res_t mainBtnToggle(lv_obj_t *btn) {
   return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
 
-void autonSelector() {
+void autonSelector()
+{
   lv_scr_act();
 
   lv_obj_set_hidden(redNear1Btn, true);
@@ -420,7 +456,8 @@ void autonSelector() {
   lv_obj_align(fieldPic, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 25);
 }
 
-void lcdCode2() {
+void lcdCode2()
+{
   lv_scr_act();
   /*Create an array for the points of the line*/
   static lv_point_t line_points[] = {
@@ -439,7 +476,8 @@ void lcdCode2() {
   lv_obj_align(line1, NULL, LV_ALIGN_IN_TOP_MID, 0, 20);
 }
 
-void displayRedNear1() {
+void displayRedNear1()
+{
   // path1
   // static lv_point_t path1Points[] = {
   //     {0, 0}, {60, 0}, {20, 0}, {15, -60}, {20, 0}};

@@ -18,29 +18,26 @@
 
 void states()
 {
+  double x = odometry::currX.convert(okapi::inch);
+  double y = odometry::currY.convert(okapi::inch);
+  double angle = odometry::currAngle.convert(okapi::degree);
+
   pros::lcd::print(1, "Drive state: %c | Drive temp: %i", drive::currState, (int)drive::driveR1.getTemperature());
   pros::lcd::print(2, "Puncher state: %c | Puncher temp: %i", puncher::currState, (int)puncher::puncher.getTemperature());
-  pros::lcd::print(3, "Puncher encoder: %i", (int)puncher::puncher.getPosition());
-  pros::lcd::print(3, "Angle target: %i", (int)angler::target);
-  pros::lcd::print(4, "Angle state: %c | Angle temp: %i", angler::currState, (int)angler::angler.getTemperature());
-  pros::lcd::print(5, "Angle encoder: %i", (int)angler::angler.getPosition());
-  pros::lcd::print(6, "Diff state: %c | Diff Left temp: %i", differential::currState, (int)differential::diffLeft.getTemperature());
-  pros::lcd::print(7, "Macro state: %c", macro::currState);
+  pros::lcd::print(3, "Angle Target: %i | Angle Enc: %i | Angle Temp: %i",(int)angler::target, (int)angler::angler.getPosition(), (int)angler::angler.getTemperature());
+  pros::lcd::print(4, "Diff state: %c | Diff Left temp: %i", differential::currState, (int)differential::diffLeft.getTemperature());
+  pros::lcd::print(5, "Macro state: %c", macro::currState);
 }
 
 void opcontrol()
 {
 
-  lv_obj_clean(lv_scr_act());
-
   pros::lcd::initialize();
-
-  // autonSelector();
 
   while (true)
   {
 
-      states();
+      // states();
 
   // i'm alive!
 

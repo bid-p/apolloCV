@@ -10,6 +10,14 @@ extern Controller controller;
 
 extern const double joyDeadband;
 
+enum alliances
+{
+    red = 'r',
+    blue = 'b',
+};
+
+extern alliances alliance;
+
 void waitUntilSettled(okapi::AbstractMotor &motor);
 
 extern pros::Task driveActTask;

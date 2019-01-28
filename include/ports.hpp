@@ -15,14 +15,21 @@ const int ANGLE_CHANGER_PORT = 6;
 /*----------------------------------------------------------------------------------------------*/
 
 const char SPORT_INTAKE_L = 'H';
-const char SPORT_INTAKE_R = 'G';
 
 const char SPORT_PUNCHERB = 'F';
 
-/*----------------------------------------------------------------------------------------------*/
-
-const int SPORT_VISION = 1;
-
-/*----------------------------------------------------------------------------------------------*/
-
 const int SPORT_LINECOCK = 'E';
+
+const char SPORT_LIFT = 'G';
+
+/*----------------------------------------------------------------------------------------------*/
+
+const int SPORT_VISION = 9;
+
+/*----------------------------------------------------------------------------------------------*/
+
+const char SPORT_ENC_RTOP = 'A';
+const char SPORT_ENC_RBOT = 'B';
+
+const char SPORT_ENC_LTOP = 'C';
+const char SPORT_ENC_LBOT = 'D';

@@ -10,7 +10,7 @@ ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 ControllerButton doubleShotNearBtn1 = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn2 = controller[ControllerDigital::L2];
 
-ControllerButton doubleShotFarBtn = controller[ControllerDigital::L2];
+ControllerButton doubleShotFarBtn = controller[ControllerDigital::X];
 
 int macroTarget1; // target encoder values for angler to shoot first flag in macro
 int macroTarget2; // target encoder value for angler to shoot second flag in macro
@@ -227,8 +227,9 @@ void customShotCall(int target1, int target2)
 }
 
 // overloaded function: one argument means single shot
-void customShotCall(int target1) {
+void customShotCall(int target1)
+{
   macroTarget1 = target1;
-  
+
   macro::currState = macro::macroStates::customShotSingle;
 }

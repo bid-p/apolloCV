@@ -4,19 +4,22 @@ autonRoutines autonRoutine = notSelected;
 
 void initProgSkills()
 {
-    drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{39_in, 0_in, 0_deg}}, "A1");
-    drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{35_in, 0_in, 0_deg}}, "A2");
 }
 
 void executeProgSkills()
 {
+    odometry::currX = 24_in;
+    odometry::currY = 36_in;
+    odometry::currAngle = 90_deg;
+
     // Pause the macro task to prevent it from
     // taking control of the differential
     macroActTask.suspend();
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
+
+    drive::profileController.generatePath(
+        {Point{odometry::currX, odometry::currY, odometry::currAngle}, Point{63_in, 36_in, 90_deg}}, "A1");
 
     drive::profileController.setTarget("A1");
     drive::profileController.waitUntilSettled();
@@ -28,15 +31,20 @@ void executeProgSkills()
     // }
     // differential::currState = differential::differentialStates::notRunning;
 
+    drive::profileController.generatePath(
+        {Point{20_in, 36_in, 90_deg}, Point{odometry::currX, odometry::currY, odometry::currAngle}}, "A2");
+
     drive::profileController.setTarget("A2", true);
     drive::profileController.waitUntilSettled();
     //Reverse to starting tile
 
-    turnAngleVel(-90_deg, 100);
+    removePaths("A1", "A2");
+
+    turnAngleVel(0_deg - odometry::currAngle, 100);
     // Turn left
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{50_in, 0_in, 0_deg}}, "forward");
+        {Point{odometry::currY, odometry::currX, odometry::currAngle}, Point{88_in, 20_in, 0_deg}}, "forward");
 
     drive::profileController.setTarget("forward");
     drive::profileController.waitUntilSettled();
@@ -61,28 +69,26 @@ void executeProgSkills()
     macroActTask.suspend();
     // Pause macro task to regain control of differential
 
-    removePaths("A1", "A2");
-
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{46_in, 6_in, 0_deg}}, "B");
+        {Point{odometry::currY, odometry::currX, odometry::currAngle}, Point{132_in, 13_in, 0_deg}}, "B");
 
     drive::profileController.setTarget("B");
     drive::profileController.waitUntilSettled();
     // Perform s-curve to toggle the bottom flag
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{48.5_in, -6_in, 0_deg}}, "B1");
+        {Point{odometry::currY, odometry::currX, odometry::currAngle}, Point{86_in, 20_in, 0_deg}}, "B1");
 
     drive::profileController.setTarget("B1", true);
     drive::profileController.waitUntilSettled();
 
     removePaths("B", "B1");
 
-    turnAngleVel(90_deg, 100);
+    turnAngleVel(90_deg - currAngle, 100);
     // Turn right
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{35_in, 0_in, 0_deg}}, "C1");
+        {Point{odometry::currX, odometry::currX, odometry::currAngle}, Point{35_in, 0_in, 90_deg}}, "C1");
     drive::profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{12_in, 0_in, 0_deg}}, "C2");
 

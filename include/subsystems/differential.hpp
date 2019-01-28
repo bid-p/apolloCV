@@ -26,7 +26,7 @@ extern differentialStates currState;
 extern okapi::Motor diffLeft, diffRight;
 
 extern pros::ADILineSensor lineL;
-extern pros::ADILineSensor lineR;
+// extern pros::ADILineSensor lineR;
 
 extern char stateIndicator;
 
