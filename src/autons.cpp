@@ -84,7 +84,7 @@ void executeProgSkills()
 
     removePaths("B", "B1");
 
-    turnAngleVel(90_deg - currAngle, 100);
+    turnAngleVel(90_deg - odometry::currAngle, 100);
     // Turn right
 
     drive::profileController.generatePath(

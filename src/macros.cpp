@@ -68,7 +68,7 @@ void act(void *)
 
       while (!puncher::isLoaded())
       {
-        pros::delay(10);
+        pros::delay(2);
         differential::currState = differential::intakeIn;
       } // waits for puncher to load
       differential::currState = differential::notRunning;
@@ -76,7 +76,10 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
-      waitUntilSettled(puncher::puncher);
+      // waitUntilSettled(puncher::puncher);
+      while(puncher::isLoaded()){
+        pros::delay(2);
+      }
 
       puncher::currState = puncher::cocking;
 
@@ -95,7 +98,6 @@ void act(void *)
       macro::currState = none;
       break;
     case doubleShotFar:
-
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -103,9 +105,11 @@ void act(void *)
       angler::currState = angler::toTarget;
       // will switch out of toTarget automatically when target reached
 
+      // should automatically stop when ball loads into puncher
+
       while (!puncher::isLoaded())
       {
-        pros::delay(10);
+        pros::delay(2);
         differential::currState = differential::intakeIn;
       } // waits for puncher to load
       differential::currState = differential::notRunning;
@@ -113,7 +117,10 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
-      waitUntilSettled(puncher::puncher);
+      // waitUntilSettled(puncher::puncher);
+      while(puncher::isLoaded()){
+        pros::delay(2);
+      }
 
       puncher::currState = puncher::cocking;
 
@@ -127,8 +134,6 @@ void act(void *)
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler);
-
       puncher::currState = puncher::shooting;
 
       macro::currState = none;
@@ -137,35 +142,38 @@ void act(void *)
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
-      angler::target = macroTarget1;
+      angler::target = 0;
       angler::currState = angler::toTarget;
       // will switch out of toTarget automatically when target reached
 
+      // should automatically stop when ball loads into puncher
+
       while (!puncher::isLoaded())
       {
-        pros::delay(10);
+        pros::delay(2);
         differential::currState = differential::intakeIn;
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler); // waits for angler to stop
+      waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
-      waitUntilSettled(puncher::puncher);
+      // waitUntilSettled(puncher::puncher);
+      while(puncher::isLoaded()){
+        pros::delay(2);
+      }
 
       puncher::currState = puncher::cocking;
 
-      angler::target = macroTarget2;
+      angler::target = 120;
       angler::currState = angler::toTarget;
 
       while (!puncher::isLoaded())
       {
-        pros::delay(10);
+        pros::delay(2);
         differential::currState = differential::intakeIn;
       } // waits for puncher to load
       differential::currState = differential::notRunning;
-
-      waitUntilSettled(angler::angler);
 
       puncher::currState = puncher::shooting;
 
@@ -189,10 +197,11 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits for angler to stop
 
       puncher::currState = puncher::shooting;
-      waitUntilSettled(puncher::puncher);
+      while(puncher::isLoaded()){
+        pros::delay(2);
+      }
 
       macro::currState = none;
-
       break;
     case anglerCH: // changes the angler to target the high flag from the close tile
       angler::target = 25;

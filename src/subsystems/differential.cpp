@@ -19,6 +19,10 @@ Timer timerBallBrake;
 pros::ADILineSensor lineL(SPORT_INTAKE_L);
 // pros::ADILineSensor lineR(SPORT_INTAKE_R);
 
+Potentiometer liftPot(SPORT_LIFT);
+AverageFilter<5> liftPotFilter;
+int liftVal;
+
 bool hasBall()
 {
   if (lineL.get_value() < 2300 /* || lineR.get_value() < 2000*/)
@@ -30,28 +34,8 @@ bool hasBall()
 
 void update()
 {
-  // if (puncher::isLoaded())
-  // {
-  //   printf("loaded\n");
-  // }
-
-  // if (differential::hasBall())
-  // {
-  //   printf("has ball\n");
-  // }
-
-  // printf("greetings\n");
-
+  liftVal = liftPotFilter.filter(liftPot.get());
   // AUTOMATED CHECKERS
-  /*if (currState == intakeIn && !puncher::isLoaded())
-  {
-    currState = intakeIn;
-  } // if puncher isn't loaded, run intake
-  if (currState == intakeIn && puncher::isLoaded() && !hasBall())
-  {
-    currState = intakeIn;
-  } // if is loaded but doesn't have ball ready, keep running intake*/
-
   if (currState == intakeIn && puncher::isLoaded() && hasBall())
   {
     currState = ballBrake;
@@ -63,11 +47,13 @@ void update()
   } // Reverses intake at 83.3% speed for 20ms so that ball doesn't
   // overshoot due to speed of the intake
 
-  // USER INPUT
-  if (intakeInBtn.isPressed() && intakeOutBtn.isPressed())
+  // bool liftInRange = (liftVal >= 90 || liftVal <= 110);
+  if(currState == capHoldTransition && (liftVal >= 90 && liftVal <= 110))
   {
     currState = liftHold;
-  } // if both buttons are pressed, run lift PID
+  }
+
+  // USER INPUT
   if (liftUpBtn.isPressed())
   {
     currState = liftUp;
@@ -84,6 +70,10 @@ void update()
   {
     currState = intakeOut;
   }
+  if (intakeInBtn.isPressed() && intakeOutBtn.isPressed())
+  {
+    currState = capHoldTransition;
+  } // if both buttons are pressed, run lift PID
 }
 
 void act(void *)
@@ -120,8 +110,8 @@ void act(void *)
     case liftHold: // lift hold PID
       diffLeft.setBrakeMode(AbstractMotor::brakeMode::hold);
       diffRight.setBrakeMode(AbstractMotor::brakeMode::hold);
-      diffLeft.moveVoltage(0);
-      diffRight.moveVoltage(0);
+      diffLeft.moveVelocity(0);
+      diffRight.moveVelocity(0);
       break;
     case ballBrake:
       diffLeft.moveVoltage(10000);
@@ -132,8 +122,18 @@ void act(void *)
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
       // For use in auton, keeps intake running in the reverse
-      // diretion to flip caps
+      // direction to flip caps
       break;
+    case capHoldTransition:
+      if(liftVal <= 100){
+        diffLeft.moveVoltage(10000);
+        diffRight.moveVoltage(10000);
+      }
+      if(liftVal >= 100){
+        diffLeft.moveVoltage(-10000);
+        diffRight.moveVoltage(-10000);
+      }
+    break;
     case yield:
       break;
     }

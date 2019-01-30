@@ -54,7 +54,7 @@ void act(void *)
       puncher.setBrakeMode(AbstractMotor::brakeMode::coast);
       puncher.moveVoltage(0);
       break;
-    case shooting: // turn the puncher gear exactly one revolution to shoot the ball
+    case shooting: // turn the puncher gear to shoot the ball
       puncher.moveRelative(270, 100);
       waitUntilSettled(puncher);
       currState = cocking;

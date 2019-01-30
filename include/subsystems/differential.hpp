@@ -18,6 +18,7 @@ enum differentialStates
   intakeOut = 'o',
   ballBrake = 't',
   intakeOutNY = 'n',
+  capHoldTransition = 'c',
   yield = 'y',
 };
 
@@ -27,6 +28,8 @@ extern okapi::Motor diffLeft, diffRight;
 
 extern pros::ADILineSensor lineL;
 // extern pros::ADILineSensor lineR;
+
+extern Potentiometer liftPot;
 
 extern char stateIndicator;
 
