@@ -11,6 +11,7 @@ enum puncherStates
 {
   notRunning = 'x',
   shooting = 's',
+  fullSend = 'f',
   cocking = 'c',
   yield = 'y'
 };

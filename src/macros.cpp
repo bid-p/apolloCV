@@ -66,10 +66,10 @@ void act(void *)
 
       // should automatically stop when ball loads into puncher
 
+      differential::currState = differential::intakeIn;
       while (!puncher::isLoaded())
       {
         pros::delay(2);
-        differential::currState = differential::intakeIn;
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
@@ -77,7 +77,8 @@ void act(void *)
 
       puncher::currState = puncher::shooting;
       // waitUntilSettled(puncher::puncher);
-      while(puncher::isLoaded()){
+      while (puncher::isLoaded())
+      {
         pros::delay(2);
       }
 
@@ -86,10 +87,10 @@ void act(void *)
       angler::target = 120;
       angler::currState = angler::toTarget;
 
+      differential::currState = differential::intakeIn;
       while (!puncher::isLoaded())
       {
-        pros::delay(10);
-        differential::currState = differential::intakeIn;
+        pros::delay(2);
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
@@ -118,7 +119,8 @@ void act(void *)
 
       puncher::currState = puncher::shooting;
       // waitUntilSettled(puncher::puncher);
-      while(puncher::isLoaded()){
+      while (puncher::isLoaded())
+      {
         pros::delay(2);
       }
 
@@ -159,7 +161,8 @@ void act(void *)
 
       puncher::currState = puncher::shooting;
       // waitUntilSettled(puncher::puncher);
-      while(puncher::isLoaded()){
+      while (puncher::isLoaded())
+      {
         pros::delay(2);
       }
 
@@ -197,7 +200,8 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits for angler to stop
 
       puncher::currState = puncher::shooting;
-      while(puncher::isLoaded()){
+      while (puncher::isLoaded())
+      {
         pros::delay(2);
       }
 

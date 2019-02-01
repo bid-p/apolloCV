@@ -19,7 +19,7 @@ pros::ADILineSensor lineCock(SPORT_LINECOCK);
 // uses line sensors to detect whether the puncher is pulled back for ball intake
 bool isCocked()
 {
-  if (lineCock.get_value() > 2200)
+  if (lineCock.get_value() > 2100)
   {
     return true;
   }
@@ -42,6 +42,10 @@ void update()
   {
     currState = shooting; // begin shooting on button press; will cock automatically after shooting
   }
+  if (isCocked())
+  {
+    printf("big dick energy\n");
+  }
 }
 
 void act(void *)
@@ -55,7 +59,7 @@ void act(void *)
       puncher.moveVoltage(0);
       break;
     case shooting: // turn the puncher gear to shoot the ball
-      puncher.moveRelative(270, 100);
+      puncher.moveRelative(200, 100);
       waitUntilSettled(puncher);
       currState = cocking;
       break;
@@ -69,6 +73,11 @@ void act(void *)
         puncher.moveVoltage(0);
         currState = notRunning;
       }
+      break;
+    case fullSend: // turn the puncher gear to shoot the ball
+      puncher.moveRelative(500, 100);
+      waitUntilSettled(puncher);
+      currState = cocking;
       break;
     case yield: // for macro in order to take direct control of puncher
       break;
