@@ -76,11 +76,13 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
-      // waitUntilSettled(puncher::puncher);
-      while (puncher::isLoaded())
-      {
-        pros::delay(2);
-      }
+
+      // pros::delay(500);
+      waitUntilSettled(puncher::puncher);
+      // while (puncher::isLoaded())
+      // {
+      //   pros::delay(2);
+      // }
 
       puncher::currState = puncher::cocking;
 
@@ -93,6 +95,8 @@ void act(void *)
         pros::delay(2);
       } // waits for puncher to load
       differential::currState = differential::notRunning;
+
+      waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
 
@@ -118,11 +122,11 @@ void act(void *)
       waitUntilSettled(angler::angler); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
-      // waitUntilSettled(puncher::puncher);
-      while (puncher::isLoaded())
-      {
-        pros::delay(2);
-      }
+      waitUntilSettled(puncher::puncher);
+      // while (puncher::isLoaded())
+      // {
+      //   pros::delay(2);
+      // }
 
       puncher::currState = puncher::cocking;
 

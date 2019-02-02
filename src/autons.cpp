@@ -19,7 +19,7 @@ void executeProgSkills()
     differential::currState = differential::intakeIn;
 
     drive::profileController.generatePath(
-        {Point{odometry::currX, odometry::currY, odometry::currAngle}, Point{63_in, 36_in, 90_deg}}, "A1");
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{36_in, 63_in, 90_deg}}, "A1");
 
     drive::profileController.setTarget("A1");
     drive::profileController.waitUntilSettled();
@@ -32,7 +32,7 @@ void executeProgSkills()
     // differential::currState = differential::differentialStates::notRunning;
 
     drive::profileController.generatePath(
-        {Point{20_in, 36_in, 90_deg}, Point{odometry::currX, odometry::currY, odometry::currAngle}}, "A2");
+        {Point{36_in, 28_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 90_deg}}, "A2");
 
     drive::profileController.setTarget("A2", true);
     drive::profileController.waitUntilSettled();
@@ -44,7 +44,7 @@ void executeProgSkills()
     // Turn left
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, odometry::currAngle}, Point{88_in, 20_in, 0_deg}}, "forward");
+        {Point{odometry::currY, 28_in, odometry::currAngle}, Point{88_in, odometry::currX, 0_deg}}, "forward");
 
     drive::profileController.setTarget("forward");
     drive::profileController.waitUntilSettled();
