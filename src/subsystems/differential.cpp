@@ -12,8 +12,8 @@ namespace differential
 
 differentialStates currState;
 
-Motor diffLeft(DIFF_PORT_L, false, AbstractMotor::gearset::green);
-Motor diffRight(DIFF_PORT_R, true, AbstractMotor::gearset::green);
+Motor diffLeft(DIFF_PORT_L, true, AbstractMotor::gearset::green);
+Motor diffRight(DIFF_PORT_R, false, AbstractMotor::gearset::green);
 
 Timer timerBallBrake;
 pros::ADILineSensor lineL(SPORT_INTAKE_L);
@@ -21,6 +21,7 @@ pros::ADILineSensor lineL(SPORT_INTAKE_L);
 
 Potentiometer liftPot(SPORT_LIFT);
 AverageFilter<5> liftPotFilter;
+
 int liftVal;
 
 bool hasBall()
@@ -35,7 +36,21 @@ bool hasBall()
 void update()
 {
   liftVal = liftPotFilter.filter(liftPot.get());
+
   // AUTOMATED CHECKERS
+  if (currState == intakeIn && !puncher::isLoaded() && hasBall())
+  {
+    currState = ballDecel;
+  }
+  // if (currState == ballDecel && !intakeInBtn.isPressed())
+  // {
+  //   currState = notRunning;
+  // }
+  if (currState == ballDecel && puncher::isLoaded())
+  {
+    currState = intakeIn;
+  }
+
   if (currState == intakeIn && puncher::isLoaded() && hasBall())
   {
     currState = ballBrake;
@@ -48,7 +63,7 @@ void update()
   // overshoot due to speed of the intake
 
   // bool liftInRange = (liftVal >= 90 || liftVal <= 110);
-  if(currState == capHoldTransition && (liftVal >= 90 && liftVal <= 110))
+  if (currState == capHoldTransition && (liftVal >= 90 && liftVal <= 110))
   {
     currState = liftHold;
   }
@@ -62,7 +77,7 @@ void update()
   {
     currState = liftDown;
   }
-  if (intakeInBtn.isPressed() && !intakeOutBtn.isPressed())
+  if (currState == notRunning && intakeInBtn.isPressed() && !intakeOutBtn.isPressed())
   {
     currState = intakeIn;
   }
@@ -89,18 +104,21 @@ void act(void *)
       diffRight.moveVoltage(0);
       break;
     case liftUp: // Both differential motors same direction
-      diffLeft.moveVelocity(200);
-      diffRight.moveVelocity(200);
-      currState = notRunning;
-      break;
-    case liftDown: // Both differential motors same direction
       diffLeft.moveVelocity(-200);
       diffRight.moveVelocity(-200);
       currState = notRunning;
+      // currState = liftHold;
+      break;
+    case liftDown: // Both differential motors same direction
+      diffLeft.moveVelocity(200);
+      diffRight.moveVelocity(200);
+      currState = notRunning;
+      // currState = liftHold;
       break;
     case intakeIn:
       diffLeft.moveVoltage(-12000);
       diffRight.moveVoltage(12000);
+      // currState = notRunning;
       break;
     case intakeOut: // Reverses intake at 83.3% power
       diffLeft.moveVoltage(10000);
@@ -118,6 +136,11 @@ void act(void *)
       diffRight.moveVoltage(-10000);
       // Robot outtakes without yielding control back to notRunning state
       break;
+    case ballDecel:
+      diffLeft.moveVoltage(-5200);
+      diffRight.moveVoltage(5200);
+      // Robot intakes slower
+      break;
     case intakeOutNY:
       diffLeft.moveVoltage(10000);
       diffRight.moveVoltage(-10000);
@@ -125,15 +148,17 @@ void act(void *)
       // direction to flip caps
       break;
     case capHoldTransition:
-      if(liftVal <= 100){
-        diffLeft.moveVoltage(10000);
-        diffRight.moveVoltage(10000);
-      }
-      if(liftVal >= 100){
+      if (liftVal <= 100)
+      {
         diffLeft.moveVoltage(-10000);
         diffRight.moveVoltage(-10000);
       }
-    break;
+      if (liftVal >= 100)
+      {
+        diffLeft.moveVoltage(10000);
+        diffRight.moveVoltage(10000);
+      }
+      break;
     case yield:
       break;
     }

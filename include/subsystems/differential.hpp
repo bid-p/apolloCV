@@ -17,6 +17,7 @@ enum differentialStates
   intakeIn = 'i',
   intakeOut = 'o',
   ballBrake = 't',
+  ballDecel = 'd',
   intakeOutNY = 'n',
   capHoldTransition = 'c',
   yield = 'y',

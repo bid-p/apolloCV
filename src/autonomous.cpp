@@ -26,7 +26,7 @@ void autonomous()
   angler::currState = angler::anglerStates::yield;
   // Overrides states to yield during autonomous period
 
-  drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+  // drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
 
   // autonStates();
 
@@ -70,12 +70,11 @@ void autonomous()
     executeBlueFar2();
     break;
   }
-  executeProgSkills();
+  // executeProgSkills();
 
-  // turnAngleVel(3600_deg, 100);
+  turnAngleVel(3600_deg, 100);
 
   // odometryPrint.suspend();
 
   // lv_obj_clean(lv_scr_act());
-
 }

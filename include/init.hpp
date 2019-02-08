@@ -18,7 +18,7 @@ enum alliances
 
 extern alliances alliance;
 
-void waitUntilSettled(okapi::AbstractMotor &motor);
+void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetError, double iatTargetDerivative, QTime iatTargetTime);
 
 extern pros::Task driveActTask;
 extern pros::Task puncherActTask;

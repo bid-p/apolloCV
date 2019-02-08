@@ -11,7 +11,6 @@ enum puncherStates
 {
   notRunning = 'x',
   shooting = 's',
-  fullSend = 'f',
   cocking = 'c',
   yield = 'y'
 };
@@ -29,6 +28,8 @@ extern pros::ADILineSensor lineP;
 extern pros::ADILineSensor lineCock;
 
 extern bool isLoaded();
+
+extern bool isFired();
 
 extern void update();
 extern void act(void *);

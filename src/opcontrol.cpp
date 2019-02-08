@@ -22,11 +22,11 @@ void states()
   double y = odometry::currY.convert(okapi::inch);
   double angle = odometry::currAngle.convert(okapi::degree);
 
-  pros::lcd::print(1, "Drive state: %c | Drive temp: %i", drive::currState, (int)drive::driveR1.getTemperature());
-  pros::lcd::print(2, "Puncher state: %c | Puncher temp: %i", puncher::currState, (int)puncher::puncher.getTemperature());
-  pros::lcd::print(3, "Angle Target: %i | Angle Enc: %i | Angle Temp: %i", (int)angler::target, (int)angler::angler.getPosition(), (int)angler::angler.getTemperature());
-  pros::lcd::print(4, "Diff state: %c | Diff Left temp: %i", differential::currState, (int)differential::diffLeft.getTemperature());
-  pros::lcd::print(5, "Macro state: %c", macro::currState);
+  // pros::lcd::print(1, "Drive state: %c | Drive temp: %d", drive::currState, (int)drive::driveR1.getTemperature());
+  // pros::lcd::print(2, "Puncher state: %c | Puncher temp: %d", puncher::currState, (int)puncher::puncher.getTemperature());
+  pros::lcd::print(7, "Angle Target: %d | Angle Enc: %d | Angle Temp: %d", (int)angler::target, (int)angler::angler.getPosition(), (int)angler::angler.getTemperature());
+  // pros::lcd::print(4, "Diff state: %c | Diff Left temp: %d", differential::currState, (int)differential::diffLeft.getTemperature());
+  // pros::lcd::print(5, "Macro state: %c", macro::currState);
 }
 
 void opcontrol()
@@ -36,15 +36,17 @@ void opcontrol()
 
   while (true)
   {
-    printf("Line cock: %d\n", puncher::lineCock.get_value());
 
-    // states();
+    // printf("%d\n", pros::millis());
+    //printf("%f\n", puncher::puncher.get_torque());
+
+    states();
 
     // i'm alive!
 
     // All of our work has been offloaded to external tasks, so the main
     // while loop is empty.
 
-    pros::delay(500);
+    pros::delay(10);
   }
 }

@@ -2,8 +2,8 @@
 
 using namespace okapi;
 
-ControllerButton puncherShootBtn = controller[ControllerDigital::L1];
-ControllerButton puncherCockingBtn = controller[ControllerDigital::L2];
+// ControllerButton puncherShootBtn = controller[ControllerDigital::L1];
+// ControllerButton puncherCockingBtn = controller[ControllerDigital::L2];
 
 namespace puncher
 {
@@ -19,7 +19,7 @@ pros::ADILineSensor lineCock(SPORT_LINECOCK);
 // uses line sensors to detect whether the puncher is pulled back for ball intake
 bool isCocked()
 {
-  if (lineCock.get_value() > 2250)
+  if (lineCock.get_value() > 2500)
   {
     return true;
   }
@@ -36,12 +36,21 @@ bool isLoaded()
   return false;
 }
 
+bool isFired()
+{
+  if (puncher.get_torque() < .1) // low ass number
+  {
+    return true;
+  }
+  return false;
+}
+
 void update()
 {
-  if (puncherShootBtn.isPressed() && !puncherCockingBtn.isPressed())
-  {
-    currState = shooting; // begin shooting on button press; will cock automatically after shooting
-  }
+  // if (puncherShootBtn.changedToPressed())
+  // {
+  //   currState = shooting; // begin shooting on button press; will cock automatically after shooting
+  // }
 }
 
 void act(void *)
@@ -55,9 +64,14 @@ void act(void *)
       puncher.moveVoltage(0);
       break;
     case shooting: // turn the puncher gear to shoot the ball
-      puncher.moveRelative(320, 100);
-      waitUntilSettled(puncher);
-      currState = cocking;
+      puncher.moveVoltage(12000);
+      pros::delay(30);
+      if (isFired()) // low ass number
+      {
+        currState = cocking;
+        // printf("cocking\n");
+      }
+      // printf("Torque: %f\n", puncher.get_torque());
       break;
     case cocking: // pulls back the puncher until line sensors detect the puncher
       if (!isCocked())
@@ -69,11 +83,6 @@ void act(void *)
         puncher.moveVoltage(0);
         currState = notRunning;
       }
-      break;
-    case fullSend: // turn the puncher gear to yeet the ball
-      puncher.moveRelative(500, 100);
-      waitUntilSettled(puncher);
-      currState = cocking;
       break;
     case yield: // for macro in order to take direct control of puncher
       break;

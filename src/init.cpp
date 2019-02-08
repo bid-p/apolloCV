@@ -25,12 +25,11 @@ pros::Task macroActTask(macro::act, NULL, TASK_PRIORITY_DEFAULT,
 pros::Task updateTask(updateFunc, NULL, TASK_PRIORITY_DEFAULT,
                       TASK_STACK_DEPTH_DEFAULT, "Update");
 
-void waitUntilSettled(okapi::AbstractMotor &motor)
+void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetError = 50, double iatTargetDerivative = 5, QTime iatTargetTime = 250_ms)
 {
-  auto settledUtil = SettledUtilFactory::create();
+  auto settledUtil = SettledUtilFactory::create(iatTargetError, iatTargetDerivative, iatTargetTime);
 
-  while (
-      !settledUtil.isSettled(motor.getTargetPosition() - motor.getPosition()))
+  while (!settledUtil.isSettled(motor.getTargetPosition() - motor.getPosition()))
   {
     pros::delay(10);
   }
