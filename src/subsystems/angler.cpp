@@ -39,12 +39,12 @@ void act(void *)
       anglerController.flipDisable(true);
       angler.moveAbsolute(target, 600);
       waitUntilSettled(angler, 50, 5, 10_ms);
-      currState = brake;
+      // currState = brake;
       break;
     case brake: // Shorts the motor terminals to replicate
                 //PID hold without current use
       anglerController.flipDisable(true);
-      angler.setBrakeMode(AbstractMotor::brakeMode::coast);
+      angler.setBrakeMode(AbstractMotor::brakeMode::hold);
       angler.moveVoltage(0);
       break;
     case autoAim:

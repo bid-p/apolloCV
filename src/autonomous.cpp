@@ -70,9 +70,9 @@ void autonomous()
     executeBlueFar2();
     break;
   }
-  // executeProgSkills();
+  executeProgSkills();
 
-  turnAngleVel(3600_deg, 100);
+  // turnAngleVel(3600_deg, 100);
 
   // odometryPrint.suspend();
 

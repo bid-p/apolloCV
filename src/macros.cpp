@@ -64,12 +64,12 @@ void act(void *)
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
-      differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
-      {
-        pros::delay(2);
-      } // waits for puncher to load
-      differential::currState = differential::notRunning;
+      // differential::currState = differential::intakeIn;
+      // while (!puncher::isLoaded())
+      // {
+      //   pros::delay(2);
+      // } // waits for puncher to load
+      // differential::currState = differential::notRunning;
 
       waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
 
@@ -123,7 +123,7 @@ void act(void *)
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
-      angler::target = 0;
+      angler::target = 30;
       angler::currState = angler::toTarget;
       // will switch out of toTarget automatically when target reached
 
@@ -165,7 +165,7 @@ void act(void *)
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
-      angler::target = 0;
+      angler::target = macroTarget1;
       angler::currState = angler::toTarget;
       // will switch out of toTarget automatically when target reached
 
@@ -187,7 +187,7 @@ void act(void *)
         pros::delay(2);
       }
 
-      angler::target = 120;
+      angler::target = macroTarget2;
       angler::currState = angler::toTarget;
 
       differential::currState = differential::intakeIn;
@@ -256,11 +256,11 @@ void act(void *)
       angler::currState = angler::toTarget;
       break;
     case anglerFM: // changes the angler to target the middle flag from the far tile
-      angler::target = 75;
+      angler::target = 78;
       angler::currState = angler::toTarget;
       break;
     case anglerFH: // changes the angler to target the high flag from the far title
-      angler::target = 15;
+      angler::target = 30;
       angler::currState = angler::toTarget;
       break;
     }

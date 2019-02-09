@@ -10,7 +10,7 @@ double lEncLast;
 
 const double ENC_WHEEL = 2.75;
 const double ENC_WHEEL2 = 4.125;
-const double CHASSISWIDTH = 7.42958 /*7.12*/;
+const double CHASSISWIDTH = 7.227535 /*7.12*/;
 const double TICKSINCH = ENC_WHEEL * PI / 360.0;
 const double TICKSINCH2 = ENC_WHEEL2 * PI / 360.0;
 

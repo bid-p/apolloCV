@@ -6,6 +6,7 @@ ControllerButton liftUpBtn = controller[ControllerDigital::A];
 ControllerButton liftDownBtn = controller[ControllerDigital::Y];
 ControllerButton intakeInBtn = controller[ControllerDigital::R1];
 ControllerButton intakeOutBtn = controller[ControllerDigital::R2];
+ControllerButton liftHoldBtn = controller[ControllerDigital::B];
 
 namespace differential
 {
@@ -85,10 +86,10 @@ void update()
   {
     currState = intakeOut;
   }
-  if (intakeInBtn.isPressed() && intakeOutBtn.isPressed())
+  if (liftHoldBtn.changedToPressed())
   {
     currState = capHoldTransition;
-  } // if both buttons are pressed, run lift PID
+  } // if Button B pressed, engage lift PID
 }
 
 void act(void *)
