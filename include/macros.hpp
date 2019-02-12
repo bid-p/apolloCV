@@ -10,15 +10,15 @@ namespace macro
 enum macroStates
 {
   none = 'x',
-  doubleShotNear = 'n',
-  doubleShotFar = 'f',
-  doubleShotNoYield = 'y',
+  doubleShotNoWait = 'y',
   customShotDouble = 'd',
   singleShot = 's',
   anglerCH = '1',
   anglerCM = '2',
   anglerFM = '3',
   anglerFH = '4',
+  liftToTarget = 'l',
+  poleAlign = 'a',
 };
 
 extern macroStates currState;

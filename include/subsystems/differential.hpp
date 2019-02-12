@@ -19,7 +19,7 @@ enum differentialStates
   ballBrake = 't',
   ballDecel = 'd',
   intakeOutNY = 'n',
-  capHoldTransition = 'c',
+  targetTransition = 'c',
   yield = 'y',
 };
 
@@ -32,7 +32,10 @@ extern pros::ADILineSensor lineL;
 
 extern Potentiometer liftPot;
 
-extern char stateIndicator;
+extern AverageFilter<5> liftPotfilter;
+
+extern int liftVal;
+extern int liftTarget;
 
 extern void update();
 

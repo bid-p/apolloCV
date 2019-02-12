@@ -9,8 +9,12 @@ ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
 
 ControllerButton singleShotBtn = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn = controller[ControllerDigital::L2];
-
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::X];
+
+ControllerButton liftHoldBtn = controller[ControllerDigital::B];
+
+ControllerButton right1 = controller[ControllerDigital::R1];
+ControllerButton right2 = controller[ControllerDigital::R2];
 
 int macroTarget1; // target encoder values for angler to shoot first flag in macro
 int macroTarget2; // target encoder value for angler to shoot second flag in macro
@@ -44,11 +48,20 @@ void update()
   }
   if (doubleShotNearBtn.changedToPressed())
   {
-    currState = doubleShotNear;
+    customShotCall(0, 90);
   }
   if (doubleShotFarBtn.changedToPressed())
   {
-    currState = doubleShotFar;
+    customShotCall(25, 77);
+  }
+  if (liftHoldBtn.changedToPressed())
+  {
+    differential::liftTarget = 250;
+    currState = liftToTarget;
+  } // if Button B pressed, engage lift PID
+  if (right1.isPressed() && right2.isPressed())
+  {
+    currState = poleAlign;
   }
 }
 
@@ -70,90 +83,6 @@ void act(void *)
       //   pros::delay(2);
       // } // waits for puncher to load
       // differential::currState = differential::notRunning;
-
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
-
-      puncher::currState = puncher::shooting;
-
-      macro::currState = none;
-      break;
-    case doubleShotNear: // shoots two flags from the near tile; for driver control
-      puncher::currState = puncher::cocking;
-      // switches out of cocking when sensor value achieved
-
-      angler::target = 0;
-      angler::currState = angler::toTarget;
-      // will switch out of toTarget automatically when target reached
-
-      // should automatically stop when ball loads into puncher
-
-      differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
-      {
-        pros::delay(2);
-      } // waits for puncher to load
-      differential::currState = differential::notRunning;
-
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
-
-      puncher::currState = puncher::shooting;
-
-      while (puncher::currState != puncher::cocking)
-      {
-        pros::delay(2);
-      }
-
-      angler::target = 90;
-      angler::currState = angler::toTarget;
-
-      differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
-      {
-        pros::delay(2);
-      } // waits for puncher to load
-      differential::currState = differential::notRunning;
-
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
-
-      puncher::currState = puncher::shooting;
-
-      macro::currState = none;
-      break;
-    case doubleShotFar:
-      puncher::currState = puncher::cocking;
-      // switches out of cocking when sensor value achieved
-
-      angler::target = 30;
-      angler::currState = angler::toTarget;
-      // will switch out of toTarget automatically when target reached
-
-      // should automatically stop when ball loads into puncher
-
-      differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
-      {
-        pros::delay(2);
-      } // waits for puncher to load
-      differential::currState = differential::notRunning;
-
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
-
-      puncher::currState = puncher::shooting;
-
-      while (puncher::currState != puncher::cocking)
-      {
-        pros::delay(2);
-      }
-
-      angler::target = 75;
-      angler::currState = angler::toTarget;
-
-      differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
-      {
-        pros::delay(2);
-      } // waits for puncher to load
-      differential::currState = differential::notRunning;
 
       waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
 
@@ -203,7 +132,7 @@ void act(void *)
 
       macro::currState = none;
       break;
-    case doubleShotNoYield:
+    case doubleShotNoWait:
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -256,12 +185,49 @@ void act(void *)
       angler::currState = angler::toTarget;
       break;
     case anglerFM: // changes the angler to target the middle flag from the far tile
-      angler::target = 78;
+      angler::target = 77;
       angler::currState = angler::toTarget;
       break;
     case anglerFH: // changes the angler to target the high flag from the far title
-      angler::target = 30;
+      angler::target = 25;
       angler::currState = angler::toTarget;
+      break;
+    case liftToTarget:
+      differential::currState = differential::targetTransition;
+
+      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
+      {
+        pros::delay(10);
+      }
+
+      differential::currState = differential::liftHold;
+      break;
+    case poleAlign:
+      drive::chassisController.moveDistance(-10_in);
+
+      differential::liftTarget = 250;
+
+      differential::currState = differential::targetTransition;
+
+      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
+      {
+        pros::delay(10);
+      }
+
+      differential::currState = differential::liftHold;
+
+      drive::chassisController.waitUntilSettled();
+
+      differential::liftTarget = 3600;
+
+      differential::currState = differential::targetTransition;
+
+      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
+      {
+        pros::delay(10);
+      }
+
+      differential::currState = differential::notRunning;
       break;
     }
     pros::delay(10);
@@ -278,7 +244,7 @@ void customShotCall(int target1, int target2, bool noWait)
 
   if (noWait)
   {
-    macro::currState = macro::macroStates::doubleShotNoYield;
+    macro::currState = macro::macroStates::doubleShotNoWait;
   }
   else
   {

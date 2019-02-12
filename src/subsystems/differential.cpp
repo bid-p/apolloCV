@@ -6,7 +6,6 @@ ControllerButton liftUpBtn = controller[ControllerDigital::A];
 ControllerButton liftDownBtn = controller[ControllerDigital::Y];
 ControllerButton intakeInBtn = controller[ControllerDigital::R1];
 ControllerButton intakeOutBtn = controller[ControllerDigital::R2];
-ControllerButton liftHoldBtn = controller[ControllerDigital::B];
 
 namespace differential
 {
@@ -24,6 +23,8 @@ Potentiometer liftPot(SPORT_LIFT);
 AverageFilter<5> liftPotFilter;
 
 int liftVal;
+
+int liftTarget;
 
 bool hasBall()
 {
@@ -63,12 +64,6 @@ void update()
   } // Reverses intake at 83.3% speed for 20ms so that ball doesn't
   // overshoot due to speed of the intake
 
-  // bool liftInRange = (liftVal >= 90 || liftVal <= 110);
-  if (currState == capHoldTransition && (liftVal >= 90 && liftVal <= 110))
-  {
-    currState = liftHold;
-  }
-
   // USER INPUT
   if (liftUpBtn.isPressed())
   {
@@ -86,10 +81,6 @@ void update()
   {
     currState = intakeOut;
   }
-  if (liftHoldBtn.changedToPressed())
-  {
-    currState = capHoldTransition;
-  } // if Button B pressed, engage lift PID
 }
 
 void act(void *)
@@ -107,8 +98,8 @@ void act(void *)
     case liftUp: // Both differential motors same direction
       diffLeft.moveVelocity(-200);
       diffRight.moveVelocity(-200);
-      currState = notRunning;
-      // currState = liftHold;
+      // currState = notRunning;
+      currState = liftHold;
       break;
     case liftDown: // Both differential motors same direction
       diffLeft.moveVelocity(200);
@@ -138,8 +129,8 @@ void act(void *)
       // Robot outtakes without yielding control back to notRunning state
       break;
     case ballDecel:
-      diffLeft.moveVoltage(-5200);
-      diffRight.moveVoltage(5200);
+      diffLeft.moveVoltage(-5500);
+      diffRight.moveVoltage(5500);
       // Robot intakes slower
       break;
     case intakeOutNY:
@@ -148,13 +139,13 @@ void act(void *)
       // For use in auton, keeps intake running in the reverse
       // direction to flip caps
       break;
-    case capHoldTransition:
-      if (liftVal <= 100)
+    case targetTransition:
+      if (liftVal <= liftTarget)
       {
         diffLeft.moveVoltage(-10000);
         diffRight.moveVoltage(-10000);
       }
-      if (liftVal >= 100)
+      if (liftVal >= liftTarget)
       {
         diffLeft.moveVoltage(10000);
         diffRight.moveVoltage(10000);
