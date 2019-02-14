@@ -30,6 +30,7 @@ extern void act(void *);
 
 extern void turnAngleVel(QAngle angle, double maxVel);
 
+extern void removePaths(std::string path1);
 extern void removePaths(std::string path1, std::string path2);
 
 #endif

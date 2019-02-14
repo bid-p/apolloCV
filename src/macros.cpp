@@ -153,7 +153,7 @@ void act(void *)
 
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 2, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
 
@@ -174,7 +174,7 @@ void act(void *)
       }
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 2, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
 
@@ -191,12 +191,12 @@ void act(void *)
       macro::currState = none;
       break;
     case anglerFM: // changes the angler to target the middle flag from the far tile
-      angler::target = 86;
+      angler::target = 88;
       angler::currState = angler::toTarget;
       macro::currState = none;
       break;
     case anglerFH: // changes the angler to target the high flag from the far title
-      angler::target = 26;
+      angler::target = 35;
       angler::currState = angler::toTarget;
       macro::currState = none;
       break;

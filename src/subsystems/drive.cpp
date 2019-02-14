@@ -85,7 +85,13 @@ void turnAngleVel(QAngle angle, double maxVel)
   drive::chassisController.setMaxVelocity(200);
 }
 
-// helper function to remove profiled paths from memory two at a time
+// helper function to remove profiled paths from memory one at a time
+void removePaths(std::string path1)
+{
+  drive::profileController.removePath(path1);
+}
+
+// overloaded function to remove profiled paths from memory two at a time
 void removePaths(std::string path1, std::string path2)
 {
   drive::profileController.removePath(path1);
