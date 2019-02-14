@@ -11,10 +11,8 @@ ControllerButton singleShotBtn = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn = controller[ControllerDigital::L2];
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::X];
 
-ControllerButton liftHoldBtn = controller[ControllerDigital::B];
-
-ControllerButton right1 = controller[ControllerDigital::R1];
-ControllerButton right2 = controller[ControllerDigital::R2];
+ControllerButton gayButton = controller[ControllerDigital::B];
+ControllerButton shiftBtn = controller[ControllerDigital::R1];
 
 int macroTarget1; // target encoder values for angler to shoot first flag in macro
 int macroTarget2; // target encoder value for angler to shoot second flag in macro
@@ -52,17 +50,13 @@ void update()
   }
   if (doubleShotFarBtn.changedToPressed())
   {
-    customShotCall(25, 77);
+    customShotCall(35, 88);
   }
-  if (liftHoldBtn.changedToPressed())
+  if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
   {
-    differential::liftTarget = 250;
-    currState = liftToTarget;
-  } // if Button B pressed, engage lift PID
-  if (right1.isPressed() && right2.isPressed())
-  {
-    currState = poleAlign;
+    currState = poleScore;
   }
+  // printf("Macro State: %c\n", currState);
 }
 
 void act(void *)
@@ -84,8 +78,8 @@ void act(void *)
       // } // waits for puncher to load
       // differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
-
+      // waitUntilSettled(angler::angler, 2, 5, 10_ms); // waits until angler to stop
+      printf("Ang. PreShot: %i\n", (int)angler::angler.getPosition());
       puncher::currState = puncher::shooting;
 
       macro::currState = none;
@@ -107,8 +101,9 @@ void act(void *)
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
+      printf("Ang. PreShot 1: %i\n", (int)angler::angler.getPosition());
       puncher::currState = puncher::shooting;
 
       while (puncher::currState != puncher::cocking)
@@ -126,8 +121,9 @@ void act(void *)
       } // waits for puncher to load
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
+      printf("Ang. PreShot 2: %i\n", (int)angler::angler.getPosition());
       puncher::currState = puncher::shooting;
 
       macro::currState = none;
@@ -143,13 +139,21 @@ void act(void *)
       // should automatically stop when ball loads into puncher
 
       differential::currState = differential::intakeIn;
-      while (!puncher::isLoaded())
+      // while (!puncher::isLoaded())
+      // {
+      //   pros::delay(2);
+      // } // waits for puncher to load
+
+      pros::delay(500);
+      if (!puncher::isLoaded())
       {
-        pros::delay(2);
-      } // waits for puncher to load
+        macro::currState = none;
+        break; // if puncher not loaded do not shoot again
+      }
+
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 2, 5, 10_ms); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
 
@@ -162,7 +166,7 @@ void act(void *)
       angler::currState = angler::toTarget;
 
       differential::currState = differential::intakeIn;
-      pros::delay(1000); // doesn't wait for ball to be loaded, because it may or may not be there
+      pros::delay(500); // doesn't wait for ball to be loaded, because it may or may not be there
       if (!puncher::isLoaded())
       {
         macro::currState = none;
@@ -170,7 +174,7 @@ void act(void *)
       }
       differential::currState = differential::notRunning;
 
-      waitUntilSettled(angler::angler, 50, 5, 10_ms); // waits until angler to stop
+      waitUntilSettled(angler::angler, 2, 5, 10_ms); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
 
@@ -179,55 +183,32 @@ void act(void *)
     case anglerCH: // changes the angler to target the high flag from the close tile
       angler::target = 0;
       angler::currState = angler::toTarget;
+      macro::currState = none;
       break;
     case anglerCM: // changes the angler to target the high flag from the middle tile
       angler::target = 90;
       angler::currState = angler::toTarget;
+      macro::currState = none;
       break;
     case anglerFM: // changes the angler to target the middle flag from the far tile
-      angler::target = 77;
+      angler::target = 86;
       angler::currState = angler::toTarget;
+      macro::currState = none;
       break;
     case anglerFH: // changes the angler to target the high flag from the far title
-      angler::target = 25;
+      angler::target = 26;
       angler::currState = angler::toTarget;
+      macro::currState = none;
       break;
-    case liftToTarget:
-      differential::currState = differential::targetTransition;
-
-      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
-      {
-        pros::delay(10);
-      }
-
-      differential::currState = differential::liftHold;
-      break;
-    case poleAlign:
-      drive::chassisController.moveDistance(-10_in);
-
-      differential::liftTarget = 250;
-
-      differential::currState = differential::targetTransition;
-
-      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
-      {
-        pros::delay(10);
-      }
-
-      differential::currState = differential::liftHold;
-
+    case poleScore:
+      drive::currState = drive::yield;
+      drive::chassisController.setMaxVelocity(100);
+      drive::chassisController.moveDistance(-6.5_in);
+      differential::liftTarget = 3000;
       drive::chassisController.waitUntilSettled();
-
-      differential::liftTarget = 3600;
-
+      drive::chassisController.setMaxVelocity(200);
       differential::currState = differential::targetTransition;
-
-      while ((differential::liftVal <= differential::liftTarget - 10) && (differential::liftVal >= differential::liftTarget + 10))
-      {
-        pros::delay(10);
-      }
-
-      differential::currState = differential::notRunning;
+      currState = none;
       break;
     }
     pros::delay(10);

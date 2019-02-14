@@ -1,7 +1,8 @@
 #ifndef AUTONS_GUARD
 #define AUTONS_GUARD
 
-enum autonRoutines {
+enum autonRoutines
+{
   notSelected,
   progSkills,
   redNear1,

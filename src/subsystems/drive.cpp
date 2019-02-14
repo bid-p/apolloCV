@@ -12,15 +12,28 @@ Motor driveL2(DRIVE_PORT_L2, false, AbstractMotor::gearset::green);
 Motor driveR1(DRIVE_PORT_R1, false, AbstractMotor::gearset::green);
 Motor driveR2(DRIVE_PORT_R2, false, AbstractMotor::gearset::green);
 
-ChassisControllerIntegrated chassisController =
-    ChassisControllerFactory::create(
-        {DRIVE_PORT_L1, DRIVE_PORT_L2}, {-DRIVE_PORT_R1, -DRIVE_PORT_R2},
-        AbstractMotor::gearset::green, {4.125_in, 13.2054_in});
+TimeUtil driveUtil = TimeUtilFactory::withSettledUtilParams(50, 5, 50_ms);
 
-AsyncMotionProfileController profileController =
-    AsyncControllerFactory::motionProfile(1.00, 2.0,
-                                          10.0, // maxvel, accel, max jerk
-                                          chassisController);
+AsyncPosIntegratedController leftController(std::shared_ptr<Motor>(&driveL1), driveUtil);
+AsyncPosIntegratedController rightController(std::shared_ptr<Motor>(&driveR1), driveUtil);
+
+SkidSteerModel chassisModel = ChassisModelFactory::create({DRIVE_PORT_L1, DRIVE_PORT_L2}, {-DRIVE_PORT_R1, -DRIVE_PORT_R2}, 200);
+
+ChassisControllerIntegrated chassisController(
+    driveUtil,
+    std::shared_ptr<SkidSteerModel>(&chassisModel),
+    std::unique_ptr<AsyncPosIntegratedController>(&leftController),
+    std::unique_ptr<AsyncPosIntegratedController>(&rightController),
+    AbstractMotor::gearset::green, {4.125_in, 13.2054_in});
+
+AsyncMotionProfileController profileController(
+    driveUtil,
+    1.00, // max vel
+    2.0,  // max accel
+    10.0, //max jerk
+    std::shared_ptr<SkidSteerModel>(&chassisModel),
+    {4.125_in, 13.2054_in},
+    AbstractMotor::gearset::green);
 
 void update()
 {

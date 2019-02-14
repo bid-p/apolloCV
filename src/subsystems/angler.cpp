@@ -38,7 +38,7 @@ void act(void *)
     case toTarget: // Sets angler position to given target
       anglerController.flipDisable(true);
       angler.moveAbsolute(target, 600);
-      waitUntilSettled(angler, 50, 5, 10_ms);
+      // waitUntilSettled(angler, 5, 5, 10_ms);
       // currState = brake;
       break;
     case brake: // Shorts the motor terminals to replicate

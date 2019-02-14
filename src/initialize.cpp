@@ -8,7 +8,7 @@
  */
 void initialize()
 {
-    pros::lcd::initialize();
+    // pros::lcd::initialize();
 
     odometry::init();
 
@@ -16,7 +16,7 @@ void initialize()
 
     pros::Task odometryTask(odometry::run, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odometry");
 
-    // autonSelector();
+    autonSelector();
 
     // set all the states to not running by default
     drive::currState = drive::notRunning;

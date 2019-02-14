@@ -17,8 +17,7 @@ enum macroStates
   anglerCM = '2',
   anglerFM = '3',
   anglerFH = '4',
-  liftToTarget = 'l',
-  poleAlign = 'a',
+  poleScore = 'p',
 };
 
 extern macroStates currState;

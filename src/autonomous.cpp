@@ -70,11 +70,11 @@ void autonomous()
     executeBlueFar2();
     break;
   }
-  executeProgSkills();
+  // executeProgSkills();
 
   // turnAngleVel(3600_deg, 100);
 
   // odometryPrint.suspend();
 
-  // lv_obj_clean(lv_scr_act());
+  lv_obj_clean(lv_scr_act());
 }

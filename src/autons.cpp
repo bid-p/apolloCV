@@ -255,29 +255,18 @@ void executeProgSkills()
 
     drive::profileController.setTarget("L", true);
     drive::profileController.waitUntilSettled();
-    // Reverse
-
-    printf("case 1");
+    // Reverse into fence + fencealign
 
     differential::currState = differential::notRunning;
     // Intake Off
 
-    printf("case 2");
-
-    odometry::currX = 132_in;
-    odometry::currAngle = 270_deg;
-
-    printf("case 3");
+    odometry::currX = 132_in;      // Reset X-Axis on field perimeter
+    odometry::currAngle = 270_deg; // Reset Angle to 270_degrees
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, 136.25_in, -odometry::currAngle}, Point{84_in, odometry::currX, 270_deg}}, "L1");
+        {Point{odometry::currY, 127.75_in, -odometry::currAngle}, Point{84_in, odometry::currX, 270_deg}}, "L1");
 
-    printf("case 4");
-
-    drive::profileController.setTarget("L1");
-
-    printf("case 5");
-
+    drive::profileController.setTarget("L1"); // move forwards a little bit
     drive::profileController.waitUntilSettled();
 
     printf("case 6");
@@ -291,17 +280,11 @@ void executeProgSkills()
     printf("case 8");
 
     drive::profileController.generatePath(
-        {Point{36_in, 131.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "M");
-
-    // drive::profileController.generatePath(
-    //     {Point{0_in, 0_in, odometry::currAngle}, Point{0_in, 48_in, 0_deg}}, "M");
-
-    printf("case 9");
+        {Point{36_in, 127.75_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "M");
 
     drive::profileController.setTarget("M", true);
     // Move forward to align with cap #5
-
-    printf("case 10");
+    drive::profileController.removePath("M");
 
     if (odometry::currAngle.convert(degree) <= 90)
     {
@@ -314,13 +297,14 @@ void executeProgSkills()
         printf("case 12");
     }
 
-    drive::profileController.removePath("M");
-
     differential::currState = differential::intakeIn;
     // Run intake
 
+    // drive::profileController.generatePath(
+    //     {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "N");
+
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "N");
+        {Point{odometry::currY, 127.75_in, -odometry::currAngle}, Point{36_in, odometry::currX, 270_deg}}, "N");
 
     drive::profileController.setTarget("N");
     drive::profileController.waitUntilSettled();
@@ -377,7 +361,121 @@ void executeProgSkills()
 /*-------------------------------------------------------------------*/
 
 void initRedNear1() {}
-void executeRedNear1() {}
+
+void executeRedNear1()
+{
+    odometry::currX = 13.25_in;
+    odometry::currY = 84_in;
+    odometry::currAngle = 90_deg;
+
+    // Pause the macro task to prevent it from
+    // taking control of the differential
+    macroActTask.suspend();
+    // macro::currState = macro::intakeIn;
+    differential::currState = differential::intakeIn;
+
+    drive::profileController.generatePath(
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 52.25_in, 90_deg}}, "A1");
+
+    drive::profileController.setTarget("A1");
+    drive::profileController.waitUntilSettled();
+
+    drive::profileController.generatePath(
+        {Point{84_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 90_deg}}, "A2");
+
+    drive::profileController.setTarget("A2", true);
+    drive::profileController.waitUntilSettled();
+    //Reverse to starting tile
+
+    removePaths("A1", "A2");
+
+    turnAngleVel(0_deg - odometry::currAngle, 100);
+    // Turn left
+
+    differential::currState = differential::notRunning;
+    //Stop the differential to avoid conflict with macro task
+
+    macroActTask.resume();
+    // Resume the macro task
+
+    customShotCall(0, 120);
+    // Performs double shot
+
+    while (macro::currState != macro::none)
+    {
+        pros::delay(10);
+    }
+    // Wait for the two shots to complete
+
+    macroActTask.suspend();
+    // Pause macro task to regain control of differential
+
+    differential::currState = differential::intakeIn;
+
+    drive::profileController.generatePath(
+        {Point{odometry::currY, 11.25_in, -odometry::currAngle}, Point{130_in, odometry::currX, 0_deg}}, "B1");
+
+    drive::profileController.setTarget("B1");
+    drive::profileController.waitUntilSettled();
+    // Perform s-curve to toggle the bottom flag
+
+    // pros::delay(200);
+
+    odometry::currY = 132_in;    //resetting the y axis
+    odometry::currAngle = 0_deg; //resetting the angle
+
+    drive::profileController.generatePath(
+        {Point{108_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "B2");
+
+    drive::profileController.setTarget("B2", true);
+    drive::profileController.waitUntilSettled();
+
+    removePaths("B1", "B2");
+
+    turnAngleVel(60_deg - odometry::currAngle, 100);
+    // Turn right
+
+    macroActTask.resume();
+    // Resume the macro task
+
+    customShotCall(15, 120, true);
+    // Performs double shot
+
+    while (macro::currState != macro::none)
+    {
+        pros::delay(10);
+    }
+    // Wait for the macro to complete
+
+    macroActTask.suspend();
+    // Pause macro task to regain control of differential
+
+    differential::currState = differential::intakeOutNY;
+
+    drive::profileController.generatePath(
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{108_in, 37.25_in, 90_deg}}, "C");
+
+    drive::profileController.setTarget("C");
+    drive::profileController.waitUntilSettled();
+
+    differential::liftTarget = 200;
+    differential::currState = differential::targetTransition;
+
+    turnAngleVel(225_deg - odometry::currAngle, 150);
+    // Turn right
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{30_in, 0_in, 0_deg}}, "D");
+
+    drive::profileController.setTarget("D", true);
+    drive::profileController.waitUntilSettled();
+
+    removePaths("C", "D");
+
+    differential::currState = differential::notRunning;
+}
+
+/*-------------------------------------------------------------------*/
 
 void initRedNear2() {}
 void executeRedNear2() {}

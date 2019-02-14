@@ -7,6 +7,8 @@ ControllerButton liftDownBtn = controller[ControllerDigital::Y];
 ControllerButton intakeInBtn = controller[ControllerDigital::R1];
 ControllerButton intakeOutBtn = controller[ControllerDigital::R2];
 
+ControllerButton liftHoldBtn = controller[ControllerDigital::B];
+
 namespace differential
 {
 
@@ -28,7 +30,7 @@ int liftTarget;
 
 bool hasBall()
 {
-  if (lineL.get_value() < 2300 /* || lineR.get_value() < 2000*/)
+  if (lineL.get_value() < 2400 /* || lineR.get_value() < 2000*/)
   {
     return true;
   }
@@ -58,22 +60,27 @@ void update()
     currState = ballBrake;
     timerBallBrake.getDt();
   } // Once balls have been detected in puncher & intake, run ball brake
-  if (currState == ballBrake && timerBallBrake.readDt() >= 20_ms)
+  if (currState == ballBrake && timerBallBrake.readDt() >= 22_ms)
   {
     currState = notRunning;
   } // Reverses intake at 83.3% speed for 20ms so that ball doesn't
   // overshoot due to speed of the intake
+  // bool liftInRange = (liftVal >= 90 || liftVal <= 110);
+  if (currState == targetTransition && (liftVal >= (liftTarget - 20) && liftVal <= (liftTarget + 20)))
+  {
+    currState = liftHold;
+  }
 
   // USER INPUT
-  if (liftUpBtn.isPressed())
+  if (liftUpBtn.isPressed() && !liftDownBtn.isPressed())
   {
     currState = liftUp;
   }
-  if (liftDownBtn.isPressed())
+  if (liftDownBtn.isPressed() && !liftUpBtn.isPressed())
   {
     currState = liftDown;
   }
-  if (currState == notRunning && intakeInBtn.isPressed() && !intakeOutBtn.isPressed())
+  if (currState == notRunning && intakeInBtn.changedToPressed() && !intakeOutBtn.isPressed())
   {
     currState = intakeIn;
   }
@@ -81,6 +88,11 @@ void update()
   {
     currState = intakeOut;
   }
+  if (liftHoldBtn.changedToPressed() && !intakeInBtn.isPressed())
+  {
+    liftTarget = 250;
+    currState = targetTransition;
+  } // if Button B pressed, engage lift PID
 }
 
 void act(void *)
