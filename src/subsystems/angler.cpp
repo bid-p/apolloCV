@@ -11,7 +11,7 @@ pros::Vision vision(SPORT_VISION, pros::E_VISION_ZERO_CENTER);
 
 int target;
 
-Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::blue);
+Motor angler(ANGLE_CHANGER_PORT, true, AbstractMotor::gearset::green);
 
 const double kP = 0;
 const double kI = 0;

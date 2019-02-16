@@ -31,6 +31,7 @@ void states()
 
 void opcontrol()
 {
+  macroActTask->resume();
 
   pros::lcd::initialize();
 

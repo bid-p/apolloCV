@@ -18,14 +18,16 @@ enum alliances
 
 extern alliances alliance;
 
-void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetError, double iatTargetDerivative, QTime iatTargetTime);
+extern void initActTasks();
 
-extern pros::Task driveActTask;
-extern pros::Task puncherActTask;
-extern pros::Task anglerActTask;
-extern pros::Task differentialActTask;
-extern pros::Task macroActTask;
-extern pros::Task updateTask;
+extern void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetError, double iatTargetDerivative, QTime iatTargetTime);
+
+extern pros::Task *driveActTask;
+extern pros::Task *puncherActTask;
+extern pros::Task *anglerActTask;
+extern pros::Task *differentialActTask;
+extern pros::Task *macroActTask;
+extern pros::Task *updateTask;
 
 extern void updateFunc(void *);
 

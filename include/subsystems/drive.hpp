@@ -29,6 +29,7 @@ extern void act(void *);
 } // namespace drive
 
 extern void turnAngleVel(QAngle angle, double maxVel);
+extern void turnAngleVel(QAngle angle, double maxVel, bool async);
 
 extern void removePaths(std::string path1);
 extern void removePaths(std::string path1, std::string path2);

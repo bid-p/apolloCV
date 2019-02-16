@@ -8,13 +8,18 @@ void initProgSkills()
 
 void executeProgSkills()
 {
+    odometry::init();
+    odometry::resetAngle(90_deg);
     odometry::currX = 13.25_in;
     odometry::currY = 36_in;
-    odometry::currAngle = 90_deg;
+
+    QLength tempLength;
+
+    // odometry::currAngle = 90_deg;
 
     // Pause the macro task to prevent it from
     // taking control of the differential
-    macroActTask.suspend();
+    macroActTask->suspend();
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
 
@@ -41,7 +46,16 @@ void executeProgSkills()
 
     removePaths("A1", "A2");
 
-    turnAngleVel(0_deg - odometry::currAngle, 100);
+    // If robot is facing less than 180 degree away from the direction of the flags,
+    // turn left else turn right to face the flags.
+    if (odometry::currAngle.convert(degree) <= 180)
+    {
+        turnAngleVel(0_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 180)
+    {
+        turnAngleVel(360_deg - odometry::currAngle, 100);
+    }
     // Turn left
 
     drive::profileController.generatePath(
@@ -55,7 +69,7 @@ void executeProgSkills()
     differential::currState = differential::notRunning;
     //Stop the differential to avoid conflict with macro task
 
-    macroActTask.resume();
+    macroActTask->resume();
     // Resume the macro task
 
     customShotCall(0, 120);
@@ -67,13 +81,13 @@ void executeProgSkills()
     }
     // Wait for the two shots to complete
 
-    macroActTask.suspend();
+    macroActTask->suspend();
     // Pause macro task to regain control of differential
 
     differential::currState = differential::intakeIn;
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, 11.25_in, -odometry::currAngle}, Point{130_in, odometry::currX, 0_deg}}, "B1");
+        {Point{odometry::currY, 13.25_in, -odometry::currAngle}, Point{130_in, odometry::currX, 0_deg}}, "B1");
 
     drive::profileController.setTarget("B1");
     drive::profileController.waitUntilSettled();
@@ -81,8 +95,13 @@ void executeProgSkills()
 
     pros::delay(200);
 
+    tempLength = odometry::currX;
+    // if (odometry::currAngle > 355_deg && odometry::currAngle < 5_deg)
+    // {
+    odometry::resetAngle(0_deg);
+    // }
     odometry::currY = 132_in; //resetting the y axis
-    // odometry::currAngle = 0_deg; //resetting the angle
+    // odometry::currX = tempLength; //resetting the x axis
 
     drive::profileController.generatePath(
         {Point{84_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "B2");
@@ -92,14 +111,23 @@ void executeProgSkills()
 
     removePaths("B1", "B2");
 
-    turnAngleVel(90_deg - odometry::currAngle, 100);
+    // If robot's heading is towards the cap, turn right,
+    // else turn counterclockwise to face the cap.
+    if (odometry::currAngle.convert(degree) <= 90)
+    {
+        turnAngleVel(93_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 270)
+    {
+        turnAngleVel(93_deg + (360_deg - odometry::currAngle), 100);
+    }
     // Turn right
 
-    // drive::profileController.generatePath(
-    //     {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 53.25_in, 90_deg}}, "C1");
-
     drive::profileController.generatePath(
-        {Point{84_in, odometry::currX, 90_deg}, Point{84_in, 52.25_in, 90_deg}}, "C1");
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 55.25_in, 92_deg}}, "C1");
+
+    // drive::profileController.generatePath(
+    //     {Point{84_in, odometry::currX, 90_deg}, Point{84_in, 52.25_in, 90_deg}}, "C1");
 
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
@@ -125,7 +153,7 @@ void executeProgSkills()
     removePaths("C1", "C2");
 
     drive::profileController.generatePath(
-        {Point{108_in, odometry::currX, -odometry::currAngle}, Point{odometry::currY, 64.25_in, 90_deg}}, "D");
+        {Point{108_in, odometry::currX, -odometry::currAngle}, Point{odometry::currY, 66.25_in, 90_deg}}, "D");
 
     drive::profileController.setTarget("D");
     drive::profileController.waitUntilSettled();
@@ -134,10 +162,17 @@ void executeProgSkills()
 
     drive::profileController.removePath("D");
 
-    turnAngleVel(0_deg - odometry::currAngle, 100);
+    if (odometry::currAngle.convert(degree) >= 0)
+    {
+        turnAngleVel(0_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 270)
+    {
+        turnAngleVel(360_deg - odometry::currAngle, 100);
+    }
     // Turn to face flags
 
-    macroActTask.resume();
+    macroActTask->resume();
     // Differential has already stopped so we may resume the macro task
 
     customShotCall(20, 20, true); // double check flag if you have two balls
@@ -149,21 +184,26 @@ void executeProgSkills()
     }
     // Wait for the shot to be complete
 
-    macroActTask.suspend();
+    macroActTask->suspend();
     // Pause to return control to differential
 
+    differential::currState = differential::intakeIn;
+
     drive::profileController.generatePath(
-        {Point{odometry::currY, 58.25_in, -odometry::currAngle}, Point{132_in, odometry::currX, 0_deg}}, "E");
+        {Point{odometry::currY, 60.25_in, -odometry::currAngle}, Point{132_in, odometry::currX, 0_deg}}, "E");
 
     drive::profileController.setTarget("E");
-
-    differential::currState = differential::intakeIn;
 
     drive::profileController.waitUntilSettled();
     // Perform another s-curve to toggle bottom flag
 
-    odometry::currY = 132_in;    //resetting the y axis
-    odometry::currAngle = 0_deg; //resetting the angle
+    tempLength = odometry::currX;
+    // if (odometry::currAngle > 355_deg && odometry::currAngle < 5_deg)
+    // {
+    odometry::resetAngle(0_deg);
+    // }
+    odometry::currY = 132_in;     //resetting the y axis
+    odometry::currX = tempLength; //resetting the x axis
 
     drive::profileController.generatePath(
         {Point{108_in, 65.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "E1");
@@ -174,14 +214,22 @@ void executeProgSkills()
 
     removePaths("E", "E1");
 
-    turnAngleVel(90_deg - odometry::currAngle, 100);
+    if (odometry::currAngle.convert(degree) <= 90)
+    {
+        turnAngleVel(93_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 270)
+    {
+        turnAngleVel(93_deg + (360_deg - odometry::currAngle), 100);
+    }
+    // Turn right
     // Turn to face cap #3
 
     differential::currState = differential::intakeOutNY;
     // Reverse intake
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{108_in, 105.25_in, 90_deg}}, "F");
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{108_in, 108.25_in, -92_deg}}, "F");
 
     drive::profileController.setTarget("F");
     drive::profileController.waitUntilSettled();
@@ -189,11 +237,18 @@ void executeProgSkills()
 
     differential::currState = differential::notRunning; //Intake off
 
-    turnAngleVel(0_deg - odometry::currAngle, 100);
+    if (odometry::currAngle.convert(degree) >= 0)
+    {
+        turnAngleVel(0_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 270)
+    {
+        turnAngleVel(360_deg - odometry::currAngle, 100);
+    }
     // Turn to face low flag
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, 104.25_in, -odometry::currAngle}, Point{132_in, odometry::currX, 0_deg}}, "G");
+        {Point{odometry::currY, 106.25_in, -odometry::currAngle}, Point{133_in, odometry::currX, 0_deg}}, "G");
 
     drive::profileController.setTarget("G");
     drive::profileController.waitUntilSettled();
@@ -201,8 +256,13 @@ void executeProgSkills()
 
     removePaths("F", "G");
 
-    odometry::currY = 132_in;
-    odometry::currAngle = 0_deg;
+    tempLength = odometry::currX;
+    if (odometry::currAngle > 355_deg && odometry::currAngle < 5_deg)
+    {
+        odometry::resetAngle(0_deg);
+    }
+    odometry::currY = 132_in; //resetting the y axis
+    // odometry::currX = tempLength; //resetting the x axis
 
     drive::profileController.generatePath(
         {Point{84_in, 104.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "H");
@@ -213,12 +273,12 @@ void executeProgSkills()
 
     if (odometry::currAngle.convert(degree) <= 90)
     {
-        turnAngleVel(-90_deg - odometry::currAngle, 100); // Turn to face cap #4
+        turnAngleVel(-90_deg - odometry::currAngle, 100);
     }
-    if (odometry::currAngle.convert(degree) > 90)
+    else if (odometry::currAngle.convert(degree) > 270)
     {
-        turnAngleVel(-90_deg - (odometry::currAngle - 360_deg), 100); // Turn to face cap #4
-    }
+        turnAngleVel(270_deg - odometry::currAngle, 100);
+    } // turn to face second to last cap
 
     differential::currState = differential::intakeIn; // Run intake
 
@@ -260,8 +320,13 @@ void executeProgSkills()
     differential::currState = differential::notRunning;
     // Intake Off
 
-    odometry::currX = 132_in;      // Reset X-Axis on field perimeter
-    odometry::currAngle = 270_deg; // Reset Angle to 270_degrees
+    tempLength = odometry::currY;
+    if (odometry::currAngle > 265_deg && odometry::currAngle < 275_deg)
+    {
+        odometry::resetAngle(270_deg);
+    }
+    odometry::currX = 132_in;     //resetting the x axis
+    odometry::currY = tempLength; //resetting the y axis
 
     drive::profileController.generatePath(
         {Point{odometry::currY, 127.75_in, -odometry::currAngle}, Point{84_in, odometry::currX, 270_deg}}, "L1");
@@ -275,43 +340,49 @@ void executeProgSkills()
 
     printf("case 7");
 
-    turnAngleVel(0_deg - (odometry::currAngle - 360_deg), 100); // Turn to face parallel to platform
+    if (odometry::currAngle.convert(degree) >= 270)
+    {
+        turnAngleVel(360_deg - odometry::currAngle, 100);
+        printf("case 11");
+    }
+    if (odometry::currAngle.convert(degree) < 270)
+    {
+        turnAngleVel(90_deg + (270_deg - odometry::currAngle), 100);
+        printf("case 12");
+    } // turn to face flags to move into back field
 
     printf("case 8");
 
     drive::profileController.generatePath(
-        {Point{36_in, 127.75_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "M");
+        {Point{0_in, 0_in, 0_deg}, Point{48_in, 0_in, 0_deg}}, "M");
 
     drive::profileController.setTarget("M", true);
+    drive::profileController.waitUntilSettled();
     // Move forward to align with cap #5
-    drive::profileController.removePath("M");
 
     if (odometry::currAngle.convert(degree) <= 90)
     {
-        turnAngleVel(-90_deg - odometry::currAngle, 100); // Turn to face cap #5
-        printf("case 11");
+        turnAngleVel(-90_deg - odometry::currAngle, 100);
     }
-    if (odometry::currAngle.convert(degree) > 90)
+    else if (odometry::currAngle.convert(degree) > 270)
     {
-        turnAngleVel(-90_deg - (odometry::currAngle - 360_deg), 100); // Turn to face cap #5
-        printf("case 12");
-    }
+        turnAngleVel(270_deg - odometry::currAngle, 100);
+    } // turn to face last cap
+
+    removePaths("L", "M");
 
     differential::currState = differential::intakeIn;
     // Run intake
 
-    // drive::profileController.generatePath(
-    //     {Point{0_in, 0_in, 0_deg}, Point{42_in, 0_in, 0_deg}}, "N");
-
     drive::profileController.generatePath(
-        {Point{odometry::currY, 127.75_in, -odometry::currAngle}, Point{36_in, odometry::currX, 270_deg}}, "N");
+        {Point{0_in, 0_in, 0_deg}, Point{44_in, 0_in, 0_deg}}, "N");
 
     drive::profileController.setTarget("N");
     drive::profileController.waitUntilSettled();
     // Run into/flip cap
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{35.5_in, 22_in, 0_deg}}, "O");
+        {Point{0_in, 0_in, 0_deg}, Point{38_in, 22_in, 0_deg}}, "O");
 
     drive::profileController.setTarget("O", true);
     drive::profileController.waitUntilSettled();
@@ -322,12 +393,12 @@ void executeProgSkills()
     differential::currState = differential::notRunning;
     // Intake off
 
-    turnAngleVel(92_deg, 100);
+    turnAngleVel(360_deg - odometry::currAngle, 100);
     // Turn to face flags
 
-    macroActTask.resume();
+    macroActTask->resume();
 
-    customShotCall(60, 120);
+    customShotCall(43, 108, true);
     // Shoot right column from far
 
     while (macro::currState != macro::none)
@@ -336,7 +407,7 @@ void executeProgSkills()
     }
     // Wait for the shot to be complete
 
-    macroActTask.suspend();
+    macroActTask->suspend();
 
     drive::profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{44_in, -10_in, 0_deg}}, "P");
@@ -345,15 +416,22 @@ void executeProgSkills()
     drive::profileController.waitUntilSettled();
     // S-Curve to align with platforms
 
-    drive::profileController.removePath("P");
-
-    turnAngleVel(-90_deg, 100);
+    if (odometry::currAngle.convert(degree) <= 90)
+    {
+        turnAngleVel(-90_deg - odometry::currAngle, 100);
+    }
+    else if (odometry::currAngle.convert(degree) > 270)
+    {
+        turnAngleVel(270_deg - odometry::currAngle, 100);
+    }
     // Turn to face platforms
 
     differential::currState = differential::intakeIn;
 
     drive::chassisController.moveDistance(70_in);
-    // Park
+    // Park.
+
+    drive::profileController.removePath("P");
 
     differential::currState = differential::notRunning;
 }
@@ -366,19 +444,21 @@ void executeRedNear1()
 {
     odometry::currX = 13.25_in;
     odometry::currY = 84_in;
-    odometry::currAngle = 90_deg;
+    odometry::resetAngle(90_deg);
 
     // Pause the macro task to prevent it from
     // taking control of the differential
-    macroActTask.suspend();
+    macroActTask->suspend();
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
 
     drive::profileController.generatePath(
         {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 52.25_in, 90_deg}}, "A1");
+    printf("generated path 1");
 
     drive::profileController.setTarget("A1");
     drive::profileController.waitUntilSettled();
+    // Run into/flip first cap
 
     drive::profileController.generatePath(
         {Point{84_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 90_deg}}, "A2");
@@ -395,7 +475,7 @@ void executeRedNear1()
     differential::currState = differential::notRunning;
     //Stop the differential to avoid conflict with macro task
 
-    macroActTask.resume();
+    macroActTask->resume();
     // Resume the macro task
 
     customShotCall(0, 120);
@@ -407,7 +487,7 @@ void executeRedNear1()
     }
     // Wait for the two shots to complete
 
-    macroActTask.suspend();
+    macroActTask->suspend();
     // Pause macro task to regain control of differential
 
     differential::currState = differential::intakeIn;
@@ -422,24 +502,25 @@ void executeRedNear1()
     // pros::delay(200);
 
     odometry::currY = 132_in;    //resetting the y axis
-    odometry::currAngle = 0_deg; //resetting the angle
+    odometry::resetAngle(0_deg); // reset odometry angle
 
     drive::profileController.generatePath(
         {Point{108_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "B2");
 
     drive::profileController.setTarget("B2", true);
     drive::profileController.waitUntilSettled();
+    // Perform s-curve in reverse to get to second cap
 
     removePaths("B1", "B2");
 
-    turnAngleVel(60_deg - odometry::currAngle, 100);
+    turnAngleVel(60_deg - (odometry::currAngle - 360_deg), 100);
     // Turn right
-
-    macroActTask.resume();
+    pros::delay(3000);
+    macroActTask->resume();
     // Resume the macro task
 
     customShotCall(15, 120, true);
-    // Performs double shot
+    // Performs double shot at center column
 
     while (macro::currState != macro::none)
     {
@@ -447,32 +528,37 @@ void executeRedNear1()
     }
     // Wait for the macro to complete
 
-    macroActTask.suspend();
+    macroActTask->suspend();
     // Pause macro task to regain control of differential
 
     differential::currState = differential::intakeOutNY;
 
     drive::profileController.generatePath(
         {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{108_in, 37.25_in, 90_deg}}, "C");
+    // Flip second cap
 
     drive::profileController.setTarget("C");
     drive::profileController.waitUntilSettled();
 
     differential::liftTarget = 200;
-    differential::currState = differential::targetTransition;
+    differential::currState = differential::targetTransition; // Bring lift up
 
-    turnAngleVel(225_deg - odometry::currAngle, 150);
-    // Turn right
+    turnAngleVel(226_deg - odometry::currAngle, 150);
+    // Turn right to face flag from behind
 
-    drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{30_in, 0_in, 0_deg}}, "D");
+    // drive::profileController.generatePath(
+    //     {Point{0_in, 0_in, 0_deg}, Point{30_in, 0_in, 0_deg}}, "D");
 
-    drive::profileController.setTarget("D", true);
-    drive::profileController.waitUntilSettled();
+    // drive::profileController.setTarget("D", true);
+    // drive::profileController.waitUntilSettled();
 
-    removePaths("C", "D");
+    drive::chassisController.moveDistance(-30_in);
+    // Flip low flag
+
+    removePaths("C");
 
     differential::currState = differential::notRunning;
+    // Intake off
 }
 
 /*-------------------------------------------------------------------*/
@@ -486,92 +572,70 @@ void initRedFar1() {}
 void executeRedFar1()
 {
     odometry::currX = 13.25_in;
-    odometry::currY = 36_in;
-    odometry::currAngle = 270_deg;
-
-    macroActTask.suspend();
-
-    drive::profileController.generatePath(
-        {Point{12_in, 52.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 270_deg}}, "A1");
-
-    drive::profileController.setTarget("A1", true);
-    drive::profileController.waitUntilSettled();
-
-    differential::liftTarget = 200;
-    differential::currState = differential::targetTransition;
+    odometry::currY = 32.5_in;
+    odometry::resetAngle(90_deg);
+    drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+    macroActTask->suspend();
 
     drive::profileController.generatePath(
-        {Point{odometry::currY, 11.25_in, -odometry::currAngle}, Point{24_in, odometry::currX, 270_deg}}, "A2");
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{32.5_in, 55.25_in, 90_deg}}, "A1");
 
-    drive::profileController.setTarget("A2");
-    drive::profileController.waitUntilSettled();
-
-    macroActTask.resume();
-    macro::currState = macro::poleScore;
-
-    removePaths("A1", "A2");
-
-    while (macro::currState != macro::none)
-    {
-        pros::delay(10);
-    }
-    macroActTask.suspend();
-
-    drive::profileController.generatePath(
-        {Point{24_in, 29.75_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 270_deg}}, "B");
-
-    drive::profileController.setTarget("B", true);
-    drive::profileController.waitUntilSettled();
-
-    differential::liftTarget = 10;
-    differential::currState = differential::targetTransition;
-
-    turnAngleVel(90_deg - odometry::currAngle, 100);
-
-    differential::currState = differential::notRunning;
-
-    drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{34_in, 52.25_in, 90_deg}}, "C");
-
-    drive::profileController.setTarget("C");
+    drive::profileController.setTarget("A1");
     differential::currState = differential::intakeIn;
     drive::profileController.waitUntilSettled();
 
-    turnAngleVel(60_deg - odometry::currAngle, 100);
+    // if (odometry::currAngle.convert(degree) >= 240)
+    // {
+    //     turnAngleVel(350_deg - odometry::currAngle, 100); // Turn to face cap #5
+    //     printf("case 1");
+    // }
+    // if (odometry::currAngle.convert(degree) < 240)
+    // {
+    //     turnAngleVel(350_deg - (odometry::currAngle - 360_deg), 100); // Turn to face cap #5
+    //     printf("case 2");
+    // }
 
-    macroActTask.resume();
-    // Resume the macro task
-
-    customShotCall(35, 88, true);
-    // Performs double shot
-
-    removePaths("B", "C");
-
-    while (macro::currState != macro::none)
-    {
-        pros::delay(10);
-    }
-    // Wait for the two shots to complete
-
-    macroActTask.suspend();
-    // Pause macro task to regain control of differential
+    turnAngleVel(-100_deg, 100);
 
     drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{7_in, 0_in, 0_deg}}, "D");
+        {Point{0_in, 0_in, 0_deg}, Point{6_in, 0_in, 0_deg}}, "D");
 
     drive::profileController.setTarget("D", true);
     drive::profileController.waitUntilSettled();
 
-    if (odometry::currAngle.convert(degree) <= 240)
-    {
-        turnAngleVel(355_deg - odometry::currAngle, 100); // Turn to face cap #5
-        printf("case 1");
-    }
-    if (odometry::currAngle.convert(degree) > 240)
-    {
-        turnAngleVel(355_deg - (odometry::currAngle - 360_deg), 100); // Turn to face cap #5
-        printf("case 2");
-    }
+    differential::liftTarget = 200;
+    differential::currState = differential::targetTransition;
+    pros::delay(300);
+
+    turnAngleVel(33_deg - (odometry::currAngle - 360_deg), 100);
+
+    macroActTask->resume();
+    // Resume the macro task
+
+    customShotCall(35, 95);
+    // Performs double shot
+
+    // while (macro::currState != macro::none)
+    // {
+    //     pros::delay(10);
+    // }
+    pros::delay(2000);
+    // Wait for the two shots to complete
+
+    differential::currState = differential::intakeIn;
+
+    macroActTask->suspend();
+    // Pause macro task to regain control of differential
+
+    turnAngleVel(310_deg - (odometry::currAngle + 360_deg), 100); // Turn to face cap #5
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{9.5_in, 0_in, 0_deg}}, "D");
+
+    drive::profileController.setTarget("D");
+    drive::profileController.waitUntilSettled();
+
+    turnAngleVel(50_deg, 100); // Turn to face cap #5
 
     drive::chassisController.moveDistance(35_in);
 
@@ -579,7 +643,79 @@ void executeRedFar1()
 }
 
 void initRedFar2() {}
-void executeRedFar2() {}
+void executeRedFar2()
+{
+    odometry::currX = 13.25_in;
+    odometry::currY = 32.5_in;
+    odometry::resetAngle(90_deg);
+
+    macroActTask->suspend();
+
+    drive::profileController.generatePath(
+        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{32.5_in, 55.25_in, 90_deg}}, "A1");
+
+    drive::profileController.setTarget("A1");
+    differential::currState = differential::intakeIn;
+    drive::profileController.waitUntilSettled();
+
+    // if (odometry::currAngle.convert(degree) >= 240)
+    // {
+    //     turnAngleVel(350_deg - odometry::currAngle, 100); // Turn to face cap #5
+    //     printf("case 1");
+    // }
+    // if (odometry::currAngle.convert(degree) < 240)
+    // {
+    //     turnAngleVel(350_deg - (odometry::currAngle - 360_deg), 100); // Turn to face cap #5
+    //     printf("case 2");
+    // }
+
+    turnAngleVel(350_deg - (odometry::currAngle + 360_deg), 100);
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{6_in, 0_in, 0_deg}}, "D");
+
+    drive::profileController.setTarget("D", true);
+    drive::profileController.waitUntilSettled();
+
+    differential::liftTarget = 200;
+    differential::currState = differential::targetTransition;
+    pros::delay(300);
+
+    turnAngleVel(7_deg - (odometry::currAngle - 360_deg), 100);
+
+    pros::delay(3000);
+    macroActTask->resume();
+    // Resume the macro task
+
+    customShotCall(43, 110);
+    // Performs double shot
+
+    // while (macro::currState != macro::none)
+    // {
+    //     pros::delay(10);
+    // }
+    pros::delay(2000);
+    // Wait for the two shots to complete
+
+    differential::currState = differential::intakeIn;
+
+    macroActTask->suspend();
+    // Pause macro task to regain control of differential
+
+    turnAngleVel(310_deg - (odometry::currAngle + 360_deg), 100); // Turn to face cap #5
+
+    drive::profileController.generatePath(
+        {Point{0_in, 0_in, 0_deg}, Point{9.5_in, 0_in, 0_deg}}, "D");
+
+    drive::profileController.setTarget("D");
+    drive::profileController.waitUntilSettled();
+
+    turnAngleVel(50_deg, 100); // Turn to face cap #5
+
+    drive::chassisController.moveDistance(35_in);
+
+    removePaths("D");
+}
 
 void initBlueNear1() {}
 void executeBlueNear1() {}

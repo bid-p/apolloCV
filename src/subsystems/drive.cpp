@@ -12,22 +12,26 @@ Motor driveL2(DRIVE_PORT_L2, false, AbstractMotor::gearset::green);
 Motor driveR1(DRIVE_PORT_R1, false, AbstractMotor::gearset::green);
 Motor driveR2(DRIVE_PORT_R2, false, AbstractMotor::gearset::green);
 
-TimeUtil driveUtil = TimeUtilFactory::withSettledUtilParams(50, 5, 50_ms);
+TimeUtil chassisUtil = TimeUtilFactory::withSettledUtilParams(50, 5, 100_ms);
+TimeUtil profiledUtil = TimeUtilFactory::withSettledUtilParams(50, 5, 100_ms);
 
-AsyncPosIntegratedController leftController(std::shared_ptr<Motor>(&driveL1), driveUtil);
-AsyncPosIntegratedController rightController(std::shared_ptr<Motor>(&driveR1), driveUtil);
+okapi::MotorGroup leftMotorGroup({DRIVE_PORT_L1, DRIVE_PORT_L2});
+okapi::MotorGroup rightMotorGroup({DRIVE_PORT_R1, DRIVE_PORT_R2});
+
+AsyncPosIntegratedController leftController(std::shared_ptr<MotorGroup>(&leftMotorGroup), chassisUtil);
+AsyncPosIntegratedController rightController(std::shared_ptr<MotorGroup>(&rightMotorGroup), chassisUtil);
 
 SkidSteerModel chassisModel = ChassisModelFactory::create({DRIVE_PORT_L1, DRIVE_PORT_L2}, {-DRIVE_PORT_R1, -DRIVE_PORT_R2}, 200);
 
 ChassisControllerIntegrated chassisController(
-    driveUtil,
+    chassisUtil,
     std::shared_ptr<SkidSteerModel>(&chassisModel),
     std::unique_ptr<AsyncPosIntegratedController>(&leftController),
     std::unique_ptr<AsyncPosIntegratedController>(&rightController),
-    AbstractMotor::gearset::green, {4.125_in, 13.2054_in});
+    AbstractMotor::gearset::green, {4.125_in, 13.273906_in});
 
 AsyncMotionProfileController profileController(
-    driveUtil,
+    profiledUtil,
     1.00, // max vel
     2.0,  // max accel
     10.0, //max jerk
@@ -82,6 +86,23 @@ void turnAngleVel(QAngle angle, double maxVel)
 {
   drive::chassisController.setMaxVelocity(maxVel);
   drive::chassisController.turnAngle(angle);
+  drive::chassisController.waitUntilSettled();
+  drive::chassisController.setMaxVelocity(200);
+}
+
+void turnAngleVel(QAngle angle, double maxVel, bool async)
+{
+  drive::chassisController.setMaxVelocity(maxVel);
+  if (async)
+  {
+    drive::chassisController.turnAngleAsync(angle);
+    drive::chassisController.waitUntilSettled();
+  }
+  else
+  {
+    drive::chassisController.turnAngle(angle);
+    drive::chassisController.waitUntilSettled();
+  }
   drive::chassisController.setMaxVelocity(200);
 }
 

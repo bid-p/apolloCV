@@ -12,12 +12,19 @@ namespace odometry
 extern QLength currX;
 extern QLength currY;
 extern QAngle currAngle;
+extern ADIEncoder rightEnc;
+extern ADIEncoder leftEnc;
+
+extern double rEncLast;
+extern double lEncLast;
 
 extern void init();
 
 extern void calculate();
 
 extern void run(void *);
+
+extern void resetAngle(QAngle angle);
 
 extern void printPosition(void *);
 } // namespace odometry

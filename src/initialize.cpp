@@ -6,9 +6,20 @@
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+pros::Task *driveActTask;
+pros::Task *puncherActTask;
+pros::Task *anglerActTask;
+pros::Task *differentialActTask;
+pros::Task *macroActTask;
+pros::Task *updateTask;
+
 void initialize()
 {
     // pros::lcd::initialize();
+
+    initActTasks();
+
+    drive::profileController.startThread();
 
     odometry::init();
 
@@ -25,7 +36,7 @@ void initialize()
     differential::currState = differential::notRunning;
     macro::currState = macro::none;
 
-    initProgSkills();
+    // initProgSkills();
 }
 
 /**
@@ -33,7 +44,16 @@ void initialize()
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled()
+{
+    macroActTask->resume();
+    // set all the states to not running by default
+    drive::currState = drive::notRunning;
+    angler::currState = angler::notRunning;
+    puncher::currState = puncher::notRunning;
+    differential::currState = differential::notRunning;
+    macro::currState = macro::none;
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field

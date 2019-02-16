@@ -50,7 +50,7 @@ void update()
   }
   if (doubleShotFarBtn.changedToPressed())
   {
-    customShotCall(35, 88);
+    customShotCall(35, 90);
   }
   if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
   {
@@ -68,6 +68,8 @@ void act(void *)
     case none: // macro is not activated
       break;
     case singleShot: // shoots a single flag with a single given target encoder value for that flag; for autonomous
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -82,9 +84,13 @@ void act(void *)
       printf("Ang. PreShot: %i\n", (int)angler::angler.getPosition());
       puncher::currState = puncher::shooting;
 
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+
       macro::currState = none;
       break;
     case customShotDouble: // shoots two flags with the specified target encoder values for those flags; for autonomous
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -126,9 +132,13 @@ void act(void *)
       printf("Ang. PreShot 2: %i\n", (int)angler::angler.getPosition());
       puncher::currState = puncher::shooting;
 
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+
       macro::currState = none;
       break;
     case doubleShotNoWait:
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+
       puncher::currState = puncher::cocking;
       // switches out of cocking when sensor value achieved
 
@@ -144,9 +154,10 @@ void act(void *)
       //   pros::delay(2);
       // } // waits for puncher to load
 
-      pros::delay(500);
+      pros::delay(100);
       if (!puncher::isLoaded())
       {
+        drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
         macro::currState = none;
         break; // if puncher not loaded do not shoot again
       }
@@ -166,9 +177,10 @@ void act(void *)
       angler::currState = angler::toTarget;
 
       differential::currState = differential::intakeIn;
-      pros::delay(500); // doesn't wait for ball to be loaded, because it may or may not be there
+      pros::delay(1000); // doesn't wait for ball to be loaded, because it may or may not be there
       if (!puncher::isLoaded())
       {
+        drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
         macro::currState = none;
         break; // if puncher not loaded do not shoot again
       }
@@ -177,6 +189,8 @@ void act(void *)
       waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
       puncher::currState = puncher::shooting;
+
+      drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
 
       macro::currState = none;
       break;
@@ -203,7 +217,7 @@ void act(void *)
     case poleScore:
       drive::currState = drive::yield;
       drive::chassisController.setMaxVelocity(100);
-      drive::chassisController.moveDistance(-6.5_in);
+      drive::chassisController.moveDistance(-7.5_in);
       differential::liftTarget = 3000;
       drive::chassisController.waitUntilSettled();
       drive::chassisController.setMaxVelocity(200);

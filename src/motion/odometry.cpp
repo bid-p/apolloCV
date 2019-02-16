@@ -10,7 +10,7 @@ double lEncLast;
 
 const double ENC_WHEEL = 2.75;
 const double ENC_WHEEL2 = 4.125;
-const double CHASSISWIDTH = 7.227535 /*7.12*/;
+const double CHASSISWIDTH = 7.402083 /*7.12*/;
 const double TICKSINCH = ENC_WHEEL * PI / 360.0;
 const double TICKSINCH2 = ENC_WHEEL2 * PI / 360.0;
 
@@ -119,7 +119,9 @@ void printPosition(void *)
 
         pros::lcd::print(5, "enc chassis: %f", (rightEnc.get() * TICKSINCH - leftEnc.get() * TICKSINCH) / (20 * PI));
 
-        pros::lcd::print(6, "motor chassis: %f", (drive::driveR1.get_position() * TICKSINCH2 - drive::driveL1.get_position() * TICKSINCH2) / (20 * PI));
+        pros::lcd::print(6, "motor chassis: %f", (((drive::driveR1.get_position() + drive::driveR2.get_position())) / 2 * TICKSINCH2 - ((drive::driveL1.get_position() + drive::driveL2.get_position()) / 2) * TICKSINCH2) / (20 * PI));
+
+        printf("X: %f | Y: %f | THETA: %f\n", x, y, angle);
 
         pros::delay(10);
     }
@@ -134,6 +136,15 @@ void run(void *)
         calculate();
         pros::delay(5);
     }
+}
+
+void resetAngle(QAngle angle)
+{
+    odometry::currAngle = angle;
+    odometry::lEncLast = 0;
+    odometry::rEncLast = 0;
+    odometry::rightEnc.reset();
+    odometry::leftEnc.reset();
 }
 
 } // namespace odometry
