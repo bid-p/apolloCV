@@ -13,19 +13,28 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+void states()
+{
+	double x = odometry::currX.convert(okapi::inch);
+	double y = odometry::currY.convert(okapi::inch);
+	double angle = odometry::currAngle.convert(okapi::degree);
 
-		left_mtr = left;
-		right_mtr = right;
-		pros::delay(20);
+	// pros::lcd::print(1, "Drive state: %c | Drive temp: %d", drive::currState, (int)drive::driveR1.getTemperature());
+	// pros::lcd::print(2, "Puncher state: %c | Puncher temp: %d", puncher::currState, (int)puncher::puncher.getTemperature());
+	pros::lcd::print(7, "Ang Target: %d | Ang Enc: %d | Ang Temp: %d", (int)angler::target, (int)angler::angler.getPosition(), (int)angler::angler.getTemperature());
+	// pros::lcd::print(4, "Diff state: %c | Diff Left temp: %d", differential::currState, (int)differential::diffLeft.getTemperature());
+	// pros::lcd::print(5, "Macro state: %c", macro::currState);
+}
+
+void opcontrol()
+{
+	macroActTask->resume();
+
+	pros::lcd::initialize();
+
+	while (true)
+	{
+		states();
+		pros::delay(10);
 	}
 }

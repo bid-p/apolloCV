@@ -11,4 +11,55 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous()
+{
+    pros::Task odometryPrint(odometry::printCurrPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Screen");
+
+    drive::currState = drive::driveStates::yield;
+    differential::currState = differential::differentialStates::yield;
+    puncher::currState = puncher::puncherStates::yield;
+    angler::currState = angler::anglerStates::yield;
+
+    switch (autonRoutine) // Executes specific routine based on auton selector.
+    {
+    case notSelected:
+        break;
+    case progSkills:
+        executeProgSkills();
+        break;
+
+    case redNear1:
+        executeRedNear1();
+        break;
+
+    case redNear2:
+        executeRedNear2();
+        break;
+
+    case redFar1:
+        executeRedFar1();
+        break;
+
+    case redFar2:
+        executeRedFar2();
+        break;
+
+    case blueNear1:
+        executeBlueNear1();
+        break;
+
+    case blueNear2:
+        executeBlueNear2();
+        break;
+
+    case blueFar1:
+        executeBlueFar1();
+        break;
+
+    case blueFar2:
+        executeBlueFar2();
+        break;
+    }
+
+    lv_obj_clean(lv_scr_act());
+}

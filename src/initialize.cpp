@@ -1,26 +1,39 @@
 #include "main.h"
 
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
 
-	pros::lcd::register_btn1_cb(on_center_button);
+pros::Task *driveActTask;
+pros::Task *puncherActTask;
+pros::Task *anglerActTask;
+pros::Task *differentialActTask;
+pros::Task *macroActTask;
+pros::Task *updateTask;
+
+void initialize()
+{
+	initActTasks();
+
+	drive::profileController.startThread();
+
+	odometry::init();
+
+	angler::vision.clear_led();
+
+	pros::Task odometryTask(odometry::run, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odometry");
+
+	autonSelector();
+
+	// set all the states to not running by default
+	drive::currState = drive::notRunning;
+	angler::currState = angler::notRunning;
+	puncher::currState = puncher::notRunning;
+	differential::currState = differential::notRunning;
+	macro::currState = macro::none;
 }
 
 /**
@@ -28,7 +41,16 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled()
+{
+	macroActTask->resume();
+	// set all the states to not running by default
+	drive::currState = drive::notRunning;
+	angler::currState = angler::notRunning;
+	puncher::currState = puncher::notRunning;
+	differential::currState = differential::notRunning;
+	macro::currState = macro::none;
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
