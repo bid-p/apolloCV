@@ -11,7 +11,7 @@ namespace macro
 enum macroStates
 {
     none = 'x',
-    doubleShotNoWait = "d",
+    doubleShotNoWait = 'd',
     customShotDouble = 'c',
     singleShot = 's',
     anglerNearHigh = '1',

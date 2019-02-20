@@ -30,7 +30,7 @@ bool hasBall()
 {
     if (line.get_value() < 2400)
     {
-        reutrn true;
+        return true;
     }
     return false;
 }
@@ -39,14 +39,14 @@ void update()
 {
     liftVal = liftPotFilter.filter(liftPot.get());
 
-    if (currState == intakeIn && !puncher::isLoader() && hasBall())
+    if (currState == intakeIn && !puncher::isLoaded() && hasBall())
     {
-        currentState = ballDecel;
+        currState = ballDecel;
     }
     if (currState == ballDecel && puncher::isLoaded())
     {
         currState = intakeIn;
     }
-    if (currState == intakeIn && puncher::isLoaded())
 }
+
 } // namespace differential

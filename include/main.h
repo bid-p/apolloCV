@@ -36,6 +36,18 @@
 
 #include "api.h"
 
+#include "ports.hpp"
+#include "motion/odometry.hpp"
+#include "subsystems/angler.hpp"
+//#include "autons.hpp"
+#include "subsystems/differential.hpp"
+//#include "display.hpp"
+#include "subsystems/drive.hpp"
+#include "init.hpp"
+#include "macros.hpp"
+#include "okapi/api.hpp"
+#include "subsystems/puncher.hpp"
+
 /**
  * You should add more #includes here
  */
@@ -60,13 +72,14 @@
  * button press in opcontrol() for testing purposes).
  */
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-void autonomous(void);
-void initialize(void);
-void disabled(void);
-void competition_initialize(void);
-void opcontrol(void);
+    void autonomous(void);
+    void initialize(void);
+    void disabled(void);
+    void competition_initialize(void);
+    void opcontrol(void);
 #ifdef __cplusplus
 }
 #endif
@@ -78,4 +91,4 @@ void opcontrol(void);
 //#include <iostream>
 #endif
 
-#endif  // _PROS_MAIN_H_
+#endif // _PROS_MAIN_H_

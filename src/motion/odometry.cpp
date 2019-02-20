@@ -14,10 +14,10 @@ const double ENC_DRIVE = 4.125;
 const double CHASSIS_WIDTH = 7.402083; //Experimental value
 
 const double TICKSINCH = ENC_WHEEL * PI / 360.0;
-const double TICKSDRIVE = ENC_DRIVE * PI 360.0;
+const double TICKSDRIVE = ENC_DRIVE * PI / 360.0;
 
 QLength currX;
-QLenght currY;
+QLength currY;
 QAngle currAngle;
 
 void init()
