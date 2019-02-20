@@ -1,35 +1,36 @@
 #pragma once
 
-const int DRIVE_PORT_L1 = 12;
-const int DRIVE_PORT_L2 = 11;
-const int DRIVE_PORT_R1 = 20;
-const int DRIVE_PORT_R2 = 19;
+// Drive Ports
+const int DRIVE_L1 = 12;
+const int DRIVE_L2 = 11;
+const int DRIVE_R1 = 20;
+const int DRIVE_R2 = 19;
 
-const int DIFF_PORT_L = 13;
-const int DIFF_PORT_R = 14;
+// Differential Ports
+const int DIFF_L = 13;
+const int DIFF_R = 14;
 
-const int PUNCHER_PORT = 10;
+// Other Systems
+const int PUNCHER = 10;
 
-const int ANGLE_CHANGER_PORT = 6;
+const int ANGLE_CHANGER = 6;
 
-/*----------------------------------------------------------------------------------------------*/
+const int VISION = 9;
 
-const char SPORT_INTAKE_L = 'H';
+// Legacy Ports
 
-const char SPORT_PUNCHERB = 'F';
+//Line Sensors
+const char SPORT_INTAKE = 'H';
 
-const int SPORT_LINECOCK = 'E';
+const char SPORT_PUNCHER = 'F';
+
+const char SPORT_COCKER = 'E';
 
 const char SPORT_LIFT = 'G';
 
-/*----------------------------------------------------------------------------------------------*/
+//Encoders
+const char SPORT_RTOP = 'A';
+const char SPORT_LTOP = 'C';
 
-const int SPORT_VISION = 9;
-
-/*----------------------------------------------------------------------------------------------*/
-
-const char SPORT_ENC_RTOP = 'A';
-const char SPORT_ENC_RBOT = 'B';
-
-const char SPORT_ENC_LTOP = 'C';
-const char SPORT_ENC_LBOT = 'D';
+const char SPORT_RBOT = 'B';
+const char SPORT_LBOT = 'D';

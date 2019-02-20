@@ -1,7 +1,7 @@
 #ifndef ODOM_GUARD
 #define ODOM_GUARD
+
 #include "okapi/api.hpp"
-#include <tuple>
 #include "subsystems/drive.hpp"
 
 using namespace okapi;
@@ -15,8 +15,8 @@ extern QAngle currAngle;
 extern ADIEncoder rightEnc;
 extern ADIEncoder leftEnc;
 
-extern double rEncLast;
-extern double lEncLast;
+extern double rightEncLast;
+extern double leftEncLast;
 
 extern void init();
 
@@ -26,7 +26,7 @@ extern void run(void *);
 
 extern void resetAngle(QAngle angle);
 
-extern void printPosition(void *);
+extern void printCurrPosition(void *);
 } // namespace odometry
 
 #endif

@@ -13,14 +13,14 @@ extern const double joyDeadband;
 enum alliances
 {
     red = 'r',
-    blue = 'b',
+    blue = 'b'
 };
 
 extern alliances alliance;
 
 extern void initActTasks();
 
-extern void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetError, double iatTargetDerivative, QTime iatTargetTime);
+extern void waitUntilSettled(okapi::AbstractMotor &motor, double iatTargetErrir, double iatTargetDerivative, QTime iatTargetTime);
 
 extern pros::Task *driveActTask;
 extern pros::Task *puncherActTask;
