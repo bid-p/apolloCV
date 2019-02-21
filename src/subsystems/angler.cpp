@@ -19,6 +19,10 @@ const double kD = 0;
 
 IterativePosPIDController anglerController = IterativeControllerFactory::posPID(kP, kI, kD, 0, std::make_unique<AverageFilter<5>>());
 
+void update()
+{
+}
+
 void act(void *)
 {
     while (true)

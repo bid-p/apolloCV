@@ -30,7 +30,7 @@ const char SPORT_LIFT = 'G';
 
 //Encoders
 const char SPORT_RTOP = 'A';
-const char SPORT_LTOP = 'C';
-
 const char SPORT_RBOT = 'B';
+
+const char SPORT_LTOP = 'C';
 const char SPORT_LBOT = 'D';

@@ -30,6 +30,8 @@ extern bool isLoaded();
 
 extern bool fired();
 
+extern void update();
+
 extern void act(void *);
 
 } // namespace puncher

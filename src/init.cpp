@@ -44,6 +44,10 @@ void updateFunc(void *)
     {
         drive::update();
         macro::update();
+        differential::update();
+        puncher::update();
+        angler::update();
+
         pros::delay(5);
     }
 }

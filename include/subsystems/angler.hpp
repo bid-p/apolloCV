@@ -29,6 +29,8 @@ extern const double kP, kI, kD;
 
 extern IterativePosPIDController anglerController;
 
+extern void update();
+
 extern void act(void *);
 
 } // namespace angler

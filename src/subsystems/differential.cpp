@@ -135,8 +135,8 @@ void act(void *)
         case ballDecel:
             // Run intake at 83.3% of normal speed to prevent ball
             // from flying out.
-            diffLeft.moveVoltage(-5500);
-            diffRight.moveVoltage(5500);
+            diffLeft.moveVoltage(-7000);
+            diffRight.moveVoltage(7000);
             break;
         case intakeOutNY:
             // Keep outtaking to flip caps. For use in auton.

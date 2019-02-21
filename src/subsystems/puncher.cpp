@@ -42,6 +42,8 @@ bool isFired()
     return false;
 }
 
+void update() {}
+
 void act(void *)
 {
     while (true)

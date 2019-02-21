@@ -50,7 +50,7 @@ void update()
     }
     if (doubleShotFarBtn.changedToPressed())
     {
-        customShotCall(35, 90);
+        customShotCall(35, 92);
     }
     if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
     {
