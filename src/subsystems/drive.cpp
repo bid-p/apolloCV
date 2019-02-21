@@ -21,22 +21,26 @@ okapi::MotorGroup rightMotorGroup({DRIVE_R1, DRIVE_R2});
 AsyncPosIntegratedController leftController(std::shared_ptr<MotorGroup>(&leftMotorGroup), chassisUtil);
 AsyncPosIntegratedController rightController(std::shared_ptr<MotorGroup>(&rightMotorGroup), chassisUtil);
 
-SkidSteerModel chassisModel = ChassisModelFactory::create({DRIVE_L1, DRIVE_L2}, {-DRIVE_R1, -DRIVE_R2}, 200);
+SkidSteerModel integratedChassisModel = ChassisModelFactory::create({DRIVE_L1, DRIVE_L2}, {-DRIVE_R1, -DRIVE_R2}, 200);
+SkidSteerModel discreteChassisModel = ChassisModelFactory::create({DRIVE_L1, DRIVE_L2}, {-DRIVE_R1, -DRIVE_R2}, odometry::leftEnc, odometry::rightEnc, 200);
+
+// ChassisScales integratedScale = std_initializer_list<ChassisScales>(4.125_in, 13.273906_in);
+// ChassisScales discreteScale = std_initializer_list<ChassisScales>(2.75_in, 7.402083_in);
 
 ChassisControllerIntegrated chassisController(
     chassisUtil,
-    std::shared_ptr<SkidSteerModel>(&chassisModel),
+    std::shared_ptr<SkidSteerModel>(&discreteChassisModel),
     std::unique_ptr<AsyncPosIntegratedController>(&leftController),
     std::unique_ptr<AsyncPosIntegratedController>(&rightController),
-    AbstractMotor::gearset::green, {4.125_in, 13.273906_in});
+    AbstractMotor::gearset::green, {2.75_in, 7.402083_in});
 
 AsyncMotionProfileController profileController(
     profiledUtil,
     1.00, // max vel
     2.0,  // max accel
     10.0, //max jerk
-    std::shared_ptr<SkidSteerModel>(&chassisModel),
-    {4.125_in, 13.2054_in},
+    std::shared_ptr<SkidSteerModel>(&discreteChassisModel),
+    {2.75_in, 7.402083_in},
     AbstractMotor::gearset::green);
 
 void update()
@@ -96,12 +100,43 @@ void turnAngleVel(QAngle angle, double maxVel, bool async)
     if (async)
     {
         drive::chassisController.turnAngleAsync(angle);
-        drive::chassisController.waitUntilSettled();
     }
     else
     {
         drive::chassisController.turnAngle(angle);
         drive::chassisController.waitUntilSettled();
+    }
+    drive::chassisController.setMaxVelocity(200);
+}
+
+void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async)
+{
+    drive::chassisController.setMaxVelocity(maxVel);
+    if (async)
+    {
+        if (odom)
+        {
+            double angleError = std::atan2(sin(angle.convert(degree) - odometry::currAngle.convert(degree)), cos(sin(angle.convert(degree) - odometry::currAngle.convert(degree))));
+            drive::chassisController.turnAngleAsync(angleError);
+        }
+        else
+        {
+            drive::chassisController.turnAngleAsync(angle);
+        }
+    }
+    else
+    {
+        if (odom)
+        {
+            double angleError = std::atan2(sin(angle.convert(degree) - odometry::currAngle.convert(degree)), cos(sin(angle.convert(degree) - odometry::currAngle.convert(degree))));
+            drive::chassisController.turnAngle(angleError);
+            drive::chassisController.waitUntilSettled();
+        }
+        else
+        {
+            drive::chassisController.turnAngle(angle);
+            drive::chassisController.waitUntilSettled();
+        }
     }
     drive::chassisController.setMaxVelocity(200);
 }
