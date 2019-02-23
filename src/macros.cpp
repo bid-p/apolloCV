@@ -11,7 +11,7 @@ ControllerButton singleShotBtn = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn = controller[ControllerDigital::L2];
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::X];
 
-ControllerButton gayButton = controller[ControllerDigital::B];
+ControllerButton poleScoreBtn = controller[ControllerDigital::B];
 ControllerButton shiftBtn = controller[ControllerDigital::R1];
 
 int macroTarget1; // target encoder values for angler to shoot first flag in macro
@@ -42,19 +42,47 @@ void update()
     }
     if (singleShotBtn.changedToPressed())
     {
-        currState = singleShot;
+        if (currState == singleShot)
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = singleShot;
+        }
     }
     if (doubleShotNearBtn.changedToPressed())
     {
-        customShotCall(0, 90);
+        if (currState == customShotDouble)
+        {
+            currState = none;
+        }
+        else
+        {
+            customShotCall(0, 90);
+        }
     }
     if (doubleShotFarBtn.changedToPressed())
     {
-        customShotCall(35, 92);
+        if (currState == customShotDouble)
+        {
+            currState = none;
+        }
+        else
+        {
+            customShotCall(35, 92);
+        }
     }
-    if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
+    if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && poleScoreBtn.changedToPressed())
     {
-        currState = scorePole;
+        if (currState == scorePole)
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = scorePole;
+        }
     }
     // printf("Macro State: %c\n", currState);
 }

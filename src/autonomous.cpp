@@ -13,7 +13,7 @@
  */
 void autonomous()
 {
-    pros::Task odometryPrint(odometry::printCurrPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Screen");
+    pros::Task odometryPrint(odometry::printPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Screen");
 
     drive::currState = drive::driveStates::yield;
     differential::currState = differential::differentialStates::yield;
@@ -61,5 +61,13 @@ void autonomous()
         break;
     }
 
-    lv_obj_clean(lv_scr_act());
+    turnAngleVel(90_deg, 100, true, false);
+
+    turnAngleVel(270_deg, 100, true, false);
+
+    turnAngleVel(180_deg, 100, true, false);
+
+    turnAngleVel(0_deg, 100, true, false);
+
+    // lv_obj_clean(lv_scr_act());
 }

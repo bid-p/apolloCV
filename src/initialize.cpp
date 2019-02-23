@@ -24,7 +24,9 @@ void initialize()
 
 	angler::vision.clear_led();
 
-	pros::Task odometryTask(odometry::run, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Odometry");
+	pros::Task odometryTask(odometry::run, nullptr, TASK_PRIORITY_DEFAULT + 1, TASK_STACK_DEPTH_DEFAULT, "Odometry");
+
+	pros::Task appcTask(appcLoop, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "APPC Task");
 
 	autonSelector();
 

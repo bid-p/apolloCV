@@ -38,6 +38,13 @@
 
 #include "ports.hpp"
 #include "motion/odometry.hpp"
+
+// #include "motion/path/bezier.hpp"
+#include "motion/path/line.hpp"
+#include "motion/path/path.hpp"
+#include "motion/path/pathgroup.hpp"
+#include "motion/adaptivepurepursuit.hpp"
+
 #include "subsystems/angler.hpp"
 #include "autons.hpp"
 #include "subsystems/differential.hpp"

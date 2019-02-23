@@ -2,6 +2,7 @@
 #define DRIVE_GUARD
 
 #include "okapi/api.hpp"
+#include "motion/adaptivepurepursuit.hpp"
 
 using namespace okapi;
 
@@ -23,15 +24,19 @@ extern ChassisControllerIntegrated chassisController;
 
 extern AsyncMotionProfileController profileController;
 
+extern pathfollowing::AdaptivePurePursuit appc;
+
 extern void update();
 
 extern void act(void *);
 
 } // namespace drive
 
-extern void turnAngleVel(QAngle angle, double maxVelocity);
+extern void turnAngleVel(QAngle angle, double maxVel);
 
-extern void turnAngleVel(QAngle angle, double maxVelocity, bool asynchronous);
+extern void turnAngleVel(QAngle angle, double maxVel, bool async);
+
+extern void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async);
 
 extern void removePaths(std::string path1);
 extern void removePaths(std::string path1, std::string path2);

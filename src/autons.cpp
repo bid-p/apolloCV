@@ -21,42 +21,44 @@ void executeProgSkills()
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
 
-    drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{36_in, 52.25_in, 90_deg}}, "A1");
+    path::Line A1(
+        {13.25_in, 36_in},
+        {52.25_in, 36_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("A1");
-    drive::profileController.waitUntilSettled();
+    drive::appc.setPath(&A1);
+    appcWUS();
 
     // Drive forward into the cap #1 and intake ball
 
-    drive::profileController.generatePath(
-        {Point{36_in, 17.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 90_deg}}, "A2");
+    path::Line A2(
+        {52.25_in, 36_in},
+        {17.25_in, 36_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("A2", true);
-    drive::profileController.waitUntilSettled();
+    drive::appc.setPath(&A2);
+    appcWUS();
     //Reverse to starting tile
-
-    removePaths("A1", "A2");
 
     // If robot is facing less than 180 degree away from the direction of the flags,
     // turn left else turn right to face the flags.
-    if (odometry::currAngle.convert(degree) <= 180)
-    {
-        turnAngleVel(0_deg - odometry::currAngle, 100);
-    }
-    else if (odometry::currAngle.convert(degree) > 180)
-    {
-        turnAngleVel(360_deg - odometry::currAngle, 100);
-    }
+    turnAngleVel(0_deg, 100, true, false);
     // Turn left
 
-    drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 17.25_in, 0_deg}}, "B");
+    path::Line B(
+        {17.25_in, 36_in},
+        {17.25_in, 84_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("B");
-    drive::profileController.waitUntilSettled();
-    drive::profileController.removePath("B");
+    drive::appc.setPath(&B);
+    appcWUS();
     // Drive robot to shooting position
+
+    turnAngleVel(0_deg, 100, true, false);
+    // Correct for any angle inaccuracies
 
     differential::currState = differential::notRunning;
     //Stop the differential to avoid conflict with macro task
@@ -78,19 +80,19 @@ void executeProgSkills()
 
     differential::currState = differential::intakeIn;
 
-    drive::profileController.generatePath(
-        {Point{odometry::currY, 13.25_in, -odometry::currAngle}, Point{130_in, odometry::currX, 0_deg}}, "B1");
+    path::Line B1(
+        {17.25_in, 84_in},
+        {13.25_in, 130_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("B1");
-    drive::profileController.waitUntilSettled();
-    // Perform s-curve to toggle the bottom flag
+    drive::appc.setPath(&B1);
+    appcWUS();
+    // Perform curve to toggle the bottom flag
 
     pros::delay(200);
 
-    tempLength = odometry::currX;
-
     odometry::resetAngle(0_deg);
-
     odometry::currY = 132_in; //resetting the y axis
 
     drive::profileController.generatePath(
@@ -99,56 +101,46 @@ void executeProgSkills()
     drive::profileController.setTarget("B2", true);
     drive::profileController.waitUntilSettled();
 
-    removePaths("B1", "B2");
+    removePaths("B2");
 
     // If robot's heading is towards the cap, turn right,
     // else turn counterclockwise to face the cap.
-    if (odometry::currAngle.convert(degree) <= 90)
-    {
-        turnAngleVel(93_deg - odometry::currAngle, 100);
-    }
-    else if (odometry::currAngle.convert(degree) > 270)
-    {
-        turnAngleVel(93_deg + (360_deg - odometry::currAngle), 100);
-    }
+    turnAngleVel(90_deg, 100, true, false);
     // Turn right
 
-    drive::profileController.generatePath(
-        {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{84_in, 55.25_in, 92_deg}}, "C1");
+    path::Line C1(
+        {17.25_in, 84_in},
+        {55.25_in, 84_in},
+        200,
+        200);
 
     // macro::currState = macro::intakeIn;
     differential::currState = differential::intakeIn;
 
-    drive::profileController.setTarget("C1");
-    drive::profileController.waitUntilSettled();
+    drive::appc.setPath(&C1);
+    appcWUS();
     // Drive forward into cap #2 and intake ball
 
-    drive::profileController.generatePath(
-        {Point{0_in, 0_in, 0_deg}, Point{13_in, 0_in, 0_deg}}, "C2");
+    // drive::profileController.generatePath(
+    //     {Point{0_in, 0_in, 0_deg}, Point{13_in, 0_in, 0_deg}}, "C2");
 
-    drive::profileController.setTarget("C2", true);
-    drive::profileController.waitUntilSettled();
+    // drive::profileController.setTarget("C2", true);
+    // drive::profileController.waitUntilSettled();
 
-    removePaths("C1", "C2");
+    // removePaths("C2");
 
-    drive::profileController.generatePath(
-        {Point{108_in, odometry::currX, -odometry::currAngle}, Point{odometry::currY, 66.25_in, 90_deg}}, "D");
+    path::Line D(
+        {55.25_in, 84_in},
+        {66.25_in, 108_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("D");
-    drive::profileController.waitUntilSettled();
-    // Perform another s-curve to position robot
+    drive::appc.setPath(&D);
+    appcWUS();
+    // Perform another curve to yeet robot
     // in front of center column of flags
 
-    drive::profileController.removePath("D");
-
-    if (odometry::currAngle.convert(degree) >= 0)
-    {
-        turnAngleVel(0_deg - odometry::currAngle, 100);
-    }
-    else if (odometry::currAngle.convert(degree) > 270)
-    {
-        turnAngleVel(360_deg - odometry::currAngle, 100);
-    }
+    turnAngleVel(0_deg, 100, true, false);
     // Turn to face flags
 
     macroActTask->resume();
@@ -168,21 +160,18 @@ void executeProgSkills()
 
     differential::currState = differential::intakeIn;
 
-    drive::profileController.generatePath(
-        {Point{odometry::currY, 60.25_in, -odometry::currAngle}, Point{132_in, odometry::currX, 0_deg}}, "E");
+    path::Line E(
+        {66.25_in, 108_in},
+        {60.25_in, 132_in},
+        200,
+        200);
 
-    drive::profileController.setTarget("E");
-
-    drive::profileController.waitUntilSettled();
+    drive::appc.setPath(&E);
+    appcWUS();
     // Perform another s-curve to toggle bottom flag
 
-    tempLength = odometry::currX;
-    // if (odometry::currAngle > 355_deg && odometry::currAngle < 5_deg)
-    // {
     odometry::resetAngle(0_deg);
-    // }
-    odometry::currY = 132_in;     //resetting the y axis
-    odometry::currX = tempLength; //resetting the x axis
+    odometry::currY = 132_in; //resetting the y axis
 
     drive::profileController.generatePath(
         {Point{108_in, 65.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "E1");
@@ -191,16 +180,9 @@ void executeProgSkills()
     drive::profileController.waitUntilSettled();
     // Reverse to re-align with cap #3
 
-    removePaths("E", "E1");
+    removePaths("E1");
 
-    if (odometry::currAngle.convert(degree) <= 90)
-    {
-        turnAngleVel(93_deg - odometry::currAngle, 100);
-    }
-    else if (odometry::currAngle.convert(degree) > 270)
-    {
-        turnAngleVel(93_deg + (360_deg - odometry::currAngle), 100);
-    }
+    turnAngleVel(90_deg, 100, true, false);
     // Turn right
     // Turn to face cap #3
 
@@ -211,7 +193,7 @@ void executeProgSkills()
         {Point{odometry::currY, odometry::currX, -odometry::currAngle}, Point{108_in, 108.25_in, -92_deg}}, "F");
 
     drive::profileController.setTarget("F");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Run into/flip cap
 
     differential::currState = differential::notRunning; //Intake off
@@ -230,7 +212,7 @@ void executeProgSkills()
         {Point{odometry::currY, 106.25_in, -odometry::currAngle}, Point{133_in, odometry::currX, 0_deg}}, "G");
 
     drive::profileController.setTarget("G");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Run into low flag
 
     removePaths("F", "G");
@@ -247,7 +229,7 @@ void executeProgSkills()
         {Point{84_in, 104.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 0_deg}}, "H");
 
     drive::profileController.setTarget("H", true);
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Reverse to align cap #4
 
     if (odometry::currAngle.convert(degree) <= 90)
@@ -265,7 +247,7 @@ void executeProgSkills()
         {Point{odometry::currY, 88.25_in, -odometry::currAngle}, Point{84_in, odometry::currX, 270_deg}}, "I");
 
     drive::profileController.setTarget("I");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Run into cap
 
     removePaths("H", "I");
@@ -274,7 +256,7 @@ void executeProgSkills()
         {Point{84_in, 93.25_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 270_deg}}, "J");
 
     drive::profileController.setTarget("J", true);
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Reverse a little
 
     drive::profileController.generatePath(
@@ -284,7 +266,7 @@ void executeProgSkills()
     // Reverse intake to flip cap #4
 
     drive::profileController.setTarget("K");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Run into/flip cap #4
 
     removePaths("J", "K");
@@ -293,7 +275,7 @@ void executeProgSkills()
         {Point{84_in, 133_in, odometry::currAngle}, Point{odometry::currY, odometry::currX, 270_deg}}, "L");
 
     drive::profileController.setTarget("L", true);
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Reverse into fence + fencealign
 
     differential::currState = differential::notRunning;
@@ -311,7 +293,7 @@ void executeProgSkills()
         {Point{odometry::currY, 127.75_in, -odometry::currAngle}, Point{84_in, odometry::currX, 270_deg}}, "L1");
 
     drive::profileController.setTarget("L1"); // move forwards a little bit
-    drive::profileController.waitUntilSettled();
+    appcWUS();
 
     printf("case 6");
 
@@ -336,7 +318,7 @@ void executeProgSkills()
         {Point{0_in, 0_in, 0_deg}, Point{48_in, 0_in, 0_deg}}, "M");
 
     drive::profileController.setTarget("M", true);
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Move forward to align with cap #5
 
     if (odometry::currAngle.convert(degree) <= 90)
@@ -357,14 +339,14 @@ void executeProgSkills()
         {Point{0_in, 0_in, 0_deg}, Point{44_in, 0_in, 0_deg}}, "N");
 
     drive::profileController.setTarget("N");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Run into/flip cap
 
     drive::profileController.generatePath(
         {Point{0_in, 0_in, 0_deg}, Point{38_in, 22_in, 0_deg}}, "O");
 
     drive::profileController.setTarget("O", true);
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // Reverse back to reality, oh there goes gravity
 
     removePaths("N", "O");
@@ -392,7 +374,7 @@ void executeProgSkills()
         {Point{0_in, 0_in, 0_deg}, Point{44_in, -10_in, 0_deg}}, "P");
 
     drive::profileController.setTarget("P");
-    drive::profileController.waitUntilSettled();
+    appcWUS();
     // S-Curve to align with platforms
 
     if (odometry::currAngle.convert(degree) <= 90)

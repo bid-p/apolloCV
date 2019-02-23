@@ -24,6 +24,9 @@ void init()
     currY = 0_ft;
     currAngle = 0_deg;
 
+    odometry::rightEnc.reset();
+    odometry::leftEnc.reset();
+
     rEncLast = rightEnc.get() /* drive::driveR1.get_position()*/ * TICKSINCH;
     lEncLast = leftEnc.get() /* drive::driveL1.get_position()*/ * TICKSINCH;
 }
@@ -98,7 +101,7 @@ void calculate()
 //     }
 // }
 
-void printCurrPosition(void *)
+void printPosition(void *)
 {
     controller.clear();
 
@@ -129,7 +132,7 @@ void printCurrPosition(void *)
 
 void run(void *)
 {
-    pros::Task odometryPrint(printCurrPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Controller");
+    pros::Task odometryPrint(printPosition, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Position Print --> Controller");
 
     while (true)
     {
