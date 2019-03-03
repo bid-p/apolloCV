@@ -31,4 +31,8 @@ extern pros::Task *updateTask;
 
 extern void updateFunc(void *);
 
+extern bool looperoni;
+
+extern void appcWUS();
+
 #endif

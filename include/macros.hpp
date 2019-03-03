@@ -18,7 +18,7 @@ enum macroStates
     anglerNearMid = '2',
     anglerFarMid = '3',
     anglerFarHigh = '4',
-    scorePole = 'p'
+    scorePole = 'p',
 };
 
 extern macroStates currState;
@@ -31,6 +31,6 @@ extern void act(void *);
 
 extern void customShotCall(int target1, int target2, bool shouldWait = false);
 
-extern void chustomShotCall(int target1);
+extern void customShotCall(int target1);
 
 #endif

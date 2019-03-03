@@ -20,17 +20,17 @@ const int VISION = 9;
 // Legacy Ports
 
 //Line Sensors
-const char SPORT_INTAKE = 'H';
+const char SPORT_INTAKE = 'E';
 
-const char SPORT_PUNCHER = 'F';
+const char SPORT_PUNCHER = 'D';
 
-const char SPORT_COCKER = 'E';
+const char SPORT_COCKER = 'F';
 
-const char SPORT_LIFT = 'G';
+const char SPORT_LIFT = 'C';
 
 //Encoders
 const char SPORT_RTOP = 'A';
 const char SPORT_RBOT = 'B';
 
-const char SPORT_LTOP = 'C';
-const char SPORT_LBOT = 'D';
+const char SPORT_LTOP = 'G';
+const char SPORT_LBOT = 'H';

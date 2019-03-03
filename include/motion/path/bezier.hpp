@@ -2,14 +2,19 @@
 #include <vector>
 #include <functional>
 
-namespace path {
-    class Bezier : public Path {
-        private:
-        std::vector<std::reference_wrapper<Point>> points;
+namespace path
+{
+class Bezier : public Path
+{
+  private:
+    std::vector<Point> points;
 
-        public:
-        Bezier(std::initializer_list<std::reference_wrapper<Point>> points, int resolution, int lookahead = -1);
+    int factorial(int n);
+    double combination(int n, int r);
 
-        Point pointAt(int T);
-    };
-}
+  public:
+    Bezier(std::initializer_list<Point> points, int resolution, int lookahead = -1);
+
+    Point pointAt(int T);
+};
+} // namespace path

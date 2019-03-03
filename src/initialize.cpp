@@ -28,7 +28,9 @@ void initialize()
 
 	pros::Task appcTask(appcLoop, nullptr, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "APPC Task");
 
-	autonSelector();
+	// autonSelector();
+
+	pros::lcd::initialize();
 
 	// set all the states to not running by default
 	drive::currState = drive::notRunning;

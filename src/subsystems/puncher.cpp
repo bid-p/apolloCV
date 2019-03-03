@@ -18,6 +18,7 @@ bool isCocked()
 {
     if (lineCock.get_value() > 2500)
     {
+        // printf("is cocked\n");
         return true;
     }
     return false;
@@ -72,6 +73,7 @@ void act(void *)
             }
             else
             {
+                printf("is cocked\n");
                 puncher.moveVoltage(0);
                 currState = notRunning;
             }

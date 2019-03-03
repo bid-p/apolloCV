@@ -36,10 +36,6 @@ public:
   bool isSettled();
 };
 
-extern bool loop;
-
 } // namespace pathfollowing
 
 extern void appcLoop(void *);
-
-extern void appcWUS();

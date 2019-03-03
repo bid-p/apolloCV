@@ -50,9 +50,14 @@ void AdaptivePurePursuit::loop()
 	double distTolookaheadPoint =
 		sqrt(pow(target.x.convert(inch) - robotPosition.x.convert(inch), 2) + pow(target.y.convert(inch) - robotPosition.y.convert(inch), 2));
 
-	straightController->setTarget(distTolookaheadPoint);
+	// straightController->setTarget(distTolookaheadPoint);
 
-	double forwardPower = straightController->step(0);
+	// double forwardPower = straightController->step(0);
+
+	straightController->setTarget(0);
+
+	double forwardPower = straightController->step(-distTolookaheadPoint);
+
 	// QAngle bearing =
 	// 	std::atan2((this->target.x.convert(inch) - robotPosition.x.convert(inch)),
 	// 			   (this->target.y.convert(inch) - robotPosition.y.convert(inch))) *
@@ -69,26 +74,33 @@ void AdaptivePurePursuit::loop()
 	double angleError = bearing.convert(radian) - currBearingAngle.convert(radian);
 	angleError = std::atan2(sin(angleError), cos(angleError));
 
-	//turnController->setTarget(bearing.convert(degree));
-	turnController->setTarget(angleError);
-
-	// double turnPower = turnController->step(odometry::currAngle.convert(degree));
-	// double turnPower = turnController->step(currHeading.convert(degree));
-	//double turnPower = turnController->step(turnControllerPV.convert(degree));
-	double turnPower = turnController->step(0);
-	if (target.t == path->getResolution())
+	//if (target.t == path->getResolution())
+	//{
+	if (angleError * 180.0 / PI > 90)
 	{
-		if (angleError * 180.0 / PI > 90)
-		{
-			//bearing = (bearing.convert(degree) - 180) * degree;
-			direction *= -1;
-		}
-		else if (angleError * 180.0 / PI < -90)
-		{
-			//bearing = (bearing.convert(degree) + 180) * degree;
-			direction *= -1;
-		}
+		angleError -= PI;
+		// angleError *= -1;
+		direction *= -1;
 	}
+	else if (angleError * 180.0 / PI < -90)
+	{
+		angleError += PI;
+		// angleError *= -1;
+		direction *= -1;
+	}
+	//}
+
+	//turnController->setTarget(bearing.convert(degree));
+	// turnController->setTarget(angleError);
+
+	// // double turnPower = turnController->step(odometry::currAngle.convert(degree));
+	// // double turnPower = turnController->step(currHeading.convert(degree));
+	// //double turnPower = turnController->step(turnControllerPV.convert(degree));
+	// double turnPower = turnController->step(0);
+
+	turnController->setTarget(0);
+
+	double turnPower = turnController->step(-angleError);
 
 	//printf("Bearing: %f, ", bearing.convert(degree));
 	//printf("angleError: %f, ", (angleError * 180.0/PI));
@@ -96,6 +108,7 @@ void AdaptivePurePursuit::loop()
 	//printf("Angle: %1.2f\n", currBearingAngle.convert(degree));
 
 	drive::chassisController.driveVector(direction * forwardPower, turnPower); // TODO CHASSIS MODEL IN CONSTRUCTOR INSTEAD OF HERE
+	printf("FP: %f  |  TP: %f, A: %f\n", direction * forwardPower, turnPower, angleError * 180 / pi);
 }
 
 path::Point AdaptivePurePursuit::getPointTarget()
@@ -107,10 +120,8 @@ bool AdaptivePurePursuit::isSettled()
 {
 	path::Point endPoint = path->pointAt(path->getResolution());
 	double distance = sqrt(pow(endPoint.x.convert(inch) - odometry::currX.convert(inch), 2) + pow(endPoint.y.convert(inch) - odometry::currY.convert(inch), 2));
-	return (distance < 3);
+	return (distance < 2.5);
 }
-
-bool loop = false;
 
 } // namespace pathfollowing
 
@@ -118,22 +129,14 @@ void appcLoop(void *)
 {
 	while (true)
 	{
-		if (pathfollowing::loop)
+		if (looperoni)
 		{
 			drive::appc.loop();
 			if (drive::appc.isSettled())
 			{
-				pathfollowing::loop = false;
+				looperoni = false;
 			}
 		}
-		pros::delay(10);
-	}
-}
-
-void appcWUS()
-{
-	while (!drive::appc.isSettled())
-	{
 		pros::delay(10);
 	}
 }

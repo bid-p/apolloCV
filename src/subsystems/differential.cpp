@@ -82,7 +82,7 @@ void update()
     if (liftHoldBtn.changedToPressed() && !intakeInBtn.isPressed())
     {
         // Engage lift PID if B button is pressed.
-        liftTarget = 300;
+        liftTarget = 250;
         currState = targetTransition;
     }
 }

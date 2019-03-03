@@ -20,6 +20,8 @@ void autonomous()
     puncher::currState = puncher::puncherStates::yield;
     angler::currState = angler::anglerStates::yield;
 
+    drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+
     switch (autonRoutine) // Executes specific routine based on auton selector.
     {
     case notSelected:
@@ -61,13 +63,38 @@ void autonomous()
         break;
     }
 
-    turnAngleVel(90_deg, 100, true, false);
+    // turnAngleVel(90_deg, 100, true, false);
 
-    turnAngleVel(270_deg, 100, true, false);
+    // turnAngleVel(270_deg, 100, true, false);
 
-    turnAngleVel(180_deg, 100, true, false);
+    // turnAngleVel(180_deg, 100, true, false);
 
-    turnAngleVel(0_deg, 100, true, false);
+    // turnAngleVel(0_deg, 100, true, false);
 
+    // executeProgSkills();
+
+    odometry::init();
+    odometry::resetAngle(90_deg);
+    odometry::currX = 12_in;
+    odometry::currY = 96_in;
+
+    path::Line A1(
+        {13.25_in, 96_in},
+        {52.25_in, 120_in},
+        200,
+        200);
+
+    // path::Bezier A1(
+    //     {path::Point{12_in, 96_in},
+    //      path::Point{42_in, 162_in},
+    //      path::Point{42_in, 30_in},
+    //      path::Point{72_in, 96_in}},
+    //     200,
+    //     200);
+
+    drive::appc.setPath(&A1);
+    appcWUS();
+
+    // turnAngleVel(3600_deg, 100);
     // lv_obj_clean(lv_scr_act());
 }

@@ -1,10 +1,12 @@
-#include "main.h"
-#include <stdio.h>
+#include "path.hpp"
 #include <cmath>
 
 namespace path
 {
 Path::Path(int resolution, int lookahead) : currT(0), resolution(resolution), lookAhead(lookahead) {}
+
+Point::Point(okapi::QLength x, okapi::QLength y, int t) : x(x), y(y), t(t) {}
+Point::Point() : x(0 * okapi::inch), y(0 * okapi::inch) {}
 
 Point Path::nextPoint(int lookahead)
 {

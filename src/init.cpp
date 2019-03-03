@@ -52,6 +52,19 @@ void updateFunc(void *)
     }
 }
 
-extern void states();
+void states();
 
-extern void autonStates();
+void autonStates();
+
+bool looperoni = false;
+
+void appcWUS()
+{
+    looperoni = true;
+    while (!drive::appc.isSettled())
+    {
+        pros::delay(10);
+    }
+    // looperoni = false;
+    drive::chassisController.stop();
+}

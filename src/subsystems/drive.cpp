@@ -32,7 +32,7 @@ ChassisControllerIntegrated chassisController(
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
     std::unique_ptr<AsyncPosIntegratedController>(&leftController),
     std::unique_ptr<AsyncPosIntegratedController>(&rightController),
-    AbstractMotor::gearset::green, {4.125_in, 13.273906_in});
+    AbstractMotor::gearset::green, {4.125_in, 13.362479_in});
 
 AsyncMotionProfileController profileController(
     profiledUtil,
@@ -40,13 +40,13 @@ AsyncMotionProfileController profileController(
     2.0,  // max accel
     10.0, //max jerk
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
-    {4.125_in, 13.273906_in},
+    {4.125_in, 13.328906_in},
     AbstractMotor::gearset::green);
 
 pathfollowing::AdaptivePurePursuit appc(
-    std::make_unique<IterativePosPIDController>(0.2, 0.0, 60.0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
-    std::make_unique<IterativePosPIDController>(0.6, 0.0, 20.0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
-    10, 10.0); // the number before the Kf is the lookahead global, but it will use the path's lookahead by default
+    std::make_unique<IterativePosPIDController>(0.0425, 0.0, 0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    std::make_unique<IterativePosPIDController>(/*0.6*/ .052, 0.0, /*20.0*/ 0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    10, 12.0); // the number before the Kf is the lookahead global, but it will use the path's lookahead by default
 
 void update()
 {
@@ -69,7 +69,7 @@ void act(void *)
         {
         case notRunning: // the drive should not be moving; brake
             chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
-            chassisController.tank(0, 0, 0);
+            chassisController.stop();
             break;
 
         case running: // the drive moves according to joysticks
@@ -121,8 +121,8 @@ void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async)
     {
         if (odom)
         {
-            double angleError = std::atan2(sin(angle.convert(degree) - odometry::currAngle.convert(degree)), cos(sin(angle.convert(degree) - odometry::currAngle.convert(degree))));
-            drive::chassisController.turnAngleAsync(angleError);
+            double angleError = std::atan2(sin(angle.convert(radian) - odometry::currAngle.convert(radian)), cos((angle.convert(radian) - odometry::currAngle.convert(radian))));
+            drive::chassisController.turnAngleAsync(angleError * radian);
         }
         else
         {
@@ -133,8 +133,8 @@ void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async)
     {
         if (odom)
         {
-            double angleError = std::atan2(sin(angle.convert(degree) - odometry::currAngle.convert(degree)), cos(sin(angle.convert(degree) - odometry::currAngle.convert(degree))));
-            drive::chassisController.turnAngle(angleError);
+            double angleError = std::atan2(sin(angle.convert(radian) - odometry::currAngle.convert(radian)), cos((angle.convert(radian) - odometry::currAngle.convert(radian))));
+            drive::chassisController.turnAngle(angleError * radian);
             drive::chassisController.waitUntilSettled();
         }
         else
