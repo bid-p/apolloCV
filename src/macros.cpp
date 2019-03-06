@@ -2,10 +2,10 @@
 
 using namespace okapi;
 
-ControllerButton angleCloseHigh = controller[ControllerDigital::down];
-ControllerButton angleCloseMidBtn = controller[ControllerDigital::up];
-ControllerButton angleFarMidBtn = controller[ControllerDigital::left];
-ControllerButton angleFarHighBtn = controller[ControllerDigital::right];
+ControllerButton anglerNearHighBtn = controller[ControllerDigital::down];
+ControllerButton anglerNearMidBtn = controller[ControllerDigital::up];
+ControllerButton anglerFarMidBtn = controller[ControllerDigital::left];
+ControllerButton anglerFarHighBtn = controller[ControllerDigital::right];
 
 ControllerButton singleShotBtn = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn = controller[ControllerDigital::L2];
@@ -24,37 +24,101 @@ macroStates currState = none;
 
 void update()
 {
-    if (angleCloseHigh.changedToPressed())
+    if (anglerNearHighBtn.changedToPressed())
     {
-        currState = anglerNearHigh;
+        if (currState == '1')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = anglerNearHigh;
+        }
     }
-    if (angleCloseMidBtn.changedToPressed())
+    if (anglerNearMidBtn.changedToPressed())
     {
-        currState = anglerNearMid;
+        if (currState == '2')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = anglerNearMid;
+        }
     }
-    if (angleFarMidBtn.changedToPressed())
+    if (anglerFarMidBtn.changedToPressed())
     {
-        currState = anglerFarMid;
+        if (currState == '3')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = anglerFarMid;
+        }
     }
-    if (angleFarHighBtn.changedToPressed())
+    if (anglerFarHighBtn.changedToPressed())
     {
-        currState = anglerFarHigh;
+        if (currState == '4')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = anglerFarHigh;
+        }
     }
     if (singleShotBtn.changedToPressed())
     {
-        currState = singleShot;
+        if (currState == 's')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = singleShot;
+            angler::vision.set_led(COLOR_CYAN);
+            pros::delay(30);
+        }
     }
     if (doubleShotNearBtn.changedToPressed())
     {
-        customShotCall(0, 90);
+        if (currState == 'c')
+        {
+            currState = none;
+        }
+        else
+        {
+            customShotCall(0, 90);
+            angler::vision.set_led(COLOR_CYAN);
+            pros::delay(30);
+        }
     }
     if (doubleShotFarBtn.changedToPressed())
     {
-        customShotCall(40, 108);
+        if (currState == 'c')
+        {
+            currState = none;
+        }
+        else
+        {
+            customShotCall(40, 108);
+            angler::vision.set_led(COLOR_CYAN);
+            pros::delay(30);
+        }
     }
     if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
     {
-        currState = scorePole;
+        if (currState == 'p')
+        {
+            currState = none;
+        }
+        else
+        {
+            currState = scorePole;
+            angler::vision.set_led(COLOR_CYAN);
+            pros::delay(30);
+        }
     }
     // printf("Macro State: %c\n", currState);
 }
@@ -68,7 +132,9 @@ void act(void *)
         case none: // macro is not activated
             break;
         case singleShot: // shoots a single flag with a single given target encoder value for that flag; for autonomous
-            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+            angler::vision.set_led(COLOR_LIGHT_BLUE);
 
             puncher::currState = puncher::cocking;
             // switches out of cocking when sensor value achieved
@@ -86,10 +152,14 @@ void act(void *)
 
             drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
 
+            angler::vision.set_led(COLOR_ANTIQUE_WHITE);
+
             macro::currState = none;
             break;
         case customShotDouble: // shoots two flags with the specified target encoder values for those flags; for autonomous
-            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+            angler::vision.set_led(COLOR_LIGHT_BLUE);
 
             puncher::currState = puncher::cocking;
             // switches out of cocking when sensor value achieved
@@ -117,6 +187,8 @@ void act(void *)
                 pros::delay(2);
             }
 
+            angler::vision.set_led(COLOR_RED);
+
             angler::target = macroTarget2;
             angler::currState = angler::toTarget;
 
@@ -134,10 +206,13 @@ void act(void *)
 
             drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
 
+            angler::vision.set_led(COLOR_ANTIQUE_WHITE);
             macro::currState = none;
             break;
         case doubleShotNoWait:
-            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::brake);
+            drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+            angler::vision.set_led(COLOR_LIGHT_BLUE);
 
             puncher::currState = puncher::cocking;
             // switches out of cocking when sensor value achieved
@@ -148,13 +223,17 @@ void act(void *)
 
             // should automatically stop when ball loads into puncher
 
-            differential::currState = differential::intakeIn;
             // while (!puncher::isLoaded())
             // {
             //   pros::delay(2);
             // } // waits for puncher to load
 
-            pros::delay(100);
+            if (!puncher::isLoaded())
+            {
+                differential::currState = differential::intakeIn;
+                pros::delay(400);
+            }
+
             if (!puncher::isLoaded())
             {
                 drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -182,8 +261,11 @@ void act(void *)
             {
                 drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
                 macro::currState = none;
+                angler::vision.set_led(COLOR_ANTIQUE_WHITE);
                 break; // if puncher not loaded do not shoot again
             }
+            angler::vision.set_led(COLOR_RED);
+
             differential::currState = differential::notRunning;
 
             waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
@@ -191,6 +273,8 @@ void act(void *)
             puncher::currState = puncher::shooting;
 
             drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
+
+            angler::vision.set_led(COLOR_ANTIQUE_WHITE);
 
             macro::currState = none;
             break;

@@ -1,4 +1,4 @@
-#include "path.hpp"
+#include "motion/path/path.hpp"
 #include <cmath>
 
 namespace path

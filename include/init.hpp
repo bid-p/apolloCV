@@ -35,4 +35,6 @@ extern bool looperoni;
 
 extern void appcWUS();
 
+extern void appcWUS(bool curved);
+
 #endif

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "motion/path/line.hpp"
 #include "okapi/api/units/QLength.hpp"
 
 namespace path
@@ -18,6 +18,6 @@ Point Line::pointAt(int T)
     //double x = (end.x.convert(okapi::inch) * (double)lilT) / ((double)resolution) + start.x.convert(okapi::inch);
     //double y = (end.y.convert(okapi::inch) * (double)lilT) / ((double)resolution) + start.y.convert(okapi::inch);
 
-    return {x * okapi::inch, y * okapi::inch, lilT};
+    return Point(x * okapi::inch, y * okapi::inch, lilT);
 }
 } // namespace path

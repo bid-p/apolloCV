@@ -3,7 +3,7 @@
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
+ * the Field Management	 System or the VEX Competition Switch in the operator
  * control mode.
  *
  * If no competition control is connected, this function will run immediately
@@ -28,13 +28,15 @@ void states()
 
 void opcontrol()
 {
-	macroActTask->resume();
+	// macroActTask->resume();
 
-	pros::lcd::initialize();
+	// pros::lcd::initialize();
 
-	while (true)
-	{
-		states();
-		pros::delay(10);
-	}
+	// while (true)
+	// {
+	// 	states();
+	// 	pros::delay(10);
+	// }
+
+	autonomous();
 }

@@ -32,7 +32,7 @@ ChassisControllerIntegrated chassisController(
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
     std::unique_ptr<AsyncPosIntegratedController>(&leftController),
     std::unique_ptr<AsyncPosIntegratedController>(&rightController),
-    AbstractMotor::gearset::green, {4.125_in, 13.362479_in});
+    AbstractMotor::gearset::green, {4.125_in, 13.257979_in});
 
 AsyncMotionProfileController profileController(
     profiledUtil,
@@ -40,13 +40,13 @@ AsyncMotionProfileController profileController(
     2.0,  // max accel
     10.0, //max jerk
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
-    {4.125_in, 13.328906_in},
+    {4.125_in, 13.257979_in},
     AbstractMotor::gearset::green);
 
 pathfollowing::AdaptivePurePursuit appc(
-    std::make_unique<IterativePosPIDController>(0.0425, 0.0, 0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
-    std::make_unique<IterativePosPIDController>(/*0.6*/ .052, 0.0, /*20.0*/ 0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
-    10, 12.0); // the number before the Kf is the lookahead global, but it will use the path's lookahead by default
+    std::make_unique<IterativePosPIDController>(0.05, 0.000, 0.00, 0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    std::make_unique<IterativePosPIDController>(/*0.6*/ .7, 0.000, /*20.0*/ 0.0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    10, 10.0); // the number before the Kf is the lookahead global, but it will use the path's lookahead by default
 
 void update()
 {
