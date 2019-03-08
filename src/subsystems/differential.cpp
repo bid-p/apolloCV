@@ -22,6 +22,8 @@ pros::ADILineSensor line(SPORT_INTAKE);
 Potentiometer liftPot(SPORT_LIFT);
 AverageFilter<5> liftPotFilter;
 
+bool intakeHasBall;
+
 int liftVal;
 
 int liftTarget;
@@ -38,17 +40,18 @@ bool hasBall()
 void update()
 {
     liftVal = liftPotFilter.filter(liftPot.get());
+    intakeHasBall = hasBall();
 
     // Automatic state checkers
-    if (currState == intakeIn && !puncher::isLoaded() && hasBall())
+    if (currState == intakeIn && !puncher::puncherIsLoaded && intakeHasBall)
     {
         currState = ballDecel;
     }
-    if (currState == ballDecel && puncher::isLoaded())
+    if (currState == ballDecel && puncher::puncherIsLoaded)
     {
         currState = intakeIn;
     }
-    if (currState == intakeIn && puncher::isLoaded() && hasBall())
+    if ((currState == intakeIn || currState == ballDecel) && puncher::puncherIsLoaded && intakeHasBall)
     {
         currState = ballBrake;
         ballBrakeTimer.getDt();

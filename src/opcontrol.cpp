@@ -28,15 +28,14 @@ void states()
 
 void opcontrol()
 {
-	// macroActTask->resume();
+	macroActTask->resume(); // could this be null??
+	pros::lcd::initialize();
 
-	// pros::lcd::initialize();
+	while (true)
+	{
+		printf("Ball Sensor: %d\n", (int)differential::line.get_value());
+		states();
 
-	// while (true)
-	// {
-	// 	states();
-	// 	pros::delay(10);
-	// }
-
-	autonomous();
+		pros::delay(10);
+	}
 }

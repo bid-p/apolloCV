@@ -52,7 +52,7 @@ public:
 
   bool isSettled();
   void waitUntilSettled(bool stopWhenSettled = true);
-  void runPath(path::Path *path);
+  void runPath(path::Path *path, bool curved = false);
   void runPathAsync(path::Path *path); // @Lachlan are we making the settled utils inside the constructor of appc
 
   void setKf(double kf);

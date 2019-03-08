@@ -32,7 +32,7 @@ ChassisControllerIntegrated chassisController(
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
     std::unique_ptr<AsyncPosIntegratedController>(&leftController),
     std::unique_ptr<AsyncPosIntegratedController>(&rightController),
-    AbstractMotor::gearset::green, {4.125_in, 13.257979_in});
+    AbstractMotor::gearset::green, {4.125_in, 13.204698_in});
 
 AsyncMotionProfileController profileController(
     profiledUtil,
@@ -40,14 +40,16 @@ AsyncMotionProfileController profileController(
     2.0,  // max accel
     10.0, //max jerk
     std::shared_ptr<SkidSteerModel>(&integratedChassisModel),
-    {4.125_in, 13.257979_in},
+    {4.125_in, 13.204698_in},
     AbstractMotor::gearset::green);
 
 pathfollowing::AdaptivePurePursuit appc(
-    std::make_unique<IterativePosPIDController>(0.05, 0.000, 0.00, 0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
-    std::make_unique<IterativePosPIDController>(/*0.6*/ .7, 0.000, /*20.0*/ 0.0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    std::make_unique<IterativePosPIDController>(0.052, 0.000, 0.00, 0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
+    std::make_unique<IterativePosPIDController>(/*0.6*/ .6, 0.000, /*20.0*/ 0.0, 0.0, TimeUtilFactory::create(), std::make_unique<AverageFilter<5>>()),
     10, 10.0); // the number before the Kf is the lookahead global, but it will use the path's lookahead by default
 
+// .055
+// .08 0.0 0.01
 void update()
 {
     if (abs(controller.getAnalog(ControllerAnalog::leftY)) > joyDeadband ||
@@ -88,33 +90,8 @@ void act(void *)
     }
 }
 
-} // namespace drive
-
 // Helper function to facilitate turning during auton
-void turnAngleVel(QAngle angle, double maxVel)
-{
-    drive::chassisController.setMaxVelocity(maxVel);
-    drive::chassisController.turnAngle(angle);
-    drive::chassisController.waitUntilSettled();
-    drive::chassisController.setMaxVelocity(200);
-}
-
-void turnAngleVel(QAngle angle, double maxVel, bool async)
-{
-    drive::chassisController.setMaxVelocity(maxVel);
-    if (async)
-    {
-        drive::chassisController.turnAngleAsync(angle);
-    }
-    else
-    {
-        drive::chassisController.turnAngle(angle);
-        drive::chassisController.waitUntilSettled();
-    }
-    drive::chassisController.setMaxVelocity(200);
-}
-
-void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async)
+void turn(QAngle angle, double maxVel, bool odom, bool async)
 {
     drive::chassisController.setMaxVelocity(maxVel);
     if (async)
@@ -145,6 +122,8 @@ void turnAngleVel(QAngle angle, double maxVel, bool odom, bool async)
     }
     drive::chassisController.setMaxVelocity(200);
 }
+
+} // namespace drive
 
 // Remove path to clear up memory
 void removePaths(std::string path1)

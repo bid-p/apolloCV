@@ -33,6 +33,8 @@ extern Potentiometer liftPot;
 
 extern AverageFilter<5> liftPotFilter;
 
+extern bool intakeHasBall;
+
 extern int liftVal;
 
 extern int liftTarget;

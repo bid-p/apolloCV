@@ -13,10 +13,13 @@ pros::ADILineSensor lineP(SPORT_PUNCHER);
 
 pros::ADILineSensor lineCock(SPORT_COCKER);
 
+bool puncherIsLoaded;
+bool puncherIsFired;
+
 // Detect whether puncher has pulled back to properly shoot ball
 bool isCocked()
 {
-    if (lineCock.get_value() > 2500)
+    if (lineCock.get_value() > 2570)
     {
         // printf("is cocked\n");
         return true;
@@ -36,14 +39,18 @@ bool isLoaded()
 
 bool isFired()
 {
-    if (puncher.get_torque() < .1) // Must be a low value.
+    if (puncher.get_torque() < .2) // Must be a low value.
     {
         return true;
     }
     return false;
 }
 
-void update() {}
+void update()
+{
+    puncherIsLoaded = isLoaded();
+    puncherIsFired = isFired();
+}
 
 void act(void *)
 {
@@ -61,7 +68,7 @@ void act(void *)
             puncher.moveVoltage(12000);
             //Automatically cock the puncher to prepare for next shot.
             pros::delay(30);
-            if (isFired())
+            if (puncherIsFired)
             {
                 currState = cocking;
             }
@@ -73,7 +80,7 @@ void act(void *)
             }
             else
             {
-                printf("is cocked\n");
+                // printf("is cocked\n");
                 puncher.moveVoltage(0);
                 currState = notRunning;
             }

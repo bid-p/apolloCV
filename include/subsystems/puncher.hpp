@@ -28,6 +28,9 @@ extern pros::ADILineSensor lineCockPuncher;
 
 extern bool isLoaded();
 
+extern bool puncherIsLoaded;
+extern bool puncherIsFired;
+
 extern bool fired();
 
 extern void update();

@@ -11,7 +11,7 @@ ControllerButton singleShotBtn = controller[ControllerDigital::L1];
 ControllerButton doubleShotNearBtn = controller[ControllerDigital::L2];
 ControllerButton doubleShotFarBtn = controller[ControllerDigital::X];
 
-ControllerButton gayButton = controller[ControllerDigital::B];
+ControllerButton liftBtn = controller[ControllerDigital::B];
 ControllerButton shiftBtn = controller[ControllerDigital::R1];
 
 int macroTarget1; // target encoder values for angler to shoot first flag in macro
@@ -77,8 +77,6 @@ void update()
         else
         {
             currState = singleShot;
-            angler::vision.set_led(COLOR_CYAN);
-            pros::delay(30);
         }
     }
     if (doubleShotNearBtn.changedToPressed())
@@ -90,8 +88,6 @@ void update()
         else
         {
             customShotCall(0, 90);
-            angler::vision.set_led(COLOR_CYAN);
-            pros::delay(30);
         }
     }
     if (doubleShotFarBtn.changedToPressed())
@@ -102,12 +98,10 @@ void update()
         }
         else
         {
-            customShotCall(40, 108);
-            angler::vision.set_led(COLOR_CYAN);
-            pros::delay(30);
+            customShotCall(70, 140);
         }
     }
-    if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && gayButton.changedToPressed())
+    if (!shiftBtn.changedToPressed() && shiftBtn.isPressed() && liftBtn.changedToPressed())
     {
         if (currState == 'p')
         {
@@ -116,8 +110,6 @@ void update()
         else
         {
             currState = scorePole;
-            angler::vision.set_led(COLOR_CYAN);
-            pros::delay(30);
         }
     }
     // printf("Macro State: %c\n", currState);
@@ -140,7 +132,7 @@ void act(void *)
             // switches out of cocking when sensor value achieved
 
             // differential::currState = differential::intakeIn;
-            // while (!puncher::isLoaded())
+            // while (!puncher::puncherIsLoaded)
             // {
             //   pros::delay(2);
             // } // waits for puncher to load
@@ -171,7 +163,7 @@ void act(void *)
             // should automatically stop when ball loads into puncher
 
             differential::currState = differential::intakeIn;
-            while (!puncher::isLoaded())
+            while (!puncher::puncherIsLoaded)
             {
                 pros::delay(2);
             } // waits for puncher to load
@@ -193,7 +185,7 @@ void act(void *)
             angler::currState = angler::toTarget;
 
             differential::currState = differential::intakeIn;
-            while (!puncher::isLoaded())
+            while (!puncher::puncherIsLoaded)
             {
                 pros::delay(2);
             } // waits for puncher to load
@@ -223,18 +215,18 @@ void act(void *)
 
             // should automatically stop when ball loads into puncher
 
-            // while (!puncher::isLoaded())
+            // while (!puncher::puncherIsLoaded)
             // {
             //   pros::delay(2);
             // } // waits for puncher to load
 
-            if (!puncher::isLoaded())
+            if (!puncher::puncherIsLoaded)
             {
                 differential::currState = differential::intakeIn;
                 pros::delay(400);
             }
 
-            if (!puncher::isLoaded())
+            if (!puncher::puncherIsLoaded)
             {
                 drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
                 macro::currState = none;
@@ -257,7 +249,7 @@ void act(void *)
 
             differential::currState = differential::intakeIn;
             pros::delay(1000); // doesn't wait for ball to be loaded, because it may or may not be there
-            if (!puncher::isLoaded())
+            if (!puncher::puncherIsLoaded)
             {
                 drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::coast);
                 macro::currState = none;
@@ -299,12 +291,14 @@ void act(void *)
             macro::currState = none;
             break;
         case scorePole:
+            angler::vision.set_led(COLOR_LIGHT_BLUE);
             drive::currState = drive::yield;
             drive::chassisController.setMaxVelocity(100);
             drive::chassisController.moveDistance(-7.5_in);
-            differential::liftTarget = 3000;
             drive::chassisController.waitUntilSettled();
             drive::chassisController.setMaxVelocity(200);
+            differential::liftTarget = 3000;
+            angler::vision.set_led(COLOR_RED);
             differential::currState = differential::targetTransition;
             currState = none;
             break;

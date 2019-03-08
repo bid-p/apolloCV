@@ -91,7 +91,10 @@ void autonomous()
     // appcWUS();
 
     // executeProgSkills();
-    executeRedNear1();
+    // executeRedNear1();
+    // executeRedFar1();
+    // executeBlueFar1();
+    // executeBlueNear1();
 
     // odometry::init();
     // odometry::resetAngle(90_deg);
@@ -115,6 +118,6 @@ void autonomous()
     // drive::appc.setPath(&A1);
     // appcWUS();
 
-    // turnAngleVel(3600_deg, 100);
+    drive::turn(3600_deg, 100, false, false);
     // lv_obj_clean(lv_scr_act());
 }

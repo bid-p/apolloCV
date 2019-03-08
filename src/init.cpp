@@ -42,8 +42,8 @@ void updateFunc(void *)
 {
     while (true)
     {
-        drive::update();
         macro::update();
+        drive::update();
         differential::update();
         puncher::update();
         angler::update();
@@ -57,37 +57,3 @@ void states();
 void autonStates();
 
 bool looperoni = false;
-
-void appcWUS()
-{
-    // drive::appc.setStraightGains(0.05, 0.000, 0.001);
-    // drive::appc.setTurnGains(.02, 0.0, 0.000);
-
-    looperoni = true;
-    while (!drive::appc.isSettled())
-    {
-        pros::delay(10);
-    }
-    looperoni = false;
-    drive::chassisController.stop();
-}
-
-void appcWUS(bool curved)
-{
-    // if (curved)
-    // {
-    //     drive::appc.setStraightGains(0.06, 0.000, 0.0001);
-    //     drive::appc.setTurnGains(.5, .1, 0.000);
-    // }
-
-    looperoni = true;
-    while (!drive::appc.isSettled())
-    {
-        pros::delay(10);
-    }
-    looperoni = false;
-    drive::chassisController.stop();
-
-    // drive::appc.setStraightGains(0.06, 0.000, 0.0001);
-    // drive::appc.setTurnGains(.05, 0.0, 0.001);
-}

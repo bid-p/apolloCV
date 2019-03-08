@@ -37,8 +37,10 @@ void act(void *)
             break;
         // Set Angler position to a given target
         case toTarget:
+            // angler::vision.set_led(COLOR_RED);
             anglerController.flipDisable(true);
             angler.moveAbsolute(target, 600);
+            // angler::vision.set_led(COLOR_ANTIQUE_WHITE);
             break;
         // Essentially a PID hold but without current use
         // by shorting the motor terminals.
@@ -59,8 +61,8 @@ void act(void *)
                 // TODO: Add vision code
             }
             break;
-        // Yield control over the angler to the Macro
-        // state machine so it can use the Angler.
+        // yield control of the angler to the macro
+        // state machine so it can use the angler motor.
         case yield:
             anglerController.flipDisable(true);
             break;

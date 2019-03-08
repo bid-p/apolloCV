@@ -44,47 +44,47 @@ lv_res_t readySelect(lv_obj_t *btn)
 
     case progSkills:
         printf("PS\n");
-        initProgSkills();
+        // initProgSkills();
         break;
 
     case redNear1:
         printf("RN1\n");
-        initRedNear1();
+        // initRedNear1();
         break;
 
     case redNear2:
         printf("RN2\n");
-        initRedNear2();
+        // initRedNear2();
         break;
 
     case redFar1:
-        initRedFar1();
         printf("RF1\n");
+        // initRedFar1();
         break;
 
     case redFar2:
-        initRedFar2();
         printf("RF2\n");
+        // initRedFar2();
         break;
 
     case blueNear1:
-        initBlueNear1();
         printf("BN1\n");
+        // initBlueNear1();
         break;
 
     case blueNear2:
-        initBlueNear2();
         printf("BN2\n");
+        // initBlueNear2();
         break;
 
     case blueFar1:
-        initBlueFar1();
         printf("BF1\n");
+        // initBlueFar/1();
         break;
 
     case blueFar2:
-        initBlueFar2();
         printf("BF2\n");
+        // initBlueFar2();
         break;
     }
 
