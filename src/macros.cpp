@@ -162,12 +162,12 @@ void act(void *)
 
             // should automatically stop when ball loads into puncher
 
-            differential::currState = differential::intakeIn;
+            // differential::currState = differential::intakeIn;
+            differential::currState = differential::notRunning;
             while (!puncher::puncherIsLoaded)
             {
                 pros::delay(2);
             } // waits for puncher to load
-            differential::currState = differential::notRunning;
 
             waitUntilSettled(angler::angler, 5, 5, 20_ms); // waits until angler to stop
 
@@ -203,6 +203,7 @@ void act(void *)
             break;
         case doubleShotNoWait:
             drive::chassisController.setBrakeMode(AbstractMotor::brakeMode::hold);
+            drive::currState = drive::yield;
 
             angler::vision.set_led(COLOR_LIGHT_BLUE);
 

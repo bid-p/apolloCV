@@ -24,6 +24,8 @@ AverageFilter<5> liftPotFilter;
 
 bool intakeHasBall;
 
+bool prevIntakeHasBall;
+
 int liftVal;
 
 int liftTarget;
@@ -40,6 +42,9 @@ bool hasBall()
 void update()
 {
     liftVal = liftPotFilter.filter(liftPot.get());
+    if(currState == ballBrake) {
+        prevIntakeHasBall = intakeHasBall;
+    }
     intakeHasBall = hasBall();
 
     // Automatic state checkers
@@ -54,9 +59,10 @@ void update()
     if ((currState == intakeIn || currState == ballDecel) && puncher::puncherIsLoaded && intakeHasBall)
     {
         currState = ballBrake;
+        prevIntakeHasBall = true;
         ballBrakeTimer.getDt();
     }
-    if (currState == ballBrake && ballBrakeTimer.readDt() >= 22_ms)
+    if (currState == ballBrake && ((!prevIntakeHasBall && intakeHasBall) || ballBrakeTimer.readDt() >= 45_ms))
     {
         currState = notRunning;
     }
@@ -132,8 +138,8 @@ void act(void *)
             break;
         case ballBrake:
             // Outtake without yielding control to notRunning state.
-            diffLeft.moveVoltage(10000);
-            diffRight.moveVoltage(-10000);
+            diffLeft.moveVoltage(12000);
+            diffRight.moveVoltage(-12000);
             break;
         case ballDecel:
             // Run intake at 83.3% of normal speed to prevent ball
