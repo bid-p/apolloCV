@@ -33,9 +33,9 @@ void opcontrol()
 
 	while (true)
 	{
-		printf("Ball Sensor: %d\n", (int)differential::line.get_value());
+		// printf("Ball Sensor: %d\n", (int)differential::line.get_value());
 		states();
-
+		// printf("isLoaded: %d | hasBall: %d\n", puncher::puncherIsLoaded, differential::intakeHasBall);
 		pros::delay(10);
 	}
 }

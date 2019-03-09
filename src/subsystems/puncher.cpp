@@ -27,10 +27,10 @@ bool isCocked()
     return false;
 }
 
-// Detech whether puncher currently has a ball that it can shoot
+// Detect whether puncher currently has a ball that it can shoot
 bool isLoaded()
 {
-    if (lineP.get_value() < 2300)
+    if (lineP.get_value() < 1700)
     {
         return true;
     }
@@ -39,7 +39,7 @@ bool isLoaded()
 
 bool isFired()
 {
-    if (puncher.get_torque() < .2) // Must be a low value.
+    if (puncher.get_torque() < .1) // Must be a low value.
     {
         return true;
     }
@@ -64,6 +64,7 @@ void act(void *)
             puncher.moveVoltage(0);
             break;
         case shooting:
+            printf("shooting, %f\n", puncher.get_torque());
             // Turn puncher gear to shoot the ball
             puncher.moveVoltage(12000);
             //Automatically cock the puncher to prepare for next shot.
@@ -76,6 +77,7 @@ void act(void *)
         case cocking:
             if (!isCocked())
             {
+                printf("cocking, %f\n", puncher.get_torque());
                 puncher.moveVoltage(12000);
             }
             else
@@ -89,6 +91,7 @@ void act(void *)
             // Empty case to allow full control of puncher in macro.
             break;
         }
+        //printf("puncher line: %d\n", lineP.get_value());
         pros::delay(10);
     }
 }

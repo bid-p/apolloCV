@@ -90,10 +90,12 @@ void autonomous()
     // drive::appc.setPath(&A2);
     // appcWUS();
 
-    // executeProgSkills();
+    executeProgSkills();
     // executeRedNear1();
     // executeRedFar1();
+    // executeRedFar2();
     // executeBlueFar1();
+    // executeBlueFar2();
     // executeBlueNear1();
 
     // odometry::init();
@@ -118,6 +120,6 @@ void autonomous()
     // drive::appc.setPath(&A1);
     // appcWUS();
 
-    drive::turn(3600_deg, 100, false, false);
+    // drive::turn(3600_deg, 100, false, false);
     // lv_obj_clean(lv_scr_act());
 }

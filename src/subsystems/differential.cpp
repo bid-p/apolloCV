@@ -21,9 +21,9 @@ pros::ADILineSensor line(SPORT_INTAKE);
 
 Potentiometer liftPot(SPORT_LIFT);
 AverageFilter<5> liftPotFilter;
+AverageFilter<5> intakeSensorFilter;
 
 bool intakeHasBall;
-
 bool prevIntakeHasBall;
 
 int liftVal;
@@ -42,12 +42,20 @@ bool hasBall()
 void update()
 {
     liftVal = liftPotFilter.filter(liftPot.get());
-    if(currState == ballBrake) {
+
+    if (currState == ballBrake)
+    {
         prevIntakeHasBall = intakeHasBall;
     }
     intakeHasBall = hasBall();
 
     // Automatic state checkers
+    if ((currState == intakeIn || currState == ballDecel) && puncher::puncherIsLoaded && intakeHasBall)
+    {
+        currState = ballBrake;
+        prevIntakeHasBall = true;
+        ballBrakeTimer.getDt();
+    }
     if (currState == intakeIn && !puncher::puncherIsLoaded && intakeHasBall)
     {
         currState = ballDecel;
@@ -55,12 +63,6 @@ void update()
     if (currState == ballDecel && puncher::puncherIsLoaded)
     {
         currState = intakeIn;
-    }
-    if ((currState == intakeIn || currState == ballDecel) && puncher::puncherIsLoaded && intakeHasBall)
-    {
-        currState = ballBrake;
-        prevIntakeHasBall = true;
-        ballBrakeTimer.getDt();
     }
     if (currState == ballBrake && ((!prevIntakeHasBall && intakeHasBall) || ballBrakeTimer.readDt() >= 45_ms))
     {
@@ -91,7 +93,7 @@ void update()
     if (liftHoldBtn.changedToPressed() && !intakeInBtn.isPressed())
     {
         // Engage lift PID if B button is pressed.
-        liftTarget = 300;
+        liftTarget = 900;
         currState = targetTransition;
     }
 }

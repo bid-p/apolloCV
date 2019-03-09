@@ -47,6 +47,7 @@ void updateFunc(void *)
         differential::update();
         puncher::update();
         angler::update();
+        printf("isLoaded: %d | hasBall: %d\n", puncher::puncherIsLoaded, differential::intakeHasBall);
 
         pros::delay(5);
     }
