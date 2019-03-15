@@ -16,7 +16,7 @@ pros::Task *updateTask;
 
 void initialize()
 {
-	// pros::lcd::initialize();
+	pros::lcd::initialize();
 	initActTasks();
 
 	drive::profileController.startThread();
@@ -30,7 +30,7 @@ void initialize()
 	pros::Task odometryTask(odometry::run, nullptr, TASK_PRIORITY_DEFAULT + 1, TASK_STACK_DEPTH_DEFAULT, "Odometry");
 	drive::appc.startThread();
 
-	autonSelector();
+	// autonSelector();
 
 	// set all the states to not running by default
 	drive::currState = drive::notRunning;

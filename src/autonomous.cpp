@@ -63,34 +63,54 @@ void autonomous()
         break;
     }
 
-    // drive::appc.setStraightGains(0.06, 0.000, 0.0001);
-    // drive::appc.setTurnGains(.05, 0, 0.00);
-
     // odometry::init();
     // odometry::resetAngle(90_deg);
-    // odometry::currX = 13.25_in;
-    // odometry::currY = 84_in;
+    // odometry::currX = 0_in;
+    // odometry::currY = 0_in;
 
-    // path::Line A1(
-    //     {13.25_in, 84_in},
-    //     {53.25_in, 84_in},
-    //     200,
+    // pros::delay(500);
+
+    // path::Bezier A1(
+    //     {path::Point{0_in, 0_in},
+    //      path::Point{60_in, 0_in},
+    //      path::Point{0_in, 60_in},
+    //      path::Point{60_in, 60_in}},
+    //     1000,
     //     200);
 
-    // drive::appc.setPath(&A1);
-    // appcWUS();
-    // // Drive forward into the cap #1 and intake ball
+    // // path::Line A1(
+    // //     {0_in, 0_in},
+    // //     {0_in, 50_in},
+    // //     1000,
+    // //     1000);
 
-    // path::Line A2(
-    //     {52.25_in, 36_in},
-    //     {17.25_in, 36_in},
-    //     200,
+    // drive::appc.runPath(&A1);
+
+    // pros::delay(1000); // NOTE I shortened the delay from 4k to 1k
+
+    // path::Bezier A2(
+    //     {path::Point{odometry::currX, odometry::currY},
+    //      path::Point{0_in, odometry::currY},
+    //      path::Point{odometry::currX, 0_in},
+    //      path::Point{0_in, 0_in}},
+    //     1000,
     //     200);
 
-    // drive::appc.setPath(&A2);
-    // appcWUS();
+    // // path::Line A2(
+    // //     {0_in, 50_in},
+    // //     {0_in, 0_in},
+    // //     1000,
+    // //     1000);
 
-    executeProgSkills();
+    // drive::appc.runPath(&A2);
+
+    // pros::delay(500);
+
+    // drive::turn(0_deg);
+
+    // // // Drive forward into the cap #1 and intake ball
+
+    // executeProgSkills();
     // executeRedNear1();
     // executeRedFar1();
     // executeRedFar2();
@@ -98,27 +118,57 @@ void autonomous()
     // executeBlueFar2();
     // executeBlueNear1();
 
-    // odometry::init();
-    // odometry::resetAngle(90_deg);
-    // odometry::currX = 12_in;
-    // odometry::currY = 96_in;
+    odometry::init();
+    odometry::resetAngle(90_deg);
+    odometry::currX = 13.25_in;
+    odometry::currY = 36_in;
 
-    // path::Line A1(
-    //     {13.25_in, 96_in},
-    //     {36_in, 124_in},
-    //     200,
-    //     200);
+    pros::delay(500);
 
-    // path::Bezier A1(
-    //     {path::Point{12_in, 96_in},
-    //      path::Point{51.8_in, 96.7_in},
-    //      path::Point{39_in, 81.2_in},
-    //      path::Point{68_in, 96_in}},
-    //     200,
-    //     200);
+    path::Line A1(
+        {odometry::currX, odometry::currY},
+        {53.25_in, 36_in},
+        1000,
+        1000);
+    drive::appc.runPath(&A1);
+    // Drive forward into the cap #1 and intake ball
 
-    // drive::appc.setPath(&A1);
-    // appcWUS();
+    path::Bezier A2(
+        {path::Point{odometry::currX, odometry::currY},
+         path::Point{40_in, 36_in},
+         path::Point{20_in, 12.5_in},
+         path::Point{50_in, 12.5_in}},
+        1000,
+        250);
+
+    drive::appc.runPathAsync(&A2);
+
+    pros::delay(500);
+
+    differential::liftTarget = 10;
+    differential::currState = differential::targetTransition;
+
+    drive::appc.waitUntilSettled();
+
+    differential::liftTarget = 500;
+    differential::currState = differential::targetTransition;
+
+    pros::delay(1000);
+
+    path::Bezier A3(
+        {path::Point{odometry::currX, odometry::currY},
+         path::Point{20_in, 12.5_in},
+         path::Point{48_in, 24_in},
+         path::Point{10_in, 24_in}},
+        1000,
+        200);
+
+    drive::appc.runPathAsync(&A3);
+
+    pros::delay(1000);
+
+    differential::liftTarget = 900;
+    differential::currState = differential::targetTransition;
 
     // drive::turn(3600_deg, 100, false, false);
     // lv_obj_clean(lv_scr_act());

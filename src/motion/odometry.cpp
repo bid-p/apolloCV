@@ -2,7 +2,7 @@
 
 namespace odometry
 {
-ADIEncoder rightEnc(SPORT_RTOP, SPORT_RBOT);
+ADIEncoder rightEnc(SPORT_RTOP, SPORT_RBOT, false);
 ADIEncoder leftEnc(SPORT_LTOP, SPORT_LBOT);
 
 double rEncLast;
@@ -10,7 +10,8 @@ double lEncLast;
 
 const double ENC_WHEEL = 2.75;
 const double ENC_WHEEL2 = 4.125;
-const double CHASSISWIDTH = 7.267257 /*7.12*/;
+const double CHASSISWIDTH = 7.352431 /*7.12*/;
+const double CHASSISWIDTH2 = 13.41;
 const double TICKSINCH = ENC_WHEEL * PI / 360.0;
 const double TICKSINCH2 = ENC_WHEEL2 * PI / 360.0;
 

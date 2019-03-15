@@ -16,8 +16,8 @@ AdaptivePurePursuit::AdaptivePurePursuit(
 										 path(nullptr),
 										 direction(1),
 										 angleTarget(0_deg),
-										 distanceSettledUtil(SettledUtilFactory::create(2, 0.2, 50_ms)),
-										 angularSettledUtil(SettledUtilFactory::create(9999, 0.05, 50_ms)),
+										 distanceSettledUtil(SettledUtilFactory::create(1, /*0.2*/ 99999, 50_ms)),
+										 angularSettledUtil(SettledUtilFactory::create(9999, /*0.05*/ 99999, /*50_ms*/ 50_ms)),
 										 _isSettled(false),
 										 isLooping(false),
 										 taskHandle(nullptr)
@@ -39,81 +39,7 @@ void AdaptivePurePursuit::setLookahead(int lookahead)
 {
 	this->lookahead = lookahead;
 }
-/*
-this is manas gay angle math
-void AdaptivePurePursuit::loop()
-{
-	using namespace okapi;
 
-	path::Point robotPosition = {odometry::currX, odometry::currY};
-
-	path::PointAndDistance closestPointAndDistance = path->getClosestPointAndDistance(robotPosition);
-
-	int newLookahead = lookahead - (closestPointAndDistance.distance.convert(inch) * lookaheadKf);
-	// if (closestPointAndDistance.distance.convert(inch) == 0) {
-	// 	newLookahead = lookahead;
-	// } else {
-	// 	newLookahead = (double) lookahead / (closestPointAndDistance.distance.convert(inch) * lookaheadKf);
-	// }
-	newLookahead = (newLookahead < 0) ? 1 : newLookahead;
-	//newLookahead = (newLookahead > lookahead) ? lookahead : newLookahead;
-
-	int requiredPosition = closestPointAndDistance.point.t;
-	target = path->pointAt(requiredPosition + newLookahead);
-
-	double distTolookaheadPoint =
-		sqrt(pow(target.x.convert(inch) - robotPosition.x.convert(inch), 2) + pow(target.y.convert(inch) - robotPosition.y.convert(inch), 2));
-
-	straightController->setTarget(0);
-
-	double forwardPower = straightController->step(-distTolookaheadPoint);
-	// QAngle bearing =
-	// 	std::atan2((this->target.x.convert(inch) - robotPosition.x.convert(inch)),
-	// 			   (this->target.y.convert(inch) - robotPosition.y.convert(inch))) *
-	// 	radian;
-	QAngle bearing =
-		std::atan2((this->target.x.convert(inch) - robotPosition.x.convert(inch)),
-				   (this->target.y.convert(inch) - robotPosition.y.convert(inch))) *
-		radian;
-
-	direction = 1;
-
-	QAngle currBearingAngle = std::atan2(sin(odometry::currAngle.convert(radian)), cos(odometry::currAngle.convert(radian))) * radian;
-
-	double angleError = bearing.convert(radian) - currBearingAngle.convert(radian);
-	angleError = std::atan2(sin(angleError), cos(angleError));
-
-	//if (target.t == path->getResolution())
-	//{
-	if (angleError * 180.0 / PI > 90)
-	{
-		angleError -= PI;
-		// angleError *= -1;
-		direction *= -1;
-	}
-	else if (angleError * 180.0 / PI < -90)
-	{
-		angleError += PI;
-		// angleError *= -1;
-		direction *= -1;
-	}
-	//}
-
-	//turnController->setTarget(bearing.convert(degree));
-	turnController->setTarget(0);
-
-	// double turnPower = turnController->step(odometry::currAngle.convert(degree));
-	// double turnPower = turnController->step(currHeading.convert(degree));
-	//double turnPower = turnController->step(turnControllerPV.convert(degree));
-	double turnPower = turnController->step(-angleError);
-
-	printf("Bearing: %f, ", bearing.convert(degree));
-	printf("angleError: %f, ", (angleError * 180.0 / PI));
-	printf("Forward: %f, Turn: %f, ", forwardPower, turnPower);
-	printf("Angle: %1.2f\n", currBearingAngle.convert(degree));
-
-	drive::chassisController.driveVector(direction * forwardPower, turnPower); // TODO CHASSIS MODEL IN CONSTRUCTOR INSTEAD OF HERE
-}*/
 QAngle AdaptivePurePursuit::calculateAngleError(QAngle pV, QAngle setpoint)
 {
 	if (setpoint.convert(radian) < PI && pV.convert(radian) > PI)
@@ -187,6 +113,197 @@ void AdaptivePurePursuit::loop()
 
 	drive::chassisController.driveVector(direction * forwardPower, turnPower); // TODO CHASSIS MODEL IN CONSTRUCTOR INSTEAD OF HERE
 }
+//OLD LOOP
+void AdaptivePurePursuit::ramseteLoop()
+{
+	using namespace okapi;
+
+	if (pros::competition::is_disabled())
+	{
+		isLooping = false;
+	}
+
+	// auto model = robot.getModel();
+	// auto pose = model.getCurrentPose();
+
+	// auto currHeading = QAngle(pose.theta);
+
+	path::Point robotPosition = {odometry::currX, odometry::currY};
+	path::PointAndDistance closestPointAndDistance = path->getClosestPointAndDistance(robotPosition);
+
+	int newLookahead = lookahead - (closestPointAndDistance.distance.convert(inch) * lookaheadKf);
+	newLookahead = (newLookahead < 0) ? 1 : newLookahead;
+
+	int requiredPosition = closestPointAndDistance.point.t;
+	target = path->pointAt(requiredPosition + newLookahead);
+	// path->lookingAt(requiredPosition + newLookahead);
+
+	double distTolookaheadPoint =
+		sqrt(pow(target.x.convert(inch) - robotPosition.x.convert(inch), 2) + pow(target.y.convert(inch) - robotPosition.y.convert(inch), 2));
+
+	straightController->setTarget(0);
+
+	QAngle bearing =
+		std::atan2((this->target.x.convert(inch) - robotPosition.x.convert(inch)),
+				   (this->target.y.convert(inch) - robotPosition.y.convert(inch))) *
+		radian;
+
+	// while (bearing.convert(radian) < 0)
+	// {
+	// 	bearing = radian * (bearing.convert(radian) + 2_pi);
+	// }
+
+	QAngle currBearingAngle = std::atan2(std::sin(odometry::currAngle.convert(radian)), std::cos(odometry::currAngle.convert(radian))) * radian;
+
+	//double angleError = calculateAngleError(currBearingAngle, bearing).convert(radian);
+
+	double angleError = bearing.convert(radian) - currBearingAngle.convert(radian);
+	angleError = std::atan2(sin(angleError), cos(angleError));
+
+	// double angleError = calculateAngleError(currBearingAngle, bearing).convert(radian);
+
+	direction = 1;
+
+	if (angleError * 180.0 / PI > 90)
+	{
+		angleError -= PI;
+		direction *= -1;
+	}
+	else if (angleError * 180.0 / PI < -90)
+	{
+		angleError += PI;
+		direction *= -1;
+	}
+
+	turnController->setTarget(0);
+
+	// ramsete math
+	double zeta = 0.0;
+	double beta = 0.0;
+
+	double theta = odometry::currAngle.convert(radian);
+
+	double x_d = target.x.convert(inch);
+	double y_d = target.y.convert(inch);
+
+	double x_curr = robotPosition.x.convert(inch);
+	double y_curr = robotPosition.y.convert(inch);
+
+	double e1 = std::sin(theta) * (x_d - x_curr) + std::cos(theta) * (y_d - y_curr);
+	double e2 = std::cos(theta) * (x_d - x_curr) + std::sin(theta) * (y_d - y_curr);
+	double e3 = angleError;
+
+	double v_d = straightController->step(-distTolookaheadPoint);
+	double w_d = turnController->step(-e3 * 180.0 / 1_pi);
+
+	double k1 = 2 * zeta * sqrt((pow(w_d, 2) + beta * pow(v_d, 2)));
+	double sinc = e3 == 0 ? 1 : std::sin(e3) / e3;
+
+	double v_out = v_d * std::cos(e3) + k1 * e2;
+	double w_out = w_d + beta * sinc * e1 + k1 * e3;
+
+	// robot.getModel().driveVector(v_out, w_out);
+	drive::chassisController.driveVector(direction * v_out, w_out);
+}
+
+// void AdaptivePurePursuit::ramseteLoop()
+// {
+// 	using namespace okapi;
+
+// 	// auto model = robot.getModel();
+// 	// auto pose = model.getCurrentPose();
+
+// 	// auto currHeading = QAngle(pose.theta);
+
+// 	path::Point robotPosition = {odometry::currX, odometry::currY};
+// 	path::PointAndDistance closestPointAndDistance = path->getClosestPointAndDistance(robotPosition);
+
+// 	int newLookahead = lookahead - (closestPointAndDistance.distance.convert(inch) * lookaheadKf);
+// 	newLookahead = (newLookahead < 0) ? 1 : newLookahead;
+
+// 	int requiredPosition = closestPointAndDistance.point.t;
+// 	target = path->pointAt(requiredPosition + newLookahead);
+// 	// path->lookingAt(requiredPosition + newLookahead);
+
+// 	double distTolookaheadPoint =
+// 		sqrt(pow(target.x.convert(inch) - robotPosition.x.convert(inch), 2) + pow(target.y.convert(inch) - robotPosition.y.convert(inch), 2));
+
+// 	straightController->setTarget(0);
+
+// 	QAngle bearing =
+// 		std::atan2((this->target.x.convert(inch) - robotPosition.x.convert(inch)),
+// 				   (this->target.y.convert(inch) - robotPosition.y.convert(inch))) *
+// 		radian;
+
+// 	while (bearing.convert(radian) < 0)
+// 	{
+// 		bearing = radian * (bearing.convert(radian) + 2_pi);
+// 	}
+
+// 	QAngle currBearingAngle = std::atan2(std::sin(odometry::currAngle.convert(radian)), std::cos(odometry::currAngle.convert(radian))) * radian;
+
+// 	double angleError = calculateAngleError(currBearingAngle, bearing).convert(radian);
+
+// 	// double angleError = bearing.convert(radian) - currBearingAngle.convert(radian);
+// 	// angleError = std::atan2(sin(angleError), cos(angleError));
+
+// 	// NOTE
+// 	// WE NEED TO FIGURE OUT A WAY TO TUNE THIS TO BE GOOD
+// 	// if (target.t == path->getResolution() && distTolookaheadPoint < 3)
+// 	// {
+// 	// 	angleError = calculateAngleError(currBearingAngle, getHeadingAtPoint(target.t) * radian).convert(radian);
+// 	// }
+
+// 	turnController->setTarget(0);
+
+// 	// ramsete math
+// 	double zeta = 0.0; //3.0
+// 	double beta = 0.0; //1.0
+
+// 	double theta = currBearingAngle.convert(radian);
+
+// 	double x_d = target.x.convert(inch);
+// 	double y_d = target.y.convert(inch);
+
+// 	double x_curr = robotPosition.x.convert(inch);
+// 	double y_curr = robotPosition.y.convert(inch);
+
+// 	double e1 = std::sin(theta) * (x_d - x_curr) + std::cos(theta) * (y_d - y_curr);
+// 	double e2 = -std::cos(theta) * (x_d - x_curr) + std::sin(theta) * (y_d - y_curr);
+// 	double e3 = angleError;
+
+// 	double v_d = straightController->step(-distTolookaheadPoint);
+// 	double w_d = turnController->step(-e3 * 180 / 1_pi);
+
+// 	double k1 = 2 * zeta * sqrt((pow(w_d, 2) + beta * pow(v_d, 2)));
+// 	double sinc = e3 == 0 ? 1 : std::sin(e3) / e3;
+
+// 	double v_out = v_d * std::cos(e3) + k1 * e1;
+
+// 	double w_out = w_d + beta * sinc * e2 + k1 * e3;
+
+// 	// robot.getModel().driveVector(v_out, w_out);
+// 	drive::chassisController.driveVector(v_out, w_out);
+// }
+
+// double AdaptivePurePursuit::getHeadingAtPoint(int T)
+// {
+// 	auto point = path->pointAt(T);
+// 	double targetPoseHeading;
+
+// 	if (T - 1 >= 0)
+// 	{
+// 		auto preTarget = path->pointAt(T - 1);
+// 		targetPoseHeading = atan((target.y.convert(inch) - preTarget.y.convert(inch)) / ((target.x.convert(inch) - preTarget.x.convert(inch))));
+// 	}
+// 	else
+// 	{
+// 		auto preTarget = path->pointAt(T + 1);
+// 		targetPoseHeading = atan((preTarget.y.convert(inch) - target.y.convert(inch)) / ((preTarget.x.convert(inch) - target.x.convert(inch))));
+// 	}
+
+// 	return targetPoseHeading;
+// }
 
 path::Point AdaptivePurePursuit::getPointTarget()
 {
@@ -254,17 +371,8 @@ void AdaptivePurePursuit::runPathAsync(path::Path *path)
 
 void AdaptivePurePursuit::runPath(path::Path *path, bool curved)
 {
-	if (curved)
-	{
-		drive::appc.setStraightGains(0.055, 0.000, 0.000);
-		drive::appc.setTurnGains(0.8, 0.000, 0.001);
-	}
-
 	runPathAsync(path);
 	waitUntilSettled();
-
-	drive::appc.setStraightGains(0.052, 0.000, 0.000);
-	drive::appc.setTurnGains(0.6, 0.000, 0.000);
 }
 
 void AdaptivePurePursuit::setKf(double kf)
@@ -288,7 +396,7 @@ void AdaptivePurePursuit::runLoop()
 	{
 		if (isLooping && path != nullptr)
 		{
-			loop();
+			ramseteLoop();
 			checkIsSettled(); // updates internal boolean `isSettled` which is then exposed through getter bool isSettled();
 
 			// if (drive::appc.isSettled())

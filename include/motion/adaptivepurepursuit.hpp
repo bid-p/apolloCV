@@ -35,6 +35,7 @@ private:
   void resetSettled();
 
   okapi::QAngle calculateAngleError(okapi::QAngle pV, okapi::QAngle setpoint);
+  double getHeadingAtPoint(int T);
 
 public:
   AdaptivePurePursuit(
@@ -47,6 +48,8 @@ public:
   void setLookahead(int lookahead);
 
   void loop();
+  void ramseteLoop();
+  // void pureRamseteLoop();
 
   path::Point getPointTarget();
 

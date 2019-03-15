@@ -4,8 +4,8 @@
 
 namespace path
 {
-Bezier::Bezier(std::initializer_list<Point> points, int resolution, int lookahead) : Path::Path(resolution, lookahead),
-                                                                                     points(points) {}
+Bezier::Bezier(std::vector<Point> points, int resolution, int lookahead) : Path::Path(resolution, lookahead),
+                                                                           points(points) {}
 
 std::vector<int> getPascalCoeff(int rowIndex)
 {
@@ -32,7 +32,7 @@ std::vector<int> getPascalCoeff(int rowIndex)
     return row;
 }
 
-int Bezier::factorial(int n)
+int factorial(int n)
 {
     if (n == 0 || n == 1)
     {
@@ -66,6 +66,8 @@ Point Bezier::pointAt(int T)
     double sumY = 0;
 
     int lilT = (T > resolution) ? resolution : T;
+    if (lilT < 0)
+        lilT = 0;
     double sT = (double)lilT / (double)resolution; // scaled t
 
     for (int i = 0; i <= n; i++)
